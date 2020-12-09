@@ -12,9 +12,11 @@ class Example(QWidget):
 
     def initUI(self):
 
+        btn = QPushButton('Start game', self)
+        btn.clicked.connect(QApplication.instance().quit)
 
-
-        self.setGeometry(300, 300, 300, 150)
+        btn.setGeometry(1150, 650, 100, 50)
+        self.setGeometry(100, 100, 1280, 720)
         self.setWindowTitle('Window')
         self.show()
 
