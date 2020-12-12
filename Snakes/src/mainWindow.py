@@ -1,6 +1,7 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QPushButton,
+from PyQt5.QtWidgets import (QWidget,
                              QHBoxLayout, QVBoxLayout, QApplication)
+from button import Button
 
 
 class Example(QWidget):
@@ -12,12 +13,23 @@ class Example(QWidget):
 
     def initUI(self):
 
-        btn = QPushButton('Start game', self)
+        btn = Button.init_ui(self, 'Start game')
         btn.clicked.connect(QApplication.instance().quit)
 
-        btn.setGeometry(1150, 650, 100, 50)
-        self.setGeometry(100, 100, 1280, 720)
-        self.setWindowTitle('Window')
+        hbox = QHBoxLayout()
+
+        hbox.addWidget(btn)
+
+        vbox = QVBoxLayout()
+
+        vbox.addLayout(hbox)
+
+        self.setLayout(vbox)
+
+        self.setGeometry(100, 100, 320, 240)
+        self.move(800, 400)
+
+        self.setWindowTitle('Snakes')
         self.show()
 
 
