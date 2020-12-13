@@ -1,9 +1,7 @@
-import sys
-
+import os
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
-from PyQt5.QtWidgets import (QWidget,
-                             QHBoxLayout, QVBoxLayout, QApplication, QMainWindow, QGridLayout)
+from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout)
 from button import Button
 
 
@@ -13,39 +11,41 @@ class Example(QMainWindow):
         super().__init__()
         self.central_widget = QWidget()
 
-        self.initUI()
+        self.init_ui()
 
-    def initUI(self):
+    def init_ui(self):
+        file_dir = os.path.dirname(os.path.realpath('__file__'))
         font_db = QFontDatabase()
-        font_db.addApplicationFont("Snakes/res/Spongeboy Me Bob.ttf")
+        font_path = os.path.join(file_dir, 'Snakes/res/Spongeboy Me Bob.ttf')
+        font_db.addApplicationFont(font_path)
 
         font = QFont("Spongeboy Me Bob")
         btn = Button.init_ui('Start')
         btn.setFont(font)
         btn.clicked.connect(QApplication.instance().quit)
-        btnClose = Button.init_ui('Exit')
-        btnClose.setFont(font)
+        btn_close = Button.init_ui('Exit')
+        btn_close.setFont(font)
 
-        btnClose.clicked.connect(QApplication.instance().quit)
+        btn_close.clicked.connect(QApplication.instance().quit)
 
         btn.setStyleSheet("color: orange; font-size:28px; background-color: transparent")
 
-        btnClose.setStyleSheet("color: red; font-size:24px; background-color: transparent")
+        btn_close.setStyleSheet("color: red; font-size:24px; background-color: transparent")
         self.setCentralWidget(self.central_widget)
         grid = QGridLayout()
         grid.addWidget(btn, 1, 1, 2, 3)
-        grid.addWidget(btnClose, 1, 3, 2, 1)
+        grid.addWidget(btn_close, 1, 3, 2, 1)
 
         self.setGeometry(100, 100, 960, 640)
         self.setFixedSize(self.size())
         self.centralWidget().setLayout(grid)
         self.move(450, 200)
-        oImage = QImage("Snakes/res/splash.png")
-        sImage = oImage.scaled(QSize(960, 720))  # resize Image to widgets size
+
+        image_path = os.path.join(file_dir, 'Snakes/res/splash.png')
+        image = QImage(image_path)
+        scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
         palette = QPalette()
-        palette.setBrush(QPalette.Window, QBrush(sImage))
+        palette.setBrush(QPalette.Window, QBrush(scale_image))
         self.setPalette(palette)
-
-
         self.setWindowTitle('Snakes')
         self.show()
