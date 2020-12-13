@@ -7,8 +7,9 @@ class Button(QPushButton):
         super().__init__()
         self.init_ui()
 
-    def init_ui(self, name: str):
-        btn = QPushButton(name, self)
+    def init_ui(name: str):
+        btn = QPushButton(name)
         btn.setMinimumHeight(50)
         btn.setMaximumWidth(200)
+
         return btn
