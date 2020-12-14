@@ -1,12 +1,13 @@
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox)
+from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton)
 
 from helpers import load_res
 from button import Button
+import winsound
 
-
+winsound.PlaySound('snakehiss2.wav', winsound.SND_LOOP + winsound.SND_ASYNC)
 class Example(QMainWindow):
 
     def __init__(self):
@@ -43,7 +44,14 @@ class Example(QMainWindow):
         btn_close = Button.init_ui('Exit')
         btn_close.setFont(font)
 
+
         btn_close.clicked.connect(QApplication.instance().quit)
+
+        btn_about = QPushButton('About', self)
+        btn_about.move(800, 30)
+        "btn_about.clicked.connect(self.aboutWrite)"
+        btn_about.setFont(font)
+        btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
         btn.setStyleSheet("color: orange; font-size:40px; background-color: transparent")
 
@@ -67,3 +75,16 @@ class Example(QMainWindow):
         self.move(450, 200)
         self.setWindowTitle('Snakes')
         self.show()
+
+
+
+"""def aboutWrite(self):
+
+            self.hide()
+            about_window = AboutWindow()
+            about_window.show()
+
+            if about_window.exec_():
+                self.show()
+            else:
+                self.show()"""
