@@ -1,7 +1,7 @@
 import os
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout)
+from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox)
 from button import Button
 from pathlib import Path
 
@@ -22,6 +22,19 @@ class Example(QMainWindow):
         font_path = str(mod_path.parent) + '\\res\\Spongeboy Me Bob.ttf'
         font_db.addApplicationFont(font_path)
 
+        self.setWindowIcon(QIcon('img/icon.png'))
+
+        comboList = ['2', '3', '4']
+        combo = QComboBox(self)
+        combo.addItems(comboList)
+        combo.setFixedSize(70, 70)
+        fontCB = combo.font()
+        fontCB.setPointSize(20)
+        fontCB.setFamily('Spongeboy Me Bob')
+
+        combo.setFont(fontCB)
+        combo.setStyleSheet("color: orange; background-color: black")
+
         font = QFont("Spongeboy Me Bob")
         btn = Button.init_ui('Start')
         btn.setFont(font)
@@ -31,13 +44,15 @@ class Example(QMainWindow):
 
         btn_close.clicked.connect(QApplication.instance().quit)
 
-        btn.setStyleSheet("color: orange; font-size:28px; background-color: transparent")
+        btn.setStyleSheet("color: orange; font-size:40px; background-color: transparent")
 
-        btn_close.setStyleSheet("color: red; font-size:24px; background-color: transparent")
+        btn_close.setStyleSheet("color: red; font-size:40px; background-color: transparent")
         self.setCentralWidget(self.central_widget)
         grid = QGridLayout()
-        grid.addWidget(btn, 1, 1, 2, 3)
-        grid.addWidget(btn_close, 1, 3, 2, 1)
+        grid.setSpacing(150)
+        grid.addWidget(btn, 1, 1)
+        grid.addWidget(btn_close, 1, 3)
+        grid.addWidget(combo, 1, 2)
 
         image_path = str(mod_path.parent) + '\\res\\splash.png'
 
@@ -46,6 +61,7 @@ class Example(QMainWindow):
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
 
+        self.setLayout(grid)
         self.setPalette(palette)
         self.setGeometry(100, 100, 960, 640)
         self.setFixedSize(self.size())
