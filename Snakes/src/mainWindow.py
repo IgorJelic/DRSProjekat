@@ -1,12 +1,10 @@
-import os
+
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox)
 
 from helpers import load_res
 from button import Button
-
-from pathlib import Path
 
 
 class Example(QMainWindow):
@@ -25,16 +23,17 @@ class Example(QMainWindow):
 
         self.setWindowIcon(QIcon(load_res('icon.png')))
 
-        combo_list = [' 2 ', ' 3 ', ' 4 ']
+        combo_list = [' 2 players ', ' 3 players ', ' 4 players ']
         combo = QComboBox(self)
         combo.addItems(combo_list)
-        combo.setFixedSize(70, 70)
+        combo.setFixedSize(230, 70)
         font_cb = combo.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
 
         combo.setFont(font_cb)
-        combo.setStyleSheet("color: orange; background-color: black; selection-background-color: rgb(92, 2, 2);"
+        combo.setStyleSheet("color: orange; background-color: transparent;"
+                            "selection-background-color: transparent;"
                             "selection-color: orange")
 
         font = QFont("Spongeboy Me Bob")
@@ -52,8 +51,8 @@ class Example(QMainWindow):
         self.setCentralWidget(self.central_widget)
         grid = QGridLayout()
         grid.setSpacing(150)
-        grid.addWidget(btn, 1, 1)
-        grid.addWidget(btn_close, 1, 3)
+        grid.addWidget(btn, 1, 1, 2, 1)
+        grid.addWidget(btn_close, 1, 3, 2, 1)
         grid.addWidget(combo, 1, 2)
 
         image = QImage(load_res('splash.png'))
@@ -61,7 +60,6 @@ class Example(QMainWindow):
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
 
-        # self.setLayout(grid)
         self.setPalette(palette)
         self.setGeometry(100, 100, 960, 640)
         self.setFixedSize(self.size())
