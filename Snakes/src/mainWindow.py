@@ -3,6 +3,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout)
 from button import Button
+from pathlib import Path
 
 
 class Example(QMainWindow):
@@ -14,9 +15,11 @@ class Example(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        file_dir = os.path.dirname(os.path.realpath('__file__'))
+
+        mod_path = Path(__file__).parent
+
         font_db = QFontDatabase()
-        font_path = os.path.join(file_dir, 'Snakes/res/Spongeboy Me Bob.ttf')
+        font_path = str(mod_path.parent) + '\\res\\Spongeboy Me Bob.ttf'
         font_db.addApplicationFont(font_path)
 
         font = QFont("Spongeboy Me Bob")
@@ -36,16 +39,17 @@ class Example(QMainWindow):
         grid.addWidget(btn, 1, 1, 2, 3)
         grid.addWidget(btn_close, 1, 3, 2, 1)
 
-        self.setGeometry(100, 100, 960, 640)
-        self.setFixedSize(self.size())
-        self.centralWidget().setLayout(grid)
-        self.move(450, 200)
+        image_path = str(mod_path.parent) + '\\res\\splash.png'
 
-        image_path = os.path.join(file_dir, 'Snakes/res/splash.png')
         image = QImage(image_path)
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
+
         self.setPalette(palette)
+        self.setGeometry(100, 100, 960, 640)
+        self.setFixedSize(self.size())
+        self.centralWidget().setLayout(grid)
+        self.move(450, 200)
         self.setWindowTitle('Snakes')
         self.show()
