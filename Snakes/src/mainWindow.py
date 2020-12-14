@@ -7,7 +7,7 @@ from helpers import load_res
 from button import Button
 import winsound
 
-winsound.PlaySound('snakehiss2.wav', winsound.SND_LOOP + winsound.SND_ASYNC)
+
 class Example(QMainWindow):
 
     def __init__(self):
@@ -19,7 +19,7 @@ class Example(QMainWindow):
     def init_ui(self):
 
         font_db = QFontDatabase()
-        # font_path = str(mod_path.parent) + '\\res\\Spongeboy Me Bob.ttf'
+
         font_db.addApplicationFont(load_res('Spongeboy Me Bob.ttf'))
 
         self.setWindowIcon(QIcon(load_res('icon.png')))
@@ -27,7 +27,7 @@ class Example(QMainWindow):
         combo_list = [' 2 players ', ' 3 players ', ' 4 players ']
         combo = QComboBox(self)
         combo.addItems(combo_list)
-        combo.setFixedSize(230, 70)
+        combo.setFixedSize(210, 70)
         font_cb = combo.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
@@ -44,12 +44,11 @@ class Example(QMainWindow):
         btn_close = Button.init_ui('Exit')
         btn_close.setFont(font)
 
-
         btn_close.clicked.connect(QApplication.instance().quit)
 
-        btn_about = QPushButton('About', self)
-        btn_about.move(800, 30)
-        "btn_about.clicked.connect(self.aboutWrite)"
+        btn_about = Button.init_ui('About')
+
+        "btn_about.clicked.connect(self.about_info)"
         btn_about.setFont(font)
         btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
@@ -62,6 +61,7 @@ class Example(QMainWindow):
         grid.addWidget(btn, 1, 1, 2, 1)
         grid.addWidget(btn_close, 1, 3, 2, 1)
         grid.addWidget(combo, 1, 2)
+        grid.addWidget(btn_about, 1, 3)
 
         image = QImage(load_res('splash.png'))
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
@@ -75,10 +75,10 @@ class Example(QMainWindow):
         self.move(450, 200)
         self.setWindowTitle('Snakes')
         self.show()
+        winsound.PlaySound(load_res('snakehiss2.wav'), winsound.SND_ASYNC)
 
 
-
-"""def aboutWrite(self):
+"""def about_info(self):
 
             self.hide()
             about_window = AboutWindow()
