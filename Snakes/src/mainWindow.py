@@ -2,7 +2,10 @@ import os
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox)
+
+from helpers import load_res
 from button import Button
+
 from pathlib import Path
 
 
@@ -16,24 +19,23 @@ class Example(QMainWindow):
 
     def init_ui(self):
 
-        mod_path = Path(__file__).parent
-
         font_db = QFontDatabase()
-        font_path = str(mod_path.parent) + '\\res\\Spongeboy Me Bob.ttf'
-        font_db.addApplicationFont(font_path)
+        # font_path = str(mod_path.parent) + '\\res\\Spongeboy Me Bob.ttf'
+        font_db.addApplicationFont(load_res('Spongeboy Me Bob.ttf'))
 
-        self.setWindowIcon(QIcon('img/icon.png'))
+        self.setWindowIcon(QIcon(load_res('icon.png')))
 
-        comboList = ['2', '3', '4']
+        combo_list = [' 2 ', ' 3 ', ' 4 ']
         combo = QComboBox(self)
-        combo.addItems(comboList)
+        combo.addItems(combo_list)
         combo.setFixedSize(70, 70)
-        fontCB = combo.font()
-        fontCB.setPointSize(20)
-        fontCB.setFamily('Spongeboy Me Bob')
+        font_cb = combo.font()
+        font_cb.setPointSize(20)
+        font_cb.setFamily('Spongeboy Me Bob')
 
-        combo.setFont(fontCB)
-        combo.setStyleSheet("color: orange; background-color: black")
+        combo.setFont(font_cb)
+        combo.setStyleSheet("color: orange; background-color: black; selection-background-color: rgb(92, 2, 2);"
+                            "selection-color: orange")
 
         font = QFont("Spongeboy Me Bob")
         btn = Button.init_ui('Start')
@@ -54,14 +56,12 @@ class Example(QMainWindow):
         grid.addWidget(btn_close, 1, 3)
         grid.addWidget(combo, 1, 2)
 
-        image_path = str(mod_path.parent) + '\\res\\splash.png'
-
-        image = QImage(image_path)
+        image = QImage(load_res('splash.png'))
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
 
-        self.setLayout(grid)
+        # self.setLayout(grid)
         self.setPalette(palette)
         self.setGeometry(100, 100, 960, 640)
         self.setFixedSize(self.size())
