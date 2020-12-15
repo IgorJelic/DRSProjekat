@@ -1,8 +1,8 @@
-import mainWindow
+import splash
 from PyQt5.QtWidgets import QApplication
 import sys
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = mainWindow.Example()
+    ex = splash.SplashScreen()
     sys.exit(app.exec_())

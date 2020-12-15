@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QPushButton
+from PyQt5.QtWidgets import QPushButton
 
 
 # noinspection PyArgumentList
