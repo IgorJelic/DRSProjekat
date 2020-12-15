@@ -3,7 +3,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton)
 
-from Snakes.src import game
+import game
 from helpers import load_res
 from button import Button
 import winsound
