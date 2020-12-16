@@ -15,32 +15,41 @@ class SplashScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.game_window = game.SnakeGame()
+        self.combo_speeds = QComboBox()
         self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
 
-        self.init_ui()
-
-    def init_ui(self):
         font_db = QFontDatabase()
 
         font_db.addApplicationFont(load_res('Spongeboy Me Bob.ttf'))
 
         self.setWindowIcon(QIcon(load_res('icon.png')))
 
-        combo_list = [' 2 players ', ' 3 players ', ' 4 players ']
-        combo = QComboBox(self)
-        combo.addItems(combo_list)
-        combo.setFixedSize(210, 70)
-        font_cb = combo.font()
+        combo_speeds_list = [' Speed 1x ', ' Speed 2x ', ' Speed 3x ']
+        self.combo_speeds.addItems(combo_speeds_list)
+        self.combo_speeds.setFixedSize(210, 70)
+        font_cbs = self.combo_speeds.font()
+        font_cbs.setPointSize(20)
+        font_cbs.setFamily('Spongeboy Me Bob')
+        self.combo_speeds.setFont(font_cbs)
+        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ']
+        combo_players = QComboBox(self)
+        combo_players.addItems(combo_players_list)
+        combo_players.setFixedSize(210, 70)
+        font_cb = combo_players.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
 
-        combo.setFont(font_cb)
-        combo.setStyleSheet("color: orange; background-color: transparent;"
-                            "selection-background-color: transparent;"
-                            "selection-color: orange")
+        combo_players.setFont(font_cb)
+        combo_players.setStyleSheet("color: orange; background-color: transparent;"
+                                    "selection-background-color: transparent;"
+                                    "selection-color: orange")
+        self.combo_speeds.setStyleSheet("color: orange; background-color: transparent;"
+                                        "selection-background-color: transparent;"
+                                        "selection-color: orange")
 
         font = QFont("Spongeboy Me Bob")
+
         btn_start = Button.init_ui('Start')
         btn_start.setFont(font)
         btn_start.clicked.connect(self.on_btn_start_pressed)
@@ -63,7 +72,8 @@ class SplashScreen(QMainWindow):
         grid.setSpacing(150)
         grid.addWidget(btn_start, 1, 1, 2, 1)
         grid.addWidget(btn_close, 1, 3, 2, 1)
-        grid.addWidget(combo, 1, 2)
+        grid.addWidget(self.combo_speeds, 1, 1)
+        grid.addWidget(combo_players, 1, 2)
         grid.addWidget(btn_about, 1, 3)
 
         image = QImage(load_res('splash.png'))
