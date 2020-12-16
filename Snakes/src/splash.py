@@ -1,9 +1,10 @@
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton)
+from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton, QDesktopWidget)
 
 import game
+import game2
 from helpers import load_res
 from button import Button
 import winsound
@@ -13,7 +14,7 @@ class SplashScreen(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.game_window = game.SnakeGame()
+        self.game_window = game2.SnakeGame()
         self.central_widget = QWidget()
 
         self.init_ui()
@@ -40,14 +41,16 @@ class SplashScreen(QMainWindow):
                             "selection-color: orange")
 
         font = QFont("Spongeboy Me Bob")
-        btn = Button.init_ui('Start')
-        btn.setFont(font)
-        btn.clicked.connect(self.on_btn_start_pressed)
+        btn_start = Button.init_ui('Start')
+        btn_start.setFont(font)
+        btn_start.clicked.connect(self.on_btn_start_pressed)
+        btn_start.setStyleSheet("color: orange; font-size:40px; background-color: transparent")
 
         btn_close = Button.init_ui('Exit')
         btn_close.setFont(font)
 
         btn_close.clicked.connect(QApplication.instance().quit)
+        btn_close.setStyleSheet("color: red; font-size:40px; background-color: transparent")
 
         btn_about = Button.init_ui('About')
 
@@ -55,13 +58,10 @@ class SplashScreen(QMainWindow):
         btn_about.setFont(font)
         btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
-        btn.setStyleSheet("color: orange; font-size:40px; background-color: transparent")
-
-        btn_close.setStyleSheet("color: red; font-size:40px; background-color: transparent")
         self.setCentralWidget(self.central_widget)
         grid = QGridLayout()
         grid.setSpacing(150)
-        grid.addWidget(btn, 1, 1, 2, 1)
+        grid.addWidget(btn_start, 1, 1, 2, 1)
         grid.addWidget(btn_close, 1, 3, 2, 1)
         grid.addWidget(combo, 1, 2)
         grid.addWidget(btn_about, 1, 3)
@@ -75,9 +75,11 @@ class SplashScreen(QMainWindow):
         self.setGeometry(100, 100, 960, 640)
         self.setFixedSize(self.size())
         self.centralWidget().setLayout(grid)
-        self.move(450, 200)
+        screen = QDesktopWidget().screenGeometry()
+        size = self.geometry()
+        self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
         self.setWindowTitle('Welcome to Snakes!')
-        self.show()
+        # self.show()
         winsound.PlaySound(load_res('snakehiss2.wav'), winsound.SND_ASYNC)
 
     def on_btn_start_pressed(self):
