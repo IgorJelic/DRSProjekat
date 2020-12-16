@@ -1,9 +1,9 @@
-
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton, QDesktopWidget)
 
 import game
+import about
 
 from helpers import load_res
 from button import Button
@@ -15,12 +15,12 @@ class SplashScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.game_window = game.SnakeGame()
+        self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
 
         self.init_ui()
 
     def init_ui(self):
-
         font_db = QFontDatabase()
 
         font_db.addApplicationFont(load_res('Spongeboy Me Bob.ttf'))
@@ -54,7 +54,7 @@ class SplashScreen(QMainWindow):
 
         btn_about = Button.init_ui('About')
 
-        "btn_about.clicked.connect(self.about_info)"
+        btn_about.clicked.connect(self.about_info)
         btn_about.setFont(font)
         btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
@@ -87,14 +87,5 @@ class SplashScreen(QMainWindow):
         winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
         self.game_window.show()
 
-
-"""def about_info(self):
-
-            self.hide()
-            about_window = AboutWindow()
-            about_window.show()
-
-            if about_window.exec_():
-                self.show()
-            else:
-                self.show()"""
+    def about_info(self):
+        self.about_window.show()
