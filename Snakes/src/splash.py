@@ -86,6 +86,7 @@ class SplashScreen(QMainWindow):
         self.hide()
         winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
         self.game_window.show()
+        self.game_window.sboard.start()
 
 
 """def about_info(self):
