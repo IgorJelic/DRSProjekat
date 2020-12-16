@@ -1,10 +1,10 @@
-
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton, QDesktopWidget)
 
 import game
-import game2
+import about
+
 from helpers import load_res
 from button import Button
 import winsound
@@ -14,12 +14,10 @@ class SplashScreen(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.game_window = game2.SnakeGame()
+        self.game_window = game.SnakeGame()
+        self.combo_speeds = QComboBox()
+        self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
-
-        self.init_ui()
-
-    def init_ui(self):
 
         font_db = QFontDatabase()
 
@@ -27,20 +25,31 @@ class SplashScreen(QMainWindow):
 
         self.setWindowIcon(QIcon(load_res('icon.png')))
 
-        combo_list = [' 2 players ', ' 3 players ', ' 4 players ']
-        combo = QComboBox(self)
-        combo.addItems(combo_list)
-        combo.setFixedSize(210, 70)
-        font_cb = combo.font()
+        combo_speeds_list = [' Speed 1x ', ' Speed 2x ', ' Speed 3x ']
+        self.combo_speeds.addItems(combo_speeds_list)
+        self.combo_speeds.setFixedSize(210, 70)
+        font_cbs = self.combo_speeds.font()
+        font_cbs.setPointSize(20)
+        font_cbs.setFamily('Spongeboy Me Bob')
+        self.combo_speeds.setFont(font_cbs)
+        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ']
+        combo_players = QComboBox(self)
+        combo_players.addItems(combo_players_list)
+        combo_players.setFixedSize(210, 70)
+        font_cb = combo_players.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
 
-        combo.setFont(font_cb)
-        combo.setStyleSheet("color: orange; background-color: transparent;"
-                            "selection-background-color: transparent;"
-                            "selection-color: orange")
+        combo_players.setFont(font_cb)
+        combo_players.setStyleSheet("color: orange; background-color: transparent;"
+                                    "selection-background-color: transparent;"
+                                    "selection-color: orange")
+        self.combo_speeds.setStyleSheet("color: orange; background-color: transparent;"
+                                        "selection-background-color: transparent;"
+                                        "selection-color: orange")
 
         font = QFont("Spongeboy Me Bob")
+
         btn_start = Button.init_ui('Start')
         btn_start.setFont(font)
         btn_start.clicked.connect(self.on_btn_start_pressed)
@@ -54,7 +63,7 @@ class SplashScreen(QMainWindow):
 
         btn_about = Button.init_ui('About')
 
-        "btn_about.clicked.connect(self.about_info)"
+        btn_about.clicked.connect(self.about_info)
         btn_about.setFont(font)
         btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
@@ -63,7 +72,8 @@ class SplashScreen(QMainWindow):
         grid.setSpacing(150)
         grid.addWidget(btn_start, 1, 1, 2, 1)
         grid.addWidget(btn_close, 1, 3, 2, 1)
-        grid.addWidget(combo, 1, 2)
+        grid.addWidget(self.combo_speeds, 1, 1)
+        grid.addWidget(combo_players, 1, 2)
         grid.addWidget(btn_about, 1, 3)
 
         image = QImage(load_res('splash.png'))
@@ -79,23 +89,13 @@ class SplashScreen(QMainWindow):
         size = self.geometry()
         self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
         self.setWindowTitle('Welcome to Snakes!')
-        # self.show()
+        self.show()
         winsound.PlaySound(load_res('snakehiss2.wav'), winsound.SND_ASYNC)
 
     def on_btn_start_pressed(self):
         self.hide()
         winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
         self.game_window.show()
-        self.game_window.sboard.start()
 
-
-"""def about_info(self):
-
-            self.hide()
-            about_window = AboutWindow()
-            about_window.show()
-
-            if about_window.exec_():
-                self.show()
-            else:
-                self.show()"""
+    def about_info(self):
+        self.about_window.show()
