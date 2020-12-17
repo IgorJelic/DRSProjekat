@@ -43,7 +43,8 @@ class Board(QFrame):
         self.grow_snake = False
         self.board = []
         self.direction = 1
-        self.mc = 0
+        self.mute_cnt = 0
+        self.pause_cnt = 0
         self.drop_food()
 
         self.setFocusPolicy(Qt.StrongFocus)
@@ -57,10 +58,16 @@ class Board(QFrame):
 
     def start(self, speed: int):
         self.msg2statusbar.emit('Score: ' + str(len(self.snake) - 2) + '                                    '
-                                                                       '                                    '
-                                                                       '                                  '
-                                                                       '                                      '
-                                                                       'Press M to toggle mute')
+                                                                           '                                    '
+                                                                           '                                  '
+                                                                           '                                      '
+                                                                           '        '
+                                                                           '                            '
+                                                                           '                        '
+                                                                           ' '
+                                                                           '            '
+                                                                           'Press M to toggle mute / '
+                                                                           'Press P to pause')
         if speed == 1:
             Board.SPEED = 150
         elif speed == 2:
@@ -114,11 +121,19 @@ class Board(QFrame):
             if self.direction != 3:
                 self.direction = 4
         elif key == Qt.Key_M:
-            self.mc = self.mc + 1
-            if self.mc % 2 != 0:
+            self.mute_cnt = self.mute_cnt + 1
+            if self.mute_cnt % 2 != 0:
                 winsound.PlaySound(None, winsound.SND_PURGE)
             else:
                 winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_PURGE)
+        elif key == Qt.Key_P:
+            self.pause_cnt = self.pause_cnt + 1
+            if self.pause_cnt % 2 != 0:
+                self.setStyleSheet('border-image: url(' + load_style_res('grass_paused.jpg') + ') 0 0 0 0 stretch center')
+                self.timer.stop()
+            else:
+                self.setStyleSheet('border-image: url(' + load_style_res('grass.jpg') + ') 0 0 0 0 stretch center')
+                self.timer.start(Board.SPEED, self)
 
     def move_snake(self):
         if self.direction == 1:
@@ -147,7 +162,13 @@ class Board(QFrame):
                                                                            '                                    '
                                                                            '                                  '
                                                                            '                                      '
-                                                                           '         Press M to toggle mute')
+                                                                           '        '
+                                                                           '                            '
+                                                                           '                        '
+                                                                           ' '
+                                                                           '            '
+                                                                           'Press M to toggle mute / '
+                                                                           'Press P to pause')
             self.grow_snake = False
 
     def timerEvent(self, event):
