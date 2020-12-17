@@ -90,7 +90,7 @@ class SplashScreen(QMainWindow):
         self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
         self.setWindowTitle('Welcome to Snakes!')
         self.show()
-        winsound.PlaySound(load_res('snakehiss2.wav'), winsound.SND_ASYNC)
+        winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
 
     def get_speed(self):
         cmb_text = str(self.combo_speeds.currentText())
