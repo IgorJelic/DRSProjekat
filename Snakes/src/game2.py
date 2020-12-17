@@ -1,10 +1,12 @@
-import sys
-from PyQt5.QtCore import QBasicTimer, Qt, pyqtSignal, QRect, QProcess
-from PyQt5.QtGui import QIcon, QPixmap, QColor, QPainter, QImage
-from PyQt5.QtWidgets import QMainWindow, QStatusBar, QWidget, QFrame, QVBoxLayout, QLabel, QDesktopWidget, QApplication
 import random
-from helpers import load_res, load_style_res
+import sys
 import winsound
+
+from PyQt5.QtCore import QBasicTimer, Qt, pyqtSignal, QRect
+from PyQt5.QtGui import QIcon, QPainter, QImage
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication
+
+from helpers import load_res, load_style_res
 
 
 class SnakeGame(QMainWindow):
@@ -17,7 +19,7 @@ class SnakeGame(QMainWindow):
         self.setCentralWidget(self.sboard)
         self.setWindowTitle('Snakes')
         self.setWindowIcon(QIcon(load_res('icon.png')))
-        self.resize(800, 600)
+        self.resize(1280, 720)
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
@@ -53,12 +55,22 @@ class Board(QFrame):
     def square_height(self):
         return self.contentsRect().height() / Board.HEIGHTINBLOCKS
 
-    def start(self):
+    def start(self, speed: int):
         self.msg2statusbar.emit('Score: ' + str(len(self.snake) - 2) + '                                    '
-                                                           '                                    '
-                                                           '                                  '
-                                                           '                                      '
-                                                           'Press M to toggle mute')
+                                                                       '                                    '
+                                                                       '                                  '
+                                                                       '                                      '
+                                                                       'Press M to toggle mute')
+        if speed == 1:
+            Board.SPEED = 150
+        elif speed == 2:
+            Board.SPEED = 125
+        elif speed == 3:
+            Board.SPEED = 100
+        elif speed == 4:
+            Board.SPEED = 75
+        elif speed == 5:
+            Board.SPEED = 50
         self.timer.start(Board.SPEED, self)
 
     def paintEvent(self, event):
@@ -77,12 +89,14 @@ class Board(QFrame):
 
         image = QImage(load_res('apple.png'))
 
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 10), int(self.square_height() + 10)), image)
+        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 10), int(self.square_height() + 10)),
+                          image)
 
     def draw_snake(self, painter, x, y):
         image = QImage(load_res('head.png'))
 
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)), image)
+        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
+                          image)
 
     def keyPressEvent(self, event):
 
@@ -130,10 +144,10 @@ class Board(QFrame):
             self.snake.pop()
         else:
             self.msg2statusbar.emit('Score: ' + str(len(self.snake) - 2) + '                                    '
-                                                               '                                    '
-                                                               '                                  '
-                                                               '                                      '
-                                                               '         Press M to toggle mute')
+                                                                           '                                    '
+                                                                           '                                  '
+                                                                           '                                      '
+                                                                           '         Press M to toggle mute')
             self.grow_snake = False
 
     def timerEvent(self, event):
@@ -159,7 +173,26 @@ class Board(QFrame):
         for pos in self.food:
             if pos == self.snake[0]:
                 self.food.remove(pos)
-                self.drop_food()
+                if len(self.snake) - 2 < 10:
+                    self.drop_food()
+                elif 10 <= len(self.snake) - 2 < 25:
+                    if len(self.food) > 4:
+                        pass
+                    else:
+                        self.drop_food()
+                        self.drop_food()
+                elif 25 <= len(self.snake) - 2 < 40:
+                    if len(self.food) > 6:
+                        pass
+                    else:
+                        self.drop_food()
+                        self.drop_food()
+                elif len(self.snake) - 2 > 40:
+                    if len(self.food) > 8:
+                        self.drop_food()
+                    else:
+                        self.drop_food()
+                        self.drop_food()
                 self.grow_snake = True
 
     def drop_food(self):
@@ -202,8 +235,9 @@ class Board(QFrame):
 
 def main():
     app = QApplication([])
-    launch_game = SnakeGame()
+
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

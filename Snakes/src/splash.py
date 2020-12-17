@@ -2,7 +2,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton, QDesktopWidget)
 
-import game
+import game2
 import about
 
 from helpers import load_res
@@ -14,7 +14,7 @@ class SplashScreen(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.game_window = game.SnakeGame()
+        self.game_window = game2.SnakeGame()
         self.combo_speeds = QComboBox()
         self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
@@ -25,7 +25,7 @@ class SplashScreen(QMainWindow):
 
         self.setWindowIcon(QIcon(load_res('icon.png')))
 
-        combo_speeds_list = [' Speed 1x ', ' Speed 2x ', ' Speed 3x ']
+        combo_speeds_list = [' Speed 1x ', ' Speed 2x ', ' Speed 3x ', ' Speed 4x ', ' Speed 5x ']
         self.combo_speeds.addItems(combo_speeds_list)
         self.combo_speeds.setFixedSize(210, 70)
         font_cbs = self.combo_speeds.font()
@@ -92,10 +92,17 @@ class SplashScreen(QMainWindow):
         self.show()
         winsound.PlaySound(load_res('snakehiss2.wav'), winsound.SND_ASYNC)
 
+    def get_speed(self):
+        cmb_text = str(self.combo_speeds.currentText())
+        cmb_speed = cmb_text.replace(' Speed ', ' ')
+        final_speed = cmb_speed.replace('x', ' ')
+        return int(final_speed)
+
     def on_btn_start_pressed(self):
         self.hide()
         winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
         self.game_window.show()
+        self.game_window.sboard.start(self.get_speed())
 
     def about_info(self):
         self.about_window.show()
