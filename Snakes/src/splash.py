@@ -1,13 +1,13 @@
+import winsound
+
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QPushButton, QDesktopWidget)
+from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget)
 
-import game
 import about
-
-from helpers import load_res
+import game
 from button import Button
-import winsound
+from helpers import load_res
 
 
 class SplashScreen(QMainWindow):
@@ -90,7 +90,7 @@ class SplashScreen(QMainWindow):
         self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
         self.setWindowTitle('Welcome to Snakes!')
         self.show()
-        winsound.PlaySound(load_res('snakehiss2.wav'), winsound.SND_ASYNC)
+        winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
 
     def on_btn_start_pressed(self):
         self.hide()
