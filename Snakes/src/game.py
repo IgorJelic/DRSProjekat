@@ -1,18 +1,20 @@
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QMainWindow, QStatusBar, QWidget, QFrame, QVBoxLayout, QLabel, QDesktopWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 
 from helpers import load_res
 
 
-class SnakeGame(QWidget):
+class SnakeGame(QMainWindow):
     def __init__(self):
         super(SnakeGame, self).__init__()
 
-        self.setGeometry(100, 100, 1024, 768)
+        self.statusbar = self.statusBar()
+
         self.setWindowTitle('Snakes')
+        self.setWindowIcon(QIcon(load_res('icon.png')))
+        self.resize(1280, 720)
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
-        self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
-        self.setWindowIcon(QIcon(load_res('icon.png')))
+        self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
 
 
