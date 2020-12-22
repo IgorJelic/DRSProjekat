@@ -2,7 +2,7 @@ import winsound
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget)
+from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget, QMessageBox)
 
 import about
 import game
@@ -67,6 +67,7 @@ class SplashScreen(QMainWindow):
         btn_about.setFont(font)
         btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
+
         self.setCentralWidget(self.central_widget)
         grid = QGridLayout()
         grid.setSpacing(150)
@@ -75,6 +76,7 @@ class SplashScreen(QMainWindow):
         grid.addWidget(self.combo_speeds, 1, 1)
         grid.addWidget(combo_players, 1, 2)
         grid.addWidget(btn_about, 1, 3)
+
 
         image = QImage(load_res('splash.png'))
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
@@ -99,3 +101,14 @@ class SplashScreen(QMainWindow):
 
     def about_info(self):
         self.about_window.show()
+
+    def closeEvent(self, event):
+
+        reply = QMessageBox.question(self, 'Message',
+                                     "Are you sure to quit?", QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
