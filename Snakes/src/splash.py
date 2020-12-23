@@ -14,7 +14,7 @@ class SplashScreen(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.game_window = game.SnakeGame()
+        self.game_window = None
         self.combo_speeds = QComboBox()
         self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
@@ -67,7 +67,6 @@ class SplashScreen(QMainWindow):
         btn_about.setFont(font)
         btn_about.setStyleSheet("color: orange; font-size:30px; background-color: transparent")
 
-
         self.setCentralWidget(self.central_widget)
         grid = QGridLayout()
         grid.setSpacing(150)
@@ -76,7 +75,6 @@ class SplashScreen(QMainWindow):
         grid.addWidget(self.combo_speeds, 1, 1)
         grid.addWidget(combo_players, 1, 2)
         grid.addWidget(btn_about, 1, 3)
-
 
         image = QImage(load_res('splash.png'))
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
@@ -97,14 +95,22 @@ class SplashScreen(QMainWindow):
     def on_btn_start_pressed(self):
         self.hide()
         winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
+        self.game_window = game.SnakeGame()
         self.game_window.show()
+        self.game_window.game_board.start()
 
     def about_info(self):
         self.about_window.show()
+    #
+    # def get_speed(self):
+    #     cmb_text = str(self.combo_speeds.currentText())
+    #     cmb_speed = cmb_text.replace(' Speed ', ' ')
+    #     final_speed = cmb_speed.replace('x', ' ')
+    #     return int(final_speed)
 
     def closeEvent(self, event):
 
-        reply = QMessageBox.question(self, 'Message',
+        reply = QMessageBox.question(self, 'Really?',
                                      "Are you sure to quit?", QMessageBox.Yes |
                                      QMessageBox.No, QMessageBox.No)
 
