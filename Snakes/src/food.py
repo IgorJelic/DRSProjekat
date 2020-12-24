@@ -5,8 +5,8 @@ import board
 
 class Food(object):
     def __init__(self):
-        self.x=random.randint(0, board.Board.WIDTHINBLOCKS - 1)
-        self.y=random.randint(0, board.Board.HEIGHTINBLOCKS - 1)
+        self.x=random.randint(3, board.Board.WIDTHINBLOCKS - 4)
+        self.y=random.randint(3, board.Board.HEIGHTINBLOCKS - 4)
         self.pos=[]
 
     def drop_food(self):
