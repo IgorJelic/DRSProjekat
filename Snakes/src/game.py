@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication
 
-from Snakes.src.board import Board
+from board import Board
 from helpers import load_res
 
 

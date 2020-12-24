@@ -1,9 +1,6 @@
-import random
-import winsound
 
-import pygame
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
-from PyQt5.QtGui import QPainter, QImage, QColor
+from PyQt5.QtGui import QPainter, QImage
 from PyQt5.QtWidgets import QFrame
 
 
@@ -24,7 +21,7 @@ class Board(QFrame):
         self.snakes = []
         self.board = []
 
-        self.food=food.Food()
+        self.food = food.Food()
         self.food.drop_food()
 
         self.setFocusPolicy(Qt.StrongFocus)
