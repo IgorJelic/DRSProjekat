@@ -142,8 +142,9 @@ class Username2Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text()):
             self.hide()
+            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(2) # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+            self.game_window = game.SnakeGame() # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -237,8 +238,9 @@ class Username3Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text()):
             self.hide()
+            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(1) # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+            self.game_window = game.SnakeGame() # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -348,8 +350,9 @@ class Username4Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text(), self.usernameEdit4.text()):
             self.hide()
+            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(1)   # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+            self.game_window = game.SnakeGame()   # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
