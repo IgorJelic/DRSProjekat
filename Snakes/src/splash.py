@@ -1,4 +1,5 @@
 import winsound
+import re
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
@@ -6,6 +7,7 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QC
 
 import about
 import game
+from username import Username1Window, Username2Window, Username3Window, Username4Window
 from button import Button
 from helpers import load_res
 
@@ -33,15 +35,15 @@ class SplashScreen(QMainWindow):
         font_cbs.setFamily('Spongeboy Me Bob')
         self.combo_speeds.setFont(font_cbs)
         combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ']
-        combo_players = QComboBox(self)
-        combo_players.addItems(combo_players_list)
-        combo_players.setFixedSize(210, 70)
-        font_cb = combo_players.font()
+        self.combo_players = QComboBox(self)
+        self.combo_players.addItems(combo_players_list)
+        self.combo_players.setFixedSize(210, 70)
+        font_cb = self.combo_players.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
 
-        combo_players.setFont(font_cb)
-        combo_players.setStyleSheet("color: orange; background-color: transparent;"
+        self.combo_players.setFont(font_cb)
+        self.combo_players.setStyleSheet("color: orange; background-color: transparent;"
                                     "selection-background-color: transparent;"
                                     "selection-color: orange")
         self.combo_speeds.setStyleSheet("color: orange; background-color: transparent;"
@@ -73,7 +75,7 @@ class SplashScreen(QMainWindow):
         grid.addWidget(btn_start, 1, 1, 2, 1)
         grid.addWidget(btn_close, 1, 3, 2, 1)
         grid.addWidget(self.combo_speeds, 1, 1)
-        grid.addWidget(combo_players, 1, 2)
+        grid.addWidget(self.combo_players, 1, 2)
         grid.addWidget(btn_about, 1, 3)
 
         image = QImage(load_res('splash.png'))
@@ -92,12 +94,33 @@ class SplashScreen(QMainWindow):
         self.show()
         winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
 
+    def get_players(self):
+        cmb_text = str(self.combo_players.currentText())
+        final = re.sub('\D', '', cmb_text)
+        print(final)
+        return int(final)
+
     def on_btn_start_pressed(self):
         self.hide()
-        winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-        self.game_window = game.SnakeGame()
-        self.game_window.show()
-        self.game_window.game_board.start()
+
+        num_of_players = self.get_players()
+
+        if num_of_players == 1:
+            self.username_window = Username1Window()
+            self.username_window.show()
+        elif num_of_players == 2:
+            self.username_window = Username2Window()
+            self.username_window.show()
+        elif num_of_players == 3:
+            self.username_window = Username3Window()
+            self.username_window.show()
+        elif num_of_players == 4:
+            self.username_window = Username4Window()
+            self.username_window.show()
+
+        # self.game_window = game.SnakeGame()
+        # self.game_window.show()
+        # self.game_window.game_board.start()
 
     def about_info(self):
         self.about_window.show()
