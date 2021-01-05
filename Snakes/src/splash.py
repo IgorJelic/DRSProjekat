@@ -1,15 +1,14 @@
-import winsound
 import re
+import winsound
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget, QMessageBox)
 
 import about
-import game
-from username import Username1Window, Username2Window, Username3Window, Username4Window
 from button import Button
 from helpers import load_res
+from username import Username1Window, Username2Window, Username3Window, Username4Window
 
 
 class SplashScreen(QMainWindow):

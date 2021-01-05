@@ -9,6 +9,13 @@ class Food(object):
         self.y=random.randint(3, board.Board.HEIGHTINBLOCKS - 4)
         self.pos=[]
 
+    def is_food_collision(self, snake):
+        for po in self.pos:
+            if po == snake:
+                self.pos.remove(po)
+                self.drop_food()
+                #self.grow_snake = True
+
     def drop_food(self):
         i = random.randint(0, 1)
         if i == 0:

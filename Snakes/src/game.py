@@ -24,6 +24,7 @@ class SnakeGame(QMainWindow):
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
+        self.game_board.start()
 
 
 def main():
