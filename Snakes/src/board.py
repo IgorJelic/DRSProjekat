@@ -23,7 +23,7 @@ class Board(QFrame):
         self.board = []
         self.steps = 1
         self.snake = [[40, 17], [15, 40]]
-        self.direction = 1
+        self.direction = None
         self.current_x_head = self.snake[1][1]
         self.current_y_head = self.snake[0][1]
         self.moves = 1
@@ -75,13 +75,13 @@ class Board(QFrame):
         painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
 
     def draw_head(self, painter, x, y):
-        image = QImage(load_res('snake.png'))
+        image = QImage(load_res('head2.png'))
 
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           image)
 
     def draw_body(self, painter, x, y):
-        body = QImage(load_res('head.png'))
+        body = QImage(load_res('body.png'))
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           body)
 
@@ -93,25 +93,25 @@ class Board(QFrame):
     def keyPressEvent(self, event):
         key = event.key()
         if key == Qt.Key_Left:
-            if self.direction != 2:
-                self.direction = 1
+            if self.direction != 'RIGHT':
+                self.direction = 'LEFT'
                 self.flag = True
         elif key == Qt.Key_Right:
-            if self.direction != 1:
-                self.direction = 2
+            if self.direction != 'LEFT':
+                self.direction = 'RIGHT'
                 self.flag = True
         elif key == Qt.Key_Down:
-            if self.direction != 4:
-                self.direction = 3
+            if self.direction != 'UP':
+                self.direction = 'DOWN'
                 self.flag = True
         elif key == Qt.Key_Up:
-            if self.direction != 3:
-                self.direction = 4
+            if self.direction != 'DOWN':
+                self.direction = 'UP'
                 self.flag = True
 
     def move_snake(self):
 
-        if self.direction == 1:
+        if self.direction == 'LEFT':
 
             self.current_x_head, self.current_y_head = self.current_x_head - 1, self.current_y_head
             self.flag = False
@@ -119,19 +119,19 @@ class Board(QFrame):
 
             if self.current_x_head < 0:
                 self.current_x_head = Board.WIDTHINBLOCKS - 1
-        if self.direction == 2:
+        if self.direction == 'RIGHT':
             self.current_x_head, self.current_y_head = self.current_x_head + 1, self.current_y_head
             self.flag = False
 
             if self.current_x_head == Board.WIDTHINBLOCKS:
                 self.current_x_head = 0
-        if self.direction == 3:
+        if self.direction == 'DOWN':
             self.current_x_head, self.current_y_head = self.current_x_head, self.current_y_head + 1
             self.flag = False
 
             if self.current_y_head == Board.HEIGHTINBLOCKS:
                 self.current_y_head = 0
-        if self.direction == 4:
+        if self.direction == 'UP':
             self.current_x_head, self.current_y_head = self.current_x_head, self.current_y_head - 1
             self.flag = False
 
@@ -147,7 +147,6 @@ class Board(QFrame):
             self.grow_snake = False
 
     def timerEvent(self, event):
-
         if event.timerId() == self.timer.timerId():
             if self.flag:
                 self.move_snake()
