@@ -142,9 +142,12 @@ class Username2Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text()):
             self.hide()
+            self.usernames = []
+            self.usernames.append(self.usernameEdit1.text())
+            self.usernames.append(self.usernameEdit2.text())
             #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame() # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+            self.game_window = game.SnakeGame(2, self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -238,9 +241,13 @@ class Username3Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text()):
             self.hide()
+            self.usernames = []
+            self.usernames.append(self.usernameEdit1.text())
+            self.usernames.append(self.usernameEdit2.text())
+            self.usernames.append(self.usernameEdit3.text())
             #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame() # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+            self.game_window = game.SnakeGame(3, self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -350,9 +357,14 @@ class Username4Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text(), self.usernameEdit4.text()):
             self.hide()
-            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
+            self.usernames = []
+            self.usernames.append(self.usernameEdit1.text())
+            self.usernames.append(self.usernameEdit2.text())
+            self.usernames.append(self.usernameEdit3.text())
+            self.usernames.append(self.usernameEdit4.text())
+            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC) hocu da kad se klikne START da se cuje taj zvuk zmije jednom
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame()   # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+            self.game_window = game.SnakeGame(4, self.usernames)   # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
