@@ -52,13 +52,21 @@ class Board(QFrame):
         rect = self.contentsRect()
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
 
-        for pos in self.snake:
-            self.draw_snake(painter, rect.left() + pos[0] * self.square_width(),
-                            boardtop + pos[1] * self.square_height())
+        self.draw_head(painter, rect.left() + self.current_x_head * self.square_width(),
+                       boardtop + self.current_y_head * self.square_height())
 
+        for i, pos in enumerate(self.snake):
+            if pos[0] == self.current_x_head and pos[1] == self.current_y_head:
+                pass
+            elif i == len(self.snake) - 1:
+                self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
+                               boardtop + pos[1] * self.square_height())
+            else:
+                self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
+                               boardtop + pos[1] * self.square_height())
         for pos in self.food.pos:
             self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
-                             boardtop + pos[1] * self.square_height())
+                            boardtop + pos[1] * self.square_height())
 
     def draw_food(self, painter, x, y):
 
@@ -66,11 +74,21 @@ class Board(QFrame):
 
         painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
 
-    def draw_snake(self, painter, x, y):
-
+    def draw_head(self, painter, x, y):
         image = QImage(load_res('snake.png'))
 
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 30), int(self.square_height() + 15)), image)
+        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
+                          image)
+
+    def draw_body(self, painter, x, y):
+        body = QImage(load_res('head.png'))
+        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
+                          body)
+
+    def draw_tail(self, painter, x, y):
+        tail = QImage(load_res('snake4.png'))
+        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
+                          tail)
 
     def keyPressEvent(self, event):
         key = event.key()
@@ -128,13 +146,18 @@ class Board(QFrame):
             self.msg2statusbar.emit(str(len(self.snake) - 2))
             self.grow_snake = False
 
-
-
     def timerEvent(self, event):
 
         if event.timerId() == self.timer.timerId():
             if self.flag:
                 self.move_snake()
-                self.food.is_food_collision(self.snake[0])
+                self.is_food_collision()
                 self.update()
+
+    def is_food_collision(self):
+        for pos in self.food.pos:
+            if pos == self.snake[0]:
+                self.food.pos.remove(pos)
+                self.food.drop_food()
+                self.grow_snake = True
 
