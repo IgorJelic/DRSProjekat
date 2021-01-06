@@ -34,50 +34,35 @@ class Board(QFrame):
             self.snake.current_y_head = self.snake.snake[0][1]
             self.snake.direction = 'RIGHT'
             self.snakes.append(self.snake)
-            self.move_snake(0)
-            self.move_snake(0)
             self.snake.grow_snake = True
-            self.move_snake(0)
-
             self.snake2.snake = [[0, 5], [0, 50]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
-            self.move_snake(1)
-            self.move_snake(1)
             self.snake2.grow_snake = True
-            self.move_snake(1)
+
         elif self.num_of_players == 3:
             self.snake.snake = [[40, 35], [15, 10]]
             self.snake.current_x_head = self.snake.snake[1][1]
             self.snake.current_y_head = self.snake.snake[0][1]
             self.snake.direction = 'RIGHT'
             self.snakes.append(self.snake)
-            self.move_snake(0)
-            self.move_snake(0)
             self.snake.grow_snake = True
-            self.move_snake(0)
 
             self.snake2.snake = [[0, 5], [0, 50]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
-            self.move_snake(1)
-            self.move_snake(1)
             self.snake2.grow_snake = True
-            self.move_snake(1)
 
             self.snake3.snake = [[0, 5], [0, 10]]
             self.snake3.current_x_head = self.snake3.snake[1][1]
             self.snake3.current_y_head = self.snake3.snake[0][1]
             self.snake3.direction = 'DOWN'
             self.snakes.append(self.snake3)
-            self.move_snake(2)
-            self.move_snake(2)
             self.snake3.grow_snake = True
-            self.move_snake(2)
 
         elif self.num_of_players == 4:
             self.snake.snake = [[40, 35], [15, 10]]
@@ -85,40 +70,31 @@ class Board(QFrame):
             self.snake.current_y_head = self.snake.snake[0][1]
             self.snake.direction = 'RIGHT'
             self.snakes.append(self.snake)
-            self.move_snake(0)
-            self.move_snake(0)
             self.snake.grow_snake = True
-            self.move_snake(0)
 
             self.snake2.snake = [[0, 5], [0, 50]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
-            self.move_snake(1)
-            self.move_snake(1)
             self.snake2.grow_snake = True
-            self.move_snake(1)
 
             self.snake3.snake = [[0, 5], [0, 10]]
             self.snake3.current_x_head = self.snake3.snake[1][1]
             self.snake3.current_y_head = self.snake3.snake[0][1]
             self.snake3.direction = 'DOWN'
             self.snakes.append(self.snake3)
-            self.move_snake(2)
-            self.move_snake(2)
             self.snake3.grow_snake = True
-            self.move_snake(2)
 
             self.snake4.snake = [[0, 35], [0, 50]]
             self.snake4.current_x_head = self.snake4.snake[1][1]
             self.snake4.current_y_head = self.snake4.snake[0][1]
             self.snake4.direction = 'UP'
             self.snakes.append(self.snake4)
-            self.move_snake(3)
-            self.move_snake(3)
             self.snake4.grow_snake = True
-            self.move_snake(3)
+        for mvmt in range(3):
+            for i in range(self.num_of_players):
+                self.move_snake(i)
         self.food = food.Food()
         self.food.drop_food()
         self.flag = False
