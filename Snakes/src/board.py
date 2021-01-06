@@ -247,19 +247,8 @@ class Board(QFrame):
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
             if self.flag:
-                if self.num_of_players == 2:
-
-                    self.move_snake(0)
-                    self.move_snake(1)
-                elif self.num_of_players == 3:
-                    self.move_snake(0)
-                    self.move_snake(1)
-                    self.move_snake(2)
-                else:
-                    self.move_snake(0)
-                    self.move_snake(1)
-                    self.move_snake(2)
-                    self.move_snake(3)
+                for i in range(self.num_of_players):
+                    self.move_snake(i)
 
                 self.is_food_collision()
                 self.update()
