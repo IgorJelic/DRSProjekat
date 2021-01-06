@@ -1,7 +1,9 @@
 
 class Snake(object):
-    def __init__(self, color, x, y):
-        self.color = color
-        self.x = x
-        self.y = y
-        self.length = 3
+    def __init__(self):
+        self.snake = []
+        self.current_x_head = None
+        self.current_y_head = None
+        self.direction = None
+        self.grow_snake = False
+
