@@ -26,10 +26,7 @@ class Board(QFrame):
         self.snake4 = Snake()
         self.board = []
         self.steps = 1
-        # self.snake = [[40, 17], [15, 40]]
-        # self.snakes[0].direction = None
-        # self.snakes[0].current_x_head = self.snake[1][1]
-        # self.snakes[0].current_y_head = self.snake[0][1]
+
         self.moves = 1
         if self.num_of_players == 2:
             self.snake.snake = [[40, 35], [15, 10]]
@@ -144,192 +141,45 @@ class Board(QFrame):
         painter = QPainter(self)
         rect = self.contentsRect()
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
-        if self.num_of_players == 2:
-            self.draw_head(painter, rect.left() + self.snakes[0].current_x_head * self.square_width(),
-                           boardtop + self.snakes[0].current_y_head * self.square_height())
 
-            self.draw_head2(painter, rect.left() + self.snakes[1].current_x_head * self.square_width(),
-                            boardtop + self.snakes[1].current_y_head * self.square_height())
-            for i, pos in enumerate(self.snakes[0].snake):
-                if pos[0] == self.snakes[0].current_x_head and pos[1] == self.snakes[0].current_y_head:
+        for i in range(self.num_of_players):
+
+            self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
+                           boardtop + self.snakes[i].current_y_head * self.square_height(), 'head' + str(i+1) + '.png')
+
+            for j, pos in enumerate(self.snakes[i].snake):
+                if pos[0] == self.snakes[i].current_x_head and pos[1] == self.snakes[i].current_y_head:
                     pass
-                elif i == len(self.snakes[0].snake) - 1:
+                elif j == len(self.snakes[i].snake) - 1:
                     self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height())
+                                   boardtop + pos[1] * self.square_height(), 'tail' + str(i+1) + '.png')
                 else:
                     self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height())
+                                   boardtop + pos[1] * self.square_height(), 'body' + str(i+1) + '.png')
 
-            for i, pos in enumerate(self.snakes[1].snake):
-                if pos[0] == self.snakes[1].current_x_head and pos[1] == self.snakes[1].current_y_head:
-                    pass
-                elif i == len(self.snakes[1].snake) - 1:
-                    self.draw_tail2(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body2(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-            for pos in self.food.pos:
-                self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
-                               boardtop + pos[1] * self.square_height())
-        elif self.num_of_players == 3:
-            self.draw_head(painter, rect.left() + self.snakes[0].current_x_head * self.square_width(),
-                           boardtop + self.snakes[0].current_y_head * self.square_height())
+        for pos in self.food.pos:
+            self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
+                           boardtop + pos[1] * self.square_height(), 'apple.png')
 
-            self.draw_head2(painter, rect.left() + self.snakes[1].current_x_head * self.square_width(),
-                            boardtop + self.snakes[1].current_y_head * self.square_height())
-            self.draw_head3(painter, rect.left() + self.snakes[2].current_x_head * self.square_width(),
-                            boardtop + self.snakes[2].current_y_head * self.square_height())
-            for i, pos in enumerate(self.snakes[0].snake):
-                if pos[0] == self.snakes[0].current_x_head and pos[1] == self.snakes[0].current_y_head:
-                    pass
-                elif i == len(self.snakes[0].snake) - 1:
-                    self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height())
+    def draw_food(self, painter, x, y, file):
 
-            for i, pos in enumerate(self.snakes[1].snake):
-                if pos[0] == self.snakes[1].current_x_head and pos[1] == self.snakes[1].current_y_head:
-                    pass
-                elif i == len(self.snakes[1].snake) - 1:
-                    self.draw_tail2(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body2(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-            for i, pos in enumerate(self.snakes[2].snake):
-                if pos[0] == self.snakes[2].current_x_head and pos[1] == self.snakes[2].current_y_head:
-                    pass
-                elif i == len(self.snakes[2].snake) - 1:
-                    self.draw_tail3(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body3(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-            for pos in self.food.pos:
-                self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
-                               boardtop + pos[1] * self.square_height())
-        elif self.num_of_players == 4:
-            self.draw_head(painter, rect.left() + self.snakes[0].current_x_head * self.square_width(),
-                           boardtop + self.snakes[0].current_y_head * self.square_height())
-
-            self.draw_head2(painter, rect.left() + self.snakes[1].current_x_head * self.square_width(),
-                            boardtop + self.snakes[1].current_y_head * self.square_height())
-            self.draw_head3(painter, rect.left() + self.snakes[2].current_x_head * self.square_width(),
-                            boardtop + self.snakes[2].current_y_head * self.square_height())
-            self.draw_head4(painter, rect.left() + self.snakes[3].current_x_head * self.square_width(),
-                            boardtop + self.snakes[3].current_y_head * self.square_height())
-            for i, pos in enumerate(self.snakes[0].snake):
-                if pos[0] == self.snakes[0].current_x_head and pos[1] == self.snakes[0].current_y_head:
-                    pass
-                elif i == len(self.snakes[0].snake) - 1:
-                    self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height())
-
-            for i, pos in enumerate(self.snakes[1].snake):
-                if pos[0] == self.snakes[1].current_x_head and pos[1] == self.snakes[1].current_y_head:
-                    pass
-                elif i == len(self.snakes[1].snake) - 1:
-                    self.draw_tail2(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body2(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-            for i, pos in enumerate(self.snakes[2].snake):
-                if pos[0] == self.snakes[2].current_x_head and pos[1] == self.snakes[2].current_y_head:
-                    pass
-                elif i == len(self.snakes[2].snake) - 1:
-                    self.draw_tail3(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body3(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-
-            for i, pos in enumerate(self.snakes[3].snake):
-                if pos[0] == self.snakes[3].current_x_head and pos[1] == self.snakes[3].current_y_head:
-                    pass
-                elif i == len(self.snakes[3].snake) - 1:
-                    self.draw_tail4(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-                else:
-                    self.draw_body4(painter, rect.left() + pos[0] * self.square_width(),
-                                    boardtop + pos[1] * self.square_height())
-            for pos in self.food.pos:
-                self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
-                               boardtop + pos[1] * self.square_height())
-
-    def draw_food(self, painter, x, y):
-
-        image = QImage(load_res('apple.png'))
+        image = QImage(load_res(file))
 
         painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
 
-    def draw_head(self, painter, x, y):
-        image = QImage(load_res('head.png'))
+    def draw_head(self, painter, x, y, file):
+        image = QImage(load_res(file))
 
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           image)
 
-    def draw_body(self, painter, x, y):
-        body = QImage(load_res('body.png'))
+    def draw_body(self, painter, x, y, file):
+        body = QImage(load_res(file))
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           body)
 
-    def draw_tail(self, painter, x, y):
-        tail = QImage(load_res('tail.png'))
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          tail)
-
-    def draw_head2(self, painter, x, y):
-        image = QImage(load_res('head2.png'))
-
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          image)
-
-    def draw_body2(self, painter, x, y):
-        body = QImage(load_res('body2.png'))
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          body)
-
-    def draw_tail2(self, painter, x, y):
-        tail = QImage(load_res('tail2.png'))
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          tail)
-
-    def draw_head3(self, painter, x, y):
-        image = QImage(load_res('head3.png'))
-
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          image)
-
-    def draw_body3(self, painter, x, y):
-        body = QImage(load_res('body3.png'))
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          body)
-
-    def draw_tail3(self, painter, x, y):
-        tail = QImage(load_res('tail3.png'))
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          tail)
-
-    def draw_head4(self, painter, x, y):
-        image = QImage(load_res('head4.png'))
-
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          image)
-
-    def draw_body4(self, painter, x, y):
-        body = QImage(load_res('body4.png'))
-        painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
-                          body)
-
-    def draw_tail4(self, painter, x, y):
-        tail = QImage(load_res('tail4.png'))
+    def draw_tail(self, painter, x, y, file):
+        tail = QImage(load_res(file))
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           tail)
 
@@ -357,26 +207,30 @@ class Board(QFrame):
 
         if self.snakes[i].direction == 'LEFT':
 
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head - 1, self.snakes[i].current_y_head
+            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head - 1,\
+                                                                           self.snakes[i].current_y_head
             self.flag = False
             self.moves = self.moves - 1
 
             if self.snakes[i].current_x_head < 0:
                 self.snakes[i].current_x_head = Board.WIDTHINBLOCKS - 1
         if self.snakes[i].direction == 'RIGHT':
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head + 1, self.snakes[i].current_y_head
+            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head + 1,\
+                                                                           self.snakes[i].current_y_head
             self.flag = False
 
             if self.snakes[i].current_x_head == Board.WIDTHINBLOCKS:
                 self.snakes[i].current_x_head = 0
         if self.snakes[i].direction == 'DOWN':
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head, self.snakes[i].current_y_head + 1
+            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head,\
+                                                                           self.snakes[i].current_y_head + 1
             self.flag = False
 
             if self.snakes[i].current_y_head == Board.HEIGHTINBLOCKS:
                 self.snakes[i].current_y_head = 0
         if self.snakes[i].direction == 'UP':
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head, self.snakes[i].current_y_head - 1
+            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head,\
+                                                                           self.snakes[i].current_y_head - 1
             self.flag = False
 
             if self.snakes[i].current_y_head < 0:
@@ -418,4 +272,3 @@ class Board(QFrame):
                     self.food.drop_food()
 
                     self.snakes[i].grow_snake = True
-
