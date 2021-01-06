@@ -20,6 +20,7 @@ class Board(QFrame):
         self.timer = QBasicTimer()
         self.num_of_players = num
         #self.snakes = []
+
         self.board = []
         self.steps = 1
         self.snake = [[40, 17], [15, 40]]
@@ -75,7 +76,7 @@ class Board(QFrame):
         painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
 
     def draw_head(self, painter, x, y):
-        image = QImage(load_res('head2.png'))
+        image = QImage(load_res('head.png'))
 
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           image)
@@ -86,7 +87,7 @@ class Board(QFrame):
                           body)
 
     def draw_tail(self, painter, x, y):
-        tail = QImage(load_res('snake4.png'))
+        tail = QImage(load_res('tail.png'))
         painter.drawImage(QRect(int(x + 1), int(y + 1), int(self.square_width() + 5), int(self.square_height() + 5)),
                           tail)
 
