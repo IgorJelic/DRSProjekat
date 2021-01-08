@@ -147,7 +147,7 @@ class Username2Window(QWidget):
             self.usernames.append(self.usernameEdit2.text())
             #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(2, self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
+            self.game_window = game.SnakeGame(self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)

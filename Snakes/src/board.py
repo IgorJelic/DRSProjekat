@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QFrame
 from snake import Snake
 from helpers import load_style_res, load_res
 import threading
-import time
+from time import sleep
 import food
 
 
@@ -16,10 +16,10 @@ class Board(QFrame):
     WIDTHINBLOCKS = 60
     HEIGHTINBLOCKS = 40
 
-    def __init__(self, parent, num: int):
+    def __init__(self, parent, usernames: list):
         super(Board, self).__init__(parent)
         self.timer = QBasicTimer()
-        self.num_of_players = num
+        self.num_of_players = len(usernames)
         self.snakes = []
         self.snake = Snake()
         self.snake2 = Snake()
@@ -31,8 +31,6 @@ class Board(QFrame):
         self.moves = 1
         self.active_snake = 0
         self.key_presses = 0
-        # t = threading.Timer(3, self.change_active_snake)
-        # t.start()
 
         if self.num_of_players == 2:
             self.snake.snake = [[40, 35], [15, 10]]
@@ -197,6 +195,7 @@ class Board(QFrame):
     def move_snake(self, i: int):
         if self.key_presses >= len(self.snakes[i].snake):
             self.change_active_snake()
+
         if self.snakes[i].direction == 'LEFT':
 
             self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head - 1,\
