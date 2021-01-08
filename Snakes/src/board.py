@@ -1,3 +1,4 @@
+import time
 
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
@@ -8,6 +9,7 @@ from helpers import load_style_res, load_res
 import threading
 from time import sleep
 import food
+from pptTimer import PerpetualTimer
 
 
 class Board(QFrame):
@@ -31,7 +33,8 @@ class Board(QFrame):
         self.moves = 1
         self.active_snake = 0
         self.key_presses = 0
-
+        t = PerpetualTimer(15, self.change_active_snake)
+        t.start()
         if self.num_of_players == 2:
             self.snake1.snake = [[40, 35], [15, 10]]
             self.snake1.current_x_head = self.snake1.snake[1][1]
@@ -241,6 +244,7 @@ class Board(QFrame):
                 #     self.move_snake(i)
                 self.move_snake(self.active_snake)
                 self.is_food_collision()
+
                 self.update()
 
     def is_food_collision(self):
@@ -253,6 +257,7 @@ class Board(QFrame):
                     self.snakes[i].grow_snake = True
 
     def change_active_snake(self):
+
         if self.active_snake == self.num_of_players - 1:
             self.active_snake = 0
             self.key_presses = 0
@@ -260,12 +265,6 @@ class Board(QFrame):
         else:
             self.active_snake = self.active_snake + 1
             self.key_presses = 0
-
-    # def period(self):
-    #     starttime = time.time()
-    #     while True:
-    #         self.change_active_snake()
-    #         time.sleep(3.0 - ((time.time() - starttime) % 3.0))
 
 
 
