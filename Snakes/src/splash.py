@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QC
 import about
 from button import Button
 from helpers import load_res
-from username import Username1Window, Username2Window, Username3Window, Username4Window
+from username import Username2Window, Username3Window, Username4Window
 
 
 class SplashScreen(QMainWindow):

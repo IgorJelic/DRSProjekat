@@ -21,7 +21,7 @@ class Board(QFrame):
         self.timer = QBasicTimer()
         self.num_of_players = len(usernames)
         self.snakes = []
-        self.snake = Snake()
+        self.snake1 = Snake()
         self.snake2 = Snake()
         self.snake3 = Snake()
         self.snake4 = Snake()
@@ -33,12 +33,12 @@ class Board(QFrame):
         self.key_presses = 0
 
         if self.num_of_players == 2:
-            self.snake.snake = [[40, 35], [15, 10]]
-            self.snake.current_x_head = self.snake.snake[1][1]
-            self.snake.current_y_head = self.snake.snake[0][1]
-            self.snake.direction = 'RIGHT'
-            self.snakes.append(self.snake)
-            self.snake.grow_snake = True
+            self.snake1.snake = [[40, 35], [15, 10]]
+            self.snake1.current_x_head = self.snake1.snake[1][1]
+            self.snake1.current_y_head = self.snake1.snake[0][1]
+            self.snake1.direction = 'RIGHT'
+            self.snakes.append(self.snake1)
+            self.snake1.grow_snake = True
             self.snake2.snake = [[0, 5], [0, 50]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
@@ -47,12 +47,12 @@ class Board(QFrame):
             self.snake2.grow_snake = True
 
         elif self.num_of_players == 3:
-            self.snake.snake = [[40, 35], [15, 10]]
-            self.snake.current_x_head = self.snake.snake[1][1]
-            self.snake.current_y_head = self.snake.snake[0][1]
-            self.snake.direction = 'RIGHT'
-            self.snakes.append(self.snake)
-            self.snake.grow_snake = True
+            self.snake1.snake = [[40, 35], [15, 10]]
+            self.snake1.current_x_head = self.snake1.snake[1][1]
+            self.snake1.current_y_head = self.snake1.snake[0][1]
+            self.snake1.direction = 'RIGHT'
+            self.snakes.append(self.snake1)
+            self.snake1.grow_snake = True
 
             self.snake2.snake = [[0, 5], [0, 50]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
@@ -69,12 +69,12 @@ class Board(QFrame):
             self.snake3.grow_snake = True
 
         elif self.num_of_players == 4:
-            self.snake.snake = [[40, 35], [15, 10]]
-            self.snake.current_x_head = self.snake.snake[1][1]
-            self.snake.current_y_head = self.snake.snake[0][1]
-            self.snake.direction = 'RIGHT'
-            self.snakes.append(self.snake)
-            self.snake.grow_snake = True
+            self.snake1.snake = [[40, 35], [15, 10]]
+            self.snake1.current_x_head = self.snake1.snake[1][1]
+            self.snake1.current_y_head = self.snake1.snake[0][1]
+            self.snake1.direction = 'RIGHT'
+            self.snakes.append(self.snake1)
+            self.snake1.grow_snake = True
 
             self.snake2.snake = [[0, 5], [0, 50]]
             self.snake2.current_x_head = self.snake2.snake[1][1]

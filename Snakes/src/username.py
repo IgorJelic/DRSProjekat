@@ -8,72 +8,76 @@ from PyQt5.QtWidgets import QWidget, QMessageBox, QLabel, QDesktopWidget, QLineE
 from helpers import load_res
 
 
-class Username1Window(QWidget):
-    def __init__(self):
-        super(Username1Window, self).__init__()
-
-        self.setGeometry(100, 100, 960, 720)
-        self.setWindowTitle('1Player')
-        screen = QDesktopWidget().screenGeometry()
-        size = self.geometry()
-        self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
-        self.setWindowIcon(QIcon(load_res('icon.png')))
-
-        image = QImage(load_res('wp2409705.jpg'))
-        scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
-        palette = QPalette()
-        palette.setBrush(QPalette.Window, QBrush(scale_image))
-
-        font = "Spongeboy Me Bob"
-
-        self.usernameLabel = QLabel('PLAYER 1: ', self)
-        font_label = self.usernameLabel.font()
-        font_label.setPointSize(20)
-        font_label.setFamily(font)
-        self.usernameLabel.setFont(font_label)
-        self.usernameLabel.setFixedSize(250, 150)
-        self.usernameLabel.move(80, 150)
-
-        self.usernameEdit = QLineEdit(self)
-        font_edit = self.usernameEdit.font()
-        font_edit.setPointSize(22)
-        font_edit.setFamily(font)
-        self.usernameEdit.setFont(font_edit)
-        self.usernameEdit.setFixedSize(400, 70)
-        self.usernameEdit.move(80, 250)
-
-        self.start_button = QPushButton(self)
-        self.start_button.setText("Start")
-        self.start_button.setFont(QFont(font))
-        self.start_button.setStyleSheet("color: black; font-size:46px; background-color: green")
-        self.start_button.setToolTip("Start the game")
-        self.start_button.clicked.connect(self.start_button_pressed)
-        self.start_button.resize(self.start_button.sizeHint())
-        self.start_button.setMinimumSize(150, 100)
-        self.start_button.move(150, 600)
-
-        self.setPalette(palette)
-
-    def validate(self, usernameEdit=None):
-        if usernameEdit != "":
-            return True
-        else:
-            return False
-
-    def start_button_pressed(self):
-        if self.validate(self.usernameEdit.text()):
-            self.hide()
-            winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(1) # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
-            self.game_window.show()
-        else:
-            QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
-            pass
+# class Username1Window(QWidget):
+#     def __init__(self):
+#         super(Username1Window, self).__init__()
+#         self.usernames = []
+#         self.game_window = None
+#
+#         self.setGeometry(100, 100, 960, 720)
+#         self.setWindowTitle('1Player')
+#         screen = QDesktopWidget().screenGeometry()
+#         size = self.geometry()
+#         self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
+#         self.setWindowIcon(QIcon(load_res('icon.png')))
+#
+#         image = QImage(load_res('wp2409705.jpg'))
+#         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
+#         palette = QPalette()
+#         palette.setBrush(QPalette.Window, QBrush(scale_image))
+#
+#         font = "Spongeboy Me Bob"
+#
+#         self.usernameLabel = QLabel('PLAYER 1: ', self)
+#         font_label = self.usernameLabel.font()
+#         font_label.setPointSize(20)
+#         font_label.setFamily(font)
+#         self.usernameLabel.setFont(font_label)
+#         self.usernameLabel.setFixedSize(250, 150)
+#         self.usernameLabel.move(80, 150)
+#
+#         self.usernameEdit = QLineEdit(self)
+#         font_edit = self.usernameEdit.font()
+#         font_edit.setPointSize(22)
+#         font_edit.setFamily(font)
+#         self.usernameEdit.setFont(font_edit)
+#         self.usernameEdit.setFixedSize(400, 70)
+#         self.usernameEdit.move(80, 250)
+#
+#         self.start_button = QPushButton(self)
+#         self.start_button.setText("Start")
+#         self.start_button.setFont(QFont(font))
+#         self.start_button.setStyleSheet("color: black; font-size:46px; background-color: green")
+#         self.start_button.setToolTip("Start the game")
+#         self.start_button.clicked.connect(self.start_button_pressed)
+#         self.start_button.resize(self.start_button.sizeHint())
+#         self.start_button.setMinimumSize(150, 100)
+#         self.start_button.move(150, 600)
+#
+#         self.setPalette(palette)
+#
+#     def validate(self, usernameEdit=None):
+#         if usernameEdit != "":
+#             return True
+#         else:
+#             return False
+#
+#     def start_button_pressed(self):
+#         if self.validate(self.usernameEdit.text()):
+#             self.hide()
+#             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
+#             self.game_window = game.SnakeGame(self.usernames) # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
+#             self.game_window.show()
+#         else:
+#             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
+#             pass
 
 
 class Username2Window(QWidget):
     def __init__(self):
         super(Username2Window, self).__init__()
+        self.usernames = []
+        self.game_window = None
 
         self.setGeometry(100, 100, 960, 720)
         self.setWindowTitle('2Players')
@@ -142,10 +146,9 @@ class Username2Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text()):
             self.hide()
-            self.usernames = []
             self.usernames.append(self.usernameEdit1.text())
             self.usernames.append(self.usernameEdit2.text())
-            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
+
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
             self.game_window = game.SnakeGame(self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
@@ -157,7 +160,8 @@ class Username2Window(QWidget):
 class Username3Window(QWidget):
     def __init__(self):
         super(Username3Window, self).__init__()
-
+        self.game_window = None
+        self.usernames = []
         self.setGeometry(100, 100, 960, 720)
         self.setWindowTitle('3Players')
         screen = QDesktopWidget().screenGeometry()
@@ -241,13 +245,13 @@ class Username3Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text()):
             self.hide()
-            self.usernames = []
+
             self.usernames.append(self.usernameEdit1.text())
             self.usernames.append(self.usernameEdit2.text())
             self.usernames.append(self.usernameEdit3.text())
             #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(3, self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
+            self.game_window = game.SnakeGame(self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -257,6 +261,8 @@ class Username3Window(QWidget):
 class Username4Window(QWidget):
     def __init__(self):
         super(Username4Window, self).__init__()
+        self.game_window = None
+        self.usernames = []
 
         self.setGeometry(100, 100, 960, 720)
         self.setWindowTitle('4Players')
@@ -357,14 +363,14 @@ class Username4Window(QWidget):
     def start_button_pressed(self):
         if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text(), self.usernameEdit4.text()):
             self.hide()
-            self.usernames = []
+
             self.usernames.append(self.usernameEdit1.text())
             self.usernames.append(self.usernameEdit2.text())
             self.usernames.append(self.usernameEdit3.text())
             self.usernames.append(self.usernameEdit4.text())
             #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC) hocu da kad se klikne START da se cuje taj zvuk zmije jednom
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(4, self.usernames)   # PROSLEDJUJEM broj igraca i LISTU usernamova
+            self.game_window = game.SnakeGame(self.usernames)   # PROSLEDJUJEM broj igraca i LISTU usernamova
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
