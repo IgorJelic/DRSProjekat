@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPainter, QImage
 from PyQt5.QtWidgets import QFrame, QMessageBox
 
 from snake import Snake
+from player import Player
 from helpers import load_style_res, load_res
 import threading
 from time import sleep
@@ -48,12 +49,19 @@ class Board(QFrame):
             self.snake1.direction = 'RIGHT'
             self.snakes.append(self.snake1)
             self.snake1.grow_snake = True
+            self.player1 = Player(usernames[0])
+            self.player1.snakes.append(self.snake1)
+            self.player1.score = 0
+
             self.snake2.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
             self.snake2.grow_snake = True
+            self.player2 = Player(usernames[1])
+            self.player2.snakes.append(self.snake2)
+            self.player2.score = 0
 
         elif self.num_of_players == 3:
             self.snake1.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
@@ -62,6 +70,9 @@ class Board(QFrame):
             self.snake1.direction = 'RIGHT'
             self.snakes.append(self.snake1)
             self.snake1.grow_snake = True
+            self.player1 = Player(usernames[0])
+            self.player1.snakes.append(self.snake1)
+            self.player1.score = 0
 
             self.snake2.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
@@ -69,6 +80,9 @@ class Board(QFrame):
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
             self.snake2.grow_snake = True
+            self.player2 = Player(usernames[1])
+            self.player2.snakes.append(self.snake2)
+            self.player2.score = 0
 
             self.snake3.snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
             self.snake3.current_x_head = self.snake3.snake[1][1]
@@ -76,6 +90,9 @@ class Board(QFrame):
             self.snake3.direction = 'DOWN'
             self.snakes.append(self.snake3)
             self.snake3.grow_snake = True
+            self.player3 = Player(usernames[2])
+            self.player3.snakes.append(self.snake3)
+            self.player3.score = 0
 
         elif self.num_of_players == 4:
             self.snake1.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
@@ -84,6 +101,9 @@ class Board(QFrame):
             self.snake1.direction = 'RIGHT'
             self.snakes.append(self.snake1)
             self.snake1.grow_snake = True
+            self.player1 = Player(usernames[0])
+            self.player1.snakes.append(self.snake1)
+            self.player1.score = 0
 
             self.snake2.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
@@ -91,6 +111,9 @@ class Board(QFrame):
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
             self.snake2.grow_snake = True
+            self.player2 = Player(usernames[1])
+            self.player2.snakes.append(self.snake2)
+            self.player2.score = 0
 
             self.snake3.snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
             self.snake3.current_x_head = self.snake3.snake[1][1]
@@ -98,6 +121,9 @@ class Board(QFrame):
             self.snake3.direction = 'DOWN'
             self.snakes.append(self.snake3)
             self.snake3.grow_snake = True
+            self.player3 = Player(usernames[2])
+            self.player3.snakes.append(self.snake3)
+            self.player3.score = 0
 
             self.snake4.snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
             self.snake4.current_x_head = self.snake4.snake[1][1]
@@ -105,6 +131,10 @@ class Board(QFrame):
             self.snake4.direction = 'UP'
             self.snakes.append(self.snake4)
             self.snake4.grow_snake = True
+            self.player4 = Player(usernames[3])
+            self.player4.snakes.append(self.snake4)
+            self.player4.score = 0
+
         for mvmt in range(5):
             for i in range(self.num_of_players):
                 self.move_snake_initial(i)
