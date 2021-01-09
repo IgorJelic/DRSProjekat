@@ -104,10 +104,7 @@ class SplashScreen(QMainWindow):
 
         num_of_players = self.get_players()
 
-        if num_of_players == 1:
-            self.username_window = Username1Window()
-            self.username_window.show()
-        elif num_of_players == 2:
+        if num_of_players == 2:
             self.username_window = Username2Window()
             self.username_window.show()
         elif num_of_players == 3:

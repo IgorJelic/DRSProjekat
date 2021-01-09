@@ -18,3 +18,4 @@ class PerpetualTimer:
 
     def cancel(self):
         self.thread.cancel()
+
