@@ -35,17 +35,20 @@ class Board(QFrame):
         self.active_snake = 0
         self.key_presses = 0
         self.directions = []
-        t = PerpetualTimer(5, self.change_active_snake_timer)
+        t = PerpetualTimer(15, self.change_active_snake_timer)
         t.start()
+        r = PerpetualTimer(1, self.countdown)
+        r.start()
+        self.i = 16
 
         if self.num_of_players == 2:
-            self.snake1.snake = [[40, 35], [0, 17], [0, 40]]
+            self.snake1.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
             self.snake1.current_x_head = self.snake1.snake[1][1]
             self.snake1.current_y_head = self.snake1.snake[0][1]
             self.snake1.direction = 'RIGHT'
             self.snakes.append(self.snake1)
             self.snake1.grow_snake = True
-            self.snake2.snake = [[0, 5], [0, 50]]
+            self.snake2.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
@@ -110,7 +113,7 @@ class Board(QFrame):
         self.food.drop_food()
         self.food.drop_food()
         self.food.drop_food()
-
+        self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
         # self.setStyleSheet('border-image: url(' + load_style_res('grass.png') + ') 0 0 0 0 stretch center')
         if self.num_of_players == 2:
@@ -283,8 +286,7 @@ class Board(QFrame):
                     self.snakes[i].grow_snake = True
 
     def change_active_snake_timer(self):
-        t = time.localtime()
-        current_time = time.strftime("%H:%M:%S", t)
+
 
         self.move_multiple()
         self.directions.clear()
@@ -294,7 +296,7 @@ class Board(QFrame):
         if self.active_snake == self.num_of_players:
             self.active_snake = 0
 
-        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds! ' + current_time)
+        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds! ')
         if self.active_snake == 0:
             self.setStyleSheet('border-image: url(' + load_style_res('grassp1.png') + ') 0 0 0 0 stretch center')
         elif self.active_snake == 1:
@@ -342,3 +344,12 @@ class Board(QFrame):
         else:
             self.msg2statusbar.emit(str(len(self.snakes[i].snake) - 2))
             self.snakes[i].grow_snake = False
+
+    def countdown(self):
+        self.i -= 1
+        print(str(self.i))
+        if self.i == 0:
+            self.i = 15
+
+        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. ' + str(self.i)
+                                + ' seconds left')
