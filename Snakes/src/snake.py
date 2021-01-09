@@ -6,4 +6,4 @@ class Snake(object):
         self.current_y_head = None
         self.direction = None
         self.grow_snake = False
-
+        self.is_dead = False

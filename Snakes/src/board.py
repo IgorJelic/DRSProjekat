@@ -6,10 +6,11 @@ from PyQt5.QtWidgets import QFrame, QMessageBox
 
 from snake import Snake
 from player import Player
+from food import Food
 from helpers import load_style_res, load_res
 import threading
 from time import sleep
-import food
+
 from pptTimer import PerpetualTimer
 
 
@@ -36,11 +37,11 @@ class Board(QFrame):
         self.active_snake = 0
         self.key_presses = 0
         self.directions = []
-        t = PerpetualTimer(15, self.change_active_snake_timer)
+        t = PerpetualTimer(5, self.change_active_snake_timer)
         t.start()
         r = PerpetualTimer(1, self.countdown)
         r.start()
-        self.i = 16
+        self.i = 6
 
         if self.num_of_players == 2:
             self.snake1.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
@@ -138,7 +139,7 @@ class Board(QFrame):
         for mvmt in range(5):
             for i in range(self.num_of_players):
                 self.move_snake_initial(i)
-        self.food = food.Food()
+        self.food = Food()
         self.food.drop_food()
         self.food.drop_food()
         self.food.drop_food()
@@ -172,20 +173,22 @@ class Board(QFrame):
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
 
         for i in range(self.num_of_players):
+            if self.snakes[i].is_dead:
+                pass
+            else:
+                self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
+                               boardtop + self.snakes[i].current_y_head * self.square_height(),
+                               'head' + str(i + 1) + '.png')
 
-            self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
-                           boardtop + self.snakes[i].current_y_head * self.square_height(),
-                           'head' + str(i + 1) + '.png')
-
-            for j, pos in enumerate(self.snakes[i].snake):
-                if pos[0] == self.snakes[i].current_x_head and pos[1] == self.snakes[i].current_y_head:
-                    pass
-                elif j == len(self.snakes[i].snake) - 1:
-                    self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height(), 'tail' + str(i + 1) + '.png')
-                else:
-                    self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
-                                   boardtop + pos[1] * self.square_height(), 'body' + str(i + 1) + '.png')
+                for j, pos in enumerate(self.snakes[i].snake):
+                    if pos[0] == self.snakes[i].current_x_head and pos[1] == self.snakes[i].current_y_head:
+                        pass
+                    elif j == len(self.snakes[i].snake) - 1:
+                        self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
+                                       boardtop + pos[1] * self.square_height(), 'tail' + str(i + 1) + '.png')
+                    else:
+                        self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
+                                       boardtop + pos[1] * self.square_height(), 'body' + str(i + 1) + '.png')
 
         for pos in self.food.pos:
             self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
@@ -294,6 +297,15 @@ class Board(QFrame):
 
             self.snakes[self.active_snake].grow_snake = False
 
+    def is_suicide(self):
+        for i in range(len(self.snakes)):
+            for j in range(1, len(self.snakes[i].snake)):
+                if self.snakes[i].snake[0] == self.snakes[i].snake[j]:
+                    self.snakes[i].is_dead = True
+
+    def wall_collision(self):
+        pass
+
     def move_multiple(self):
 
         for x in self.directions[:len(self.snakes[self.active_snake].snake)]:
@@ -303,6 +315,7 @@ class Board(QFrame):
         if event.timerId() == self.timer.timerId():
             print(self.directions)
             self.is_food_collision()
+            self.is_suicide()
             # self.move_multiple()
             self.update()
 
@@ -317,7 +330,6 @@ class Board(QFrame):
 
     def change_active_snake_timer(self):
 
-
         self.move_multiple()
         self.directions.clear()
 
@@ -325,6 +337,9 @@ class Board(QFrame):
 
         if self.active_snake == self.num_of_players:
             self.active_snake = 0
+
+        if self.snakes[self.active_snake].is_dead:
+            self.active_snake = self.active_snake + 1
 
         self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds! ')
         if self.active_snake == 0:
@@ -379,7 +394,7 @@ class Board(QFrame):
         self.i -= 1
         print(str(self.i))
         if self.i == 0:
-            self.i = 15
+            self.i = 5
 
         self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. ' + str(self.i)
                                 + ' seconds left')
