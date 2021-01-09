@@ -35,8 +35,8 @@ class Board(QFrame):
         self.active_snake = 0
         self.key_presses = 0
         self.directions = []
-        self.t = PerpetualTimer(5, self.change_active_snake_timer)
-        self.t.start()
+        t = PerpetualTimer(5, self.change_active_snake_timer)
+        t.start()
 
         if self.num_of_players == 2:
             self.snake1.snake = [[40, 35], [15, 10]]
@@ -175,7 +175,6 @@ class Board(QFrame):
 
     def keyPressEvent(self, event):
         key = event.key()
-        # for i in range(self.num_of_players):
         if key == Qt.Key_Left:
             if self.snakes[self.active_snake].direction != 'RIGHT':
                 self.snakes[self.active_snake].direction = 'LEFT'
@@ -210,67 +209,61 @@ class Board(QFrame):
 
     def move_snake(self, direction):
 
-        if self.key_presses > len(self.snakes[self.active_snake].snake) + 30:
-            pass
+        if direction == 'LEFT':
+
+            self.snakes[self.active_snake].current_x_head, \
+            self.snakes[self.active_snake].current_y_head = self.snakes[self.active_snake].current_x_head - 1, \
+                                                            self.snakes[self.active_snake].current_y_head
+
+            self.moves = self.moves - 1
+            if self.snakes[self.active_snake].current_x_head < 0:
+                self.snakes[self.active_snake].current_x_head = Board.WIDTHINBLOCKS - 1
+
+        if direction == 'RIGHT':
+
+            self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head = \
+                self.snakes[self.active_snake].current_x_head + 1, \
+                self.snakes[self.active_snake].current_y_head
+
+            if self.snakes[self.active_snake].current_x_head == Board.WIDTHINBLOCKS:
+                self.snakes[self.active_snake].current_x_head = 0
+
+        if direction == 'DOWN':
+
+            self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head = \
+                self.snakes[self.active_snake].current_x_head, \
+                self.snakes[self.active_snake].current_y_head + 1
+
+            if self.snakes[self.active_snake].current_y_head == Board.HEIGHTINBLOCKS:
+                self.snakes[self.active_snake].current_y_head = 0
+        if direction == 'UP':
+
+            self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head = \
+                self.snakes[self.active_snake].current_x_head, \
+                self.snakes[self.active_snake].current_y_head - 1
+
+            if self.snakes[self.active_snake].current_y_head < 0:
+                self.snakes[self.active_snake].current_y_head = Board.HEIGHTINBLOCKS
+
+        head = [self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head]
+        self.snakes[self.active_snake].snake.insert(0, head)
+
+        if not self.snakes[self.active_snake].grow_snake:
+            self.snakes[self.active_snake].snake.pop()
         else:
 
-            if direction == 'LEFT':
-                pass
-                if self.snakes[self.active_snake].direction != 'RIGHT':
-                    self.snakes[self.active_snake].current_x_head, \
-                    self.snakes[self.active_snake].current_y_head = self.snakes[self.active_snake].current_x_head - 1, \
-                                                                    self.snakes[self.active_snake].current_y_head
-                    self.flag = False
-                    self.moves = self.moves - 1
-                    if self.snakes[self.active_snake].current_x_head < 0:
-                        self.snakes[self.active_snake].current_x_head = Board.WIDTHINBLOCKS - 1
-
-            if direction == 'RIGHT':
-                if self.snakes[self.active_snake].direction != 'LEFT':
-
-                    self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head = \
-                        self.snakes[self.active_snake].current_x_head + 1, \
-                        self.snakes[self.active_snake].current_y_head
-
-                    if self.snakes[self.active_snake].current_x_head == Board.WIDTHINBLOCKS:
-                        self.snakes[self.active_snake].current_x_head = 0
-
-            if direction == 'DOWN':
-                if self.snakes[self.active_snake].direction != 'UP':
-                    self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head = \
-                        self.snakes[self.active_snake].current_x_head, \
-                        self.snakes[self.active_snake].current_y_head + 1
-
-                    if self.snakes[self.active_snake].current_y_head == Board.HEIGHTINBLOCKS:
-                        self.snakes[self.active_snake].current_y_head = 0
-            if direction == 'UP':
-                if self.snakes[self.active_snake].direction != 'DOWN':
-                    self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head = \
-                        self.snakes[self.active_snake].current_x_head, \
-                        self.snakes[self.active_snake].current_y_head - 1
-
-                    if self.snakes[self.active_snake].current_y_head < 0:
-                        self.snakes[self.active_snake].current_y_head = Board.HEIGHTINBLOCKS
-
-            head = [self.snakes[self.active_snake].current_x_head, self.snakes[self.active_snake].current_y_head]
-            self.snakes[self.active_snake].snake.insert(0, head)
-
-            if not self.snakes[self.active_snake].grow_snake:
-                self.snakes[self.active_snake].snake.pop()
-            else:
-
-                self.snakes[self.active_snake].grow_snake = False
+            self.snakes[self.active_snake].grow_snake = False
 
     def move_multiple(self):
 
         for x in self.directions[:len(self.snakes[self.active_snake].snake)]:
             self.move_snake(x)
-        self.directions.clear()
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
             print(self.directions)
             self.is_food_collision()
+            # self.move_multiple()
             self.update()
 
     def is_food_collision(self):
@@ -284,9 +277,11 @@ class Board(QFrame):
 
     def change_active_snake_timer(self):
 
-        time.sleep(2)
-
+        # time.sleep(2)
+        #
         self.move_multiple()
+        self.directions.clear()
+
         self.active_snake = self.active_snake + 1
         # self.key_presses = 0
         if self.active_snake == self.num_of_players:
