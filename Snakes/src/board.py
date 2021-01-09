@@ -112,7 +112,13 @@ class Board(QFrame):
         self.food.drop_food()
 
         self.setFocusPolicy(Qt.StrongFocus)
-        self.setStyleSheet('border-image: url(' + load_style_res('grass.png') + ') 0 0 0 0 stretch center')
+        # self.setStyleSheet('border-image: url(' + load_style_res('grass.png') + ') 0 0 0 0 stretch center')
+        if self.num_of_players == 2:
+            self.setStyleSheet('border-image: url(' + load_style_res('grass2ps.png') + ') 0 0 0 0 stretch center')
+        elif self.num_of_players == 3:
+            self.setStyleSheet('border-image: url(' + load_style_res('grass3ps.png') + ') 0 0 0 0 stretch center')
+        elif self.num_of_players == 4:
+            self.setStyleSheet('border-image: url(' + load_style_res('grass4ps.png') + ') 0 0 0 0 stretch center')
 
     def square_width(self):
         return self.contentsRect().width() / Board.WIDTHINBLOCKS
@@ -121,8 +127,9 @@ class Board(QFrame):
         return self.contentsRect().height() / Board.HEIGHTINBLOCKS
 
     def start(self):
-
-        self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got 15 seconds')
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+        self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got 15 seconds ' + current_time)
 
         self.timer.start(Board.SPEED, self)
 
@@ -276,17 +283,26 @@ class Board(QFrame):
                     self.snakes[i].grow_snake = True
 
     def change_active_snake_timer(self):
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
 
-        # time.sleep(2)
-        #
         self.move_multiple()
         self.directions.clear()
 
         self.active_snake = self.active_snake + 1
-        # self.key_presses = 0
+
         if self.active_snake == self.num_of_players:
             self.active_snake = 0
-        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds!')
+
+        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds! ' + current_time)
+        if self.active_snake == 0:
+            self.setStyleSheet('border-image: url(' + load_style_res('grassp1.png') + ') 0 0 0 0 stretch center')
+        elif self.active_snake == 1:
+            self.setStyleSheet('border-image: url(' + load_style_res('grassp2.png') + ') 0 0 0 0 stretch center')
+        elif self.active_snake == 2:
+            self.setStyleSheet('border-image: url(' + load_style_res('grassp3.png') + ') 0 0 0 0 stretch center')
+        elif self.active_snake == 3:
+            self.setStyleSheet('border-image: url(' + load_style_res('grassp4.png') + ') 0 0 0 0 stretch center')
 
     def move_snake_initial(self, i: int):
 

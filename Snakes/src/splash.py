@@ -11,6 +11,7 @@ from helpers import load_res
 from username import Username2Window, Username3Window, Username4Window
 
 
+
 class SplashScreen(QMainWindow):
 
     def __init__(self):
