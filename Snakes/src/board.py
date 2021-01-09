@@ -39,7 +39,7 @@ class Board(QFrame):
         t.start()
 
         if self.num_of_players == 2:
-            self.snake1.snake = [[40, 35], [15, 10]]
+            self.snake1.snake = [[40, 35], [0, 17], [0, 40]]
             self.snake1.current_x_head = self.snake1.snake[1][1]
             self.snake1.current_y_head = self.snake1.snake[0][1]
             self.snake1.direction = 'RIGHT'
@@ -53,21 +53,21 @@ class Board(QFrame):
             self.snake2.grow_snake = True
 
         elif self.num_of_players == 3:
-            self.snake1.snake = [[40, 35], [15, 10]]
+            self.snake1.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
             self.snake1.current_x_head = self.snake1.snake[1][1]
             self.snake1.current_y_head = self.snake1.snake[0][1]
             self.snake1.direction = 'RIGHT'
             self.snakes.append(self.snake1)
             self.snake1.grow_snake = True
 
-            self.snake2.snake = [[0, 5], [0, 50]]
+            self.snake2.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
             self.snake2.grow_snake = True
 
-            self.snake3.snake = [[0, 5], [0, 10]]
+            self.snake3.snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
             self.snake3.current_x_head = self.snake3.snake[1][1]
             self.snake3.current_y_head = self.snake3.snake[0][1]
             self.snake3.direction = 'DOWN'
@@ -75,34 +75,34 @@ class Board(QFrame):
             self.snake3.grow_snake = True
 
         elif self.num_of_players == 4:
-            self.snake1.snake = [[40, 35], [15, 10]]
+            self.snake1.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
             self.snake1.current_x_head = self.snake1.snake[1][1]
             self.snake1.current_y_head = self.snake1.snake[0][1]
             self.snake1.direction = 'RIGHT'
             self.snakes.append(self.snake1)
             self.snake1.grow_snake = True
 
-            self.snake2.snake = [[0, 5], [0, 50]]
+            self.snake2.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
             self.snake2.current_x_head = self.snake2.snake[1][1]
             self.snake2.current_y_head = self.snake2.snake[0][1]
             self.snake2.direction = 'LEFT'
             self.snakes.append(self.snake2)
             self.snake2.grow_snake = True
 
-            self.snake3.snake = [[0, 5], [0, 10]]
+            self.snake3.snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
             self.snake3.current_x_head = self.snake3.snake[1][1]
             self.snake3.current_y_head = self.snake3.snake[0][1]
             self.snake3.direction = 'DOWN'
             self.snakes.append(self.snake3)
             self.snake3.grow_snake = True
 
-            self.snake4.snake = [[0, 35], [0, 50]]
+            self.snake4.snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
             self.snake4.current_x_head = self.snake4.snake[1][1]
             self.snake4.current_y_head = self.snake4.snake[0][1]
             self.snake4.direction = 'UP'
             self.snakes.append(self.snake4)
             self.snake4.grow_snake = True
-        for mvmt in range(3):
+        for mvmt in range(5):
             for i in range(self.num_of_players):
                 self.move_snake_initial(i)
         self.food = food.Food()
