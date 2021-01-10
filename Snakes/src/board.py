@@ -38,7 +38,7 @@ class Board(QFrame):
         self.active_snake = 0
         self.key_presses = 0
         self.flag = False
-        t = PerpetualTimer(5, self.change_active_snake_timer)
+        t = PerpetualTimer(5, self.change_active_snake)
         t.start()
         r = PerpetualTimer(1, self.countdown)
         r.start()
@@ -285,24 +285,24 @@ class Board(QFrame):
                 self.snakes[i].grow_snake = False
 
     def is_suicide(self):
-        for i in range(len(self.snakes)):
-            for j in range(1, len(self.snakes[i].snake)):
-                for x in range(len(self.snakes[i].snake)):
-                    if x == j:
-                        continue
-                    if self.snakes[i].snake[0] == self.snakes[i].snake[j]:
-                        self.snakes[i].is_dead = True
+
+        for j in range(len(self.snakes[self.active_snake].snake)):
+            if j == 0:
+                continue
+            if self.snakes[self.active_snake].snake[0] == self.snakes[self.active_snake].snake[j]:
+                self.snakes[self.active_snake].is_dead = True
+                self.update()
 
     def wall_collision(self):
         pass
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
+            self.is_suicide()
+
             if self.flag:
                 self.is_food_collision()
-                self.is_suicide()
                 self.move_snake(self.active_snake)
-                # self.move_multiple()
                 self.update()
 
     def is_food_collision(self):
@@ -314,7 +314,7 @@ class Board(QFrame):
 
                     self.snakes[i].grow_snake = True
 
-    def change_active_snake_timer(self):
+    def change_active_snake(self):
         self.flag = False
         self.key_presses = 0
         self.active_snake = self.active_snake + 1
@@ -325,7 +325,6 @@ class Board(QFrame):
         if self.snakes[self.active_snake].is_dead:
             self.active_snake = self.active_snake + 1
 
-        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds! ')
         if self.active_snake == 0:
             self.setStyleSheet('border-image: url(' + load_style_res('grassp1.png') + ') 0 0 0 0 stretch center')
         elif self.active_snake == 1:
