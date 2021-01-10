@@ -74,9 +74,10 @@ from helpers import load_res
 
 
 class Username2Window(QWidget):
-    def __init__(self):
+    def __init__(self, speed: int):
         super(Username2Window, self).__init__()
         self.usernames = []
+        self.game_speed = speed
         self.game_window = None
 
         self.setGeometry(100, 100, 960, 720)
@@ -150,7 +151,7 @@ class Username2Window(QWidget):
             self.usernames.append(self.usernameEdit2.text())
 
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -249,9 +250,8 @@ class Username3Window(QWidget):
             self.usernames.append(self.usernameEdit1.text())
             self.usernames.append(self.usernameEdit2.text())
             self.usernames.append(self.usernameEdit3.text())
-            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames) # PROSLEDJUJEM broj igraca i LISTU usernamova
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -370,7 +370,7 @@ class Username4Window(QWidget):
             self.usernames.append(self.usernameEdit4.text())
             #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC) hocu da kad se klikne START da se cuje taj zvuk zmije jednom
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames)   # PROSLEDJUJEM broj igraca i LISTU usernamova
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)

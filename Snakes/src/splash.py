@@ -11,7 +11,6 @@ from helpers import load_res
 from username import Username2Window, Username3Window, Username4Window
 
 
-
 class SplashScreen(QMainWindow):
 
     def __init__(self):
@@ -44,8 +43,8 @@ class SplashScreen(QMainWindow):
 
         self.combo_players.setFont(font_cb)
         self.combo_players.setStyleSheet("color: orange; background-color: transparent;"
-                                    "selection-background-color: transparent;"
-                                    "selection-color: orange")
+                                         "selection-background-color: transparent;"
+                                         "selection-color: orange")
         self.combo_speeds.setStyleSheet("color: orange; background-color: transparent;"
                                         "selection-background-color: transparent;"
                                         "selection-color: orange")
@@ -104,15 +103,16 @@ class SplashScreen(QMainWindow):
         self.hide()
 
         num_of_players = self.get_players()
+        game_speed = self.get_speed()
 
         if num_of_players == 2:
-            self.username_window = Username2Window()
+            self.username_window = Username2Window(game_speed)
             self.username_window.show()
         elif num_of_players == 3:
-            self.username_window = Username3Window()
+            self.username_window = Username3Window(game_speed)
             self.username_window.show()
         elif num_of_players == 4:
-            self.username_window = Username4Window()
+            self.username_window = Username4Window(game_speed)
             self.username_window.show()
 
         # self.game_window = game.SnakeGame()
@@ -121,12 +121,12 @@ class SplashScreen(QMainWindow):
 
     def about_info(self):
         self.about_window.show()
-    #
-    # def get_speed(self):
-    #     cmb_text = str(self.combo_speeds.currentText())
-    #     cmb_speed = cmb_text.replace(' Speed ', ' ')
-    #     final_speed = cmb_speed.replace('x', ' ')
-    #     return int(final_speed)
+
+    def get_speed(self):
+        cmb_text = str(self.combo_speeds.currentText())
+        cmb_speed = cmb_text.replace(' Speed ', ' ')
+        final_speed = cmb_speed.replace('x', ' ')
+        return int(final_speed)
 
     def closeEvent(self, event):
 

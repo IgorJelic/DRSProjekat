@@ -20,10 +20,11 @@ class Board(QFrame):
     WIDTHINBLOCKS = 60
     HEIGHTINBLOCKS = 40
 
-    def __init__(self, parent, usernames: list):
+    def __init__(self, parent, usernames: list, speed: int):
         super(Board, self).__init__(parent)
         self.timer = QBasicTimer()
         self.usernames = usernames
+        self.game_speed = speed
         self.num_of_players = len(usernames)
         self.snakes = []
         self.snake1 = Snake()
