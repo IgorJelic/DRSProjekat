@@ -28,9 +28,13 @@ class Board(QFrame):
         self.num_of_players = len(usernames)
         self.snakes = []
         self.snake1 = Snake()
+        self.snake11 = Snake()      # druga zmija prvog igraca
         self.snake2 = Snake()
+        self.snake22 = Snake()      # druga zmija drugog igraca
         self.snake3 = Snake()
+        self.snake33 = Snake()      # druga zmija treceg igraca
         self.snake4 = Snake()
+        self.snake44 = Snake()      # druga zmija cetvrtog igraca
         self.board = []
         self.steps = 1
         self.passed = False
@@ -254,8 +258,27 @@ class Board(QFrame):
                 self.snakes[self.active_snake].direction = 'UP'
                 self.flag = True
                 self.key_presses = self.key_presses + 1
+
+        # proveravam da li je aktivna zmija DUZA od 10 polja, ako jeste, moguce je "roditi" novu
+        elif key == Qt.Key_S:
+            if len(self.snakes[self.active_snake].snake) >= 10:
+                self.split_snake(self.active_snake)
+
         elif key == Qt.Key_N:
             self.change_active_snake()
+
+    def split_snake(self, active_snake: int):
+        if active_snake == 1:
+            self.snake11.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
+            self.snake11.current_x_head = self.snake11.snake[1][1]
+            self.snake11.current_y_head = self.snake11.snake[0][1]
+            self.snake11.direction = 'RIGHT'
+        elif active_snake == 2:
+            pass
+        elif active_snake == 3:
+            pass
+        elif active_snake == 4:
+            pass
 
     def move_snake(self, i: int):
         if self.key_presses <= len(self.snakes[self.active_snake].snake):
