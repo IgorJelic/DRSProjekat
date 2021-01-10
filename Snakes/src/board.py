@@ -275,16 +275,40 @@ class Board(QFrame):
 
     def split_snake(self, active_snake: int):
         if active_snake == 1:
-            self.snake11.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
-            self.snake11.current_x_head = self.snake11.snake[1][1]
-            self.snake11.current_y_head = self.snake11.snake[0][1]
-            self.snake11.direction = 'RIGHT'
+            if len(self.player1.snakes) < 2:    # ne dozvoljavam vise od dve zmije po igracu
+                self.snake11.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
+                self.snake11.current_x_head = self.snake11.snake[1][1]
+                self.snake11.current_y_head = self.snake11.snake[0][1]
+                self.snake11.direction = 'RIGHT'
+                self.player1.snakes.append(self.snake11)
+                self.snakes.append(self.snake11)
+
         elif active_snake == 2:
-            pass
+            if len(self.player2.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
+                self.snake22.snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
+                self.snake22.current_x_head = self.snake22.snake[1][1]
+                self.snake22.current_y_head = self.snake22.snake[0][1]
+                self.snake22.direction = 'LEFT'
+                self.player2.snakes.append(self.snake22)
+                self.snakes.append(self.snake22)
+
         elif active_snake == 3:
-            pass
+            if len(self.player3.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
+                self.snake33.snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
+                self.snake33.current_x_head = self.snake33.snake[1][1]
+                self.snake33.current_y_head = self.snake33.snake[0][1]
+                self.snake33.direction = 'DOWN'
+                self.player3.snakes.append(self.snake33)
+                self.snakes.append(self.snake33)
+
         elif active_snake == 4:
-            pass
+            if len(self.player4.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
+                self.snake44.snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
+                self.snake44.current_x_head = self.snake44.snake[1][1]
+                self.snake44.current_y_head = self.snake44.snake[0][1]
+                self.snake44.direction = 'UP'
+                self.player4.snakes.append(self.snake44)
+                self.snakes.append(self.snake44)
 
     def move_snake(self, i: int):
         if self.key_presses <= len(self.snakes[self.active_snake].snake):
