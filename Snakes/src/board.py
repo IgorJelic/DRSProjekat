@@ -246,43 +246,43 @@ class Board(QFrame):
             self.change_active_snake()
 
     def move_snake(self, i: int):
+        if self.key_presses <= len(self.snakes[self.active_snake].snake):
+            if self.snakes[i].direction == 'LEFT':
 
-        if self.snakes[i].direction == 'LEFT':
+                self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head - 1, \
+                                                                               self.snakes[i].current_y_head
+                self.flag = False
+                self.moves = self.moves - 1
+                if self.snakes[i].current_x_head < 0:
+                    self.snakes[i].current_x_head = Board.WIDTHINBLOCKS - 1
+            if self.snakes[i].direction == 'RIGHT':
+                self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head + 1, \
+                                                                               self.snakes[i].current_y_head
+                self.flag = False
+                if self.snakes[i].current_x_head == Board.WIDTHINBLOCKS:
+                    self.snakes[i].current_x_head = 0
 
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head - 1, \
-                                                                           self.snakes[i].current_y_head
-            self.flag = False
-            self.moves = self.moves - 1
-            if self.snakes[i].current_x_head < 0:
-                self.snakes[i].current_x_head = Board.WIDTHINBLOCKS - 1
-        if self.snakes[i].direction == 'RIGHT':
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head + 1, \
-                                                                           self.snakes[i].current_y_head
-            self.flag = False
-            if self.snakes[i].current_x_head == Board.WIDTHINBLOCKS:
-                self.snakes[i].current_x_head = 0
+            if self.snakes[i].direction == 'DOWN':
+                self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head, \
+                                                                               self.snakes[i].current_y_head + 1
+                self.flag = False
+                if self.snakes[i].current_y_head == Board.HEIGHTINBLOCKS:
+                    self.snakes[i].current_y_head = 0
+            if self.snakes[i].direction == 'UP':
+                self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head, \
+                                                                               self.snakes[i].current_y_head - 1
+                self.flag = False
+                if self.snakes[i].current_y_head < 0:
+                    self.snakes[i].current_y_head = Board.HEIGHTINBLOCKS
 
-        if self.snakes[i].direction == 'DOWN':
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head, \
-                                                                           self.snakes[i].current_y_head + 1
-            self.flag = False
-            if self.snakes[i].current_y_head == Board.HEIGHTINBLOCKS:
-                self.snakes[i].current_y_head = 0
-        if self.snakes[i].direction == 'UP':
-            self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head, \
-                                                                           self.snakes[i].current_y_head - 1
-            self.flag = False
-            if self.snakes[i].current_y_head < 0:
-                self.snakes[i].current_y_head = Board.HEIGHTINBLOCKS
+            head = [self.snakes[i].current_x_head, self.snakes[i].current_y_head]
+            self.snakes[i].snake.insert(0, head)
 
-        head = [self.snakes[i].current_x_head, self.snakes[i].current_y_head]
-        self.snakes[i].snake.insert(0, head)
+            if not self.snakes[i].grow_snake:
+                self.snakes[i].snake.pop()
+            else:
 
-        if not self.snakes[i].grow_snake:
-            self.snakes[i].snake.pop()
-        else:
-
-            self.snakes[i].grow_snake = False
+                self.snakes[i].grow_snake = False
 
     def is_suicide(self):
         for i in range(len(self.snakes)):
@@ -315,7 +315,8 @@ class Board(QFrame):
                     self.snakes[i].grow_snake = True
 
     def change_active_snake_timer(self):
-
+        self.flag = False
+        self.key_presses = 0
         self.active_snake = self.active_snake + 1
 
         if self.active_snake == self.num_of_players:
