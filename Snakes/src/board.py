@@ -1,17 +1,12 @@
-import time
-
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
-from PyQt5.QtWidgets import QFrame, QMessageBox
+from PyQt5.QtWidgets import QFrame
 
-from snake import Snake
-from player import Player
 from food import Food
 from helpers import load_style_res, load_res
-import threading
-from time import sleep
-
-from pptTimer import PerpetualTimer
+from player import Player
+from ppt_timer import PerpetualTimer
+from snake import Snake
 
 
 class Board(QFrame):
@@ -42,21 +37,22 @@ class Board(QFrame):
         self.active_snake = 0
         self.key_presses = 0
         self.flag = False
+        self.t = None
 
         if self.game_speed == 1:
-            t = PerpetualTimer(20, self.change_active_snake_timer)
-            t.start()
-        elif self.game_speed == 2:
-            t = PerpetualTimer(15, self.change_active_snake_timer)
-            t.start()
-        elif self.game_speed == 3:
-            t = PerpetualTimer(10, self.change_active_snake_timer)
-            t.start()
-        else:
-            t = PerpetualTimer(20, self.change_active_snake_timer)
-            t.start()
+            self.t = PerpetualTimer(15, self.change_active_snake)
 
-        r = PerpetualTimer(1, self.countdown)
+        elif self.game_speed == 2:
+            self.t = PerpetualTimer(12, self.change_active_snake)
+
+        elif self.game_speed == 3:
+            self.t = PerpetualTimer(10, self.change_active_snake)
+
+        else:
+            self.t = PerpetualTimer(15, self.change_active_snake)
+
+        self.t.start()
+        r = PerpetualTimer(0.985, self.countdown)
         r.start()
         self.cntdwn = 0
 
@@ -179,7 +175,8 @@ class Board(QFrame):
 
     def start(self):
 
-        self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got 15 seconds ')
+        self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got ' + str(self.cntdwn + 1) +
+                                'seconds ')
 
         self.timer.start(Board.SPEED, self)
 
@@ -266,6 +263,15 @@ class Board(QFrame):
 
         elif key == Qt.Key_N:
             self.change_active_snake()
+            self.t.cancel()
+
+            self.t.start()
+            if self.game_speed == 1:
+                self.cntdwn = 15
+            elif self.game_speed == 2:
+                self.cntdwn = 12
+            elif self.game_speed == 3:
+                self.cntdwn = 5
 
     def split_snake(self, active_snake: int):
         if active_snake == 1:
@@ -316,29 +322,28 @@ class Board(QFrame):
             if not self.snakes[i].grow_snake:
                 self.snakes[i].snake.pop()
             else:
-
                 self.snakes[i].grow_snake = False
 
     def is_suicide(self):
-        for i in range(len(self.snakes)):
-            for j in range(1, len(self.snakes[i].snake)):
-                for x in range(len(self.snakes[i].snake)):
-                    if x == j:
-                        continue
-                    if self.snakes[i].snake[0] == self.snakes[i].snake[j]:
-                        self.snakes[i].is_dead = True
+
+        for j in range(len(self.snakes[self.active_snake].snake)):
+            if j == 0:
+                continue
+            if self.snakes[self.active_snake].snake[0] == self.snakes[self.active_snake].snake[j]:
+                self.snakes[self.active_snake].is_dead = True
+                self.update()
 
     def wall_collision(self):
         pass
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
+            self.is_suicide()
+            self.is_food_collision()
+
             if self.flag:
-                self.is_food_collision()
-                self.is_suicide()
                 self.move_snake(self.active_snake)
-                # self.move_multiple()
-                self.update()
+            self.update()
 
     def is_food_collision(self):
         for pos in self.food.pos:
@@ -349,7 +354,7 @@ class Board(QFrame):
 
                     self.snakes[i].grow_snake = True
 
-    def change_active_snake_timer(self):
+    def change_active_snake(self):
         self.flag = False
         self.key_presses = 0
         self.active_snake = self.active_snake + 1
@@ -360,7 +365,6 @@ class Board(QFrame):
         if self.snakes[self.active_snake].is_dead:
             self.active_snake = self.active_snake + 1
 
-        # self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. You\'ve got 15 seconds! ')
         if self.active_snake == 0:
             self.setStyleSheet('border-image: url(' + load_style_res('grassp1.png') + ') 0 0 0 0 stretch center')
         elif self.active_snake == 1:
@@ -373,9 +377,9 @@ class Board(QFrame):
     def countdown(self):
         if self.cntdwn == 0:
             if self.game_speed == 1:
-                self.cntdwn = 20
-            elif self.game_speed == 2:
                 self.cntdwn = 15
+            elif self.game_speed == 2:
+                self.cntdwn = 12
             elif self.game_speed == 3:
                 self.cntdwn = 10
         self.cntdwn -= 1
