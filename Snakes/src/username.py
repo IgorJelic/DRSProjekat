@@ -159,10 +159,12 @@ class Username2Window(QWidget):
 
 
 class Username3Window(QWidget):
-    def __init__(self):
+    def __init__(self, speed: int):
         super(Username3Window, self).__init__()
         self.game_window = None
         self.usernames = []
+        self.game_speed = speed
+
         self.setGeometry(100, 100, 960, 720)
         self.setWindowTitle('3Players')
         screen = QDesktopWidget().screenGeometry()
@@ -259,9 +261,10 @@ class Username3Window(QWidget):
 
 
 class Username4Window(QWidget):
-    def __init__(self):
+    def __init__(self, speed: int):
         super(Username4Window, self).__init__()
         self.game_window = None
+        self.game_speed = speed
         self.usernames = []
 
         self.setGeometry(100, 100, 960, 720)
