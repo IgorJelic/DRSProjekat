@@ -299,11 +299,11 @@ class Board(QFrame):
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
             self.is_suicide()
+            self.is_food_collision()
 
             if self.flag:
-                self.is_food_collision()
                 self.move_snake(self.active_snake)
-                self.update()
+            self.update()
 
     def is_food_collision(self):
         for pos in self.food.pos:
