@@ -212,7 +212,7 @@ class Board(QFrame):
                 # ako je naredna zmija == snake11, nacrtacu zmiju snake1, posto joj je to "roditeljska" zmija
                 else:
                     # child zmije1
-                    if self.snakes[i] == self.snake11.snake:
+                    if self.snakes[i].snake == self.snake11.snake:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head1.png')
@@ -227,7 +227,7 @@ class Board(QFrame):
                                 self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
                                                boardtop + pos[1] * self.square_height(), 'body1.png')
                     # child zmije2
-                    elif self.snakes[i] == self.snake22.snake:
+                    elif self.snakes[i].snake == self.snake22.snake:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head2.png')
@@ -242,7 +242,7 @@ class Board(QFrame):
                                 self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
                                                boardtop + pos[1] * self.square_height(), 'body2.png')
                     # child zmije3
-                    elif self.snakes[i] == self.snake33.snake:
+                    elif self.snakes[i].snake == self.snake33.snake:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head3.png')
@@ -257,7 +257,7 @@ class Board(QFrame):
                                 self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
                                                boardtop + pos[1] * self.square_height(), 'body3.png')
                     # child zmije4
-                    elif self.snakes[i] == self.snake44.snake:
+                    elif self.snakes[i].snake == self.snake44.snake:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head4.png')
