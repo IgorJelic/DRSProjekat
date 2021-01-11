@@ -185,23 +185,52 @@ class Board(QFrame):
         rect = self.contentsRect()
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
 
-        for i in range(self.num_of_players):
+        #for i in range(self.num_of_players):
+        for i in range(len(self.snakes)):
             if self.snakes[i].is_dead:
                 pass
             else:
-                self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
-                               boardtop + self.snakes[i].current_y_head * self.square_height(),
-                               'head' + str(i + 1) + '.png')
+                # ako je i manji ili jednak broju igraca to znaci da iscrtavam samo prve 2-4 zmije
+                # to jest, glavne zmije
+                if i <= self.num_of_players:    # iscrtavanje osnovnih zmija
+                    self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
+                                   boardtop + self.snakes[i].current_y_head * self.square_height(),
+                                   'head' + str(i + 1) + '.png')
 
-                for j, pos in enumerate(self.snakes[i].snake):
-                    if pos[0] == self.snakes[i].current_x_head and pos[1] == self.snakes[i].current_y_head:
-                        pass
-                    elif j == len(self.snakes[i].snake) - 1:
-                        self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
-                                       boardtop + pos[1] * self.square_height(), 'tail' + str(i + 1) + '.png')
-                    else:
-                        self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
-                                       boardtop + pos[1] * self.square_height(), 'body' + str(i + 1) + '.png')
+                    for j, pos in enumerate(self.snakes[i].snake):
+                        if pos[0] == self.snakes[i].current_x_head and pos[1] == self.snakes[i].current_y_head:
+                            pass
+                        elif j == len(self.snakes[i].snake) - 1:
+                            self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
+                                           boardtop + pos[1] * self.square_height(), 'tail' + str(i + 1) + '.png')
+                        else:
+                            self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
+                                           boardtop + pos[1] * self.square_height(), 'body' + str(i + 1) + '.png')
+                # ako je i veci od broja igraca to znaci da je zmija medju "rodjenim" zmijama
+                # proveravam o kojoj zmiji se radi
+                # ako je naredna zmija == snake11, nacrtacu zmiju snake1, posto joj je to "roditeljska" zmija
+                else:
+                    if self.snakes[i] == self.snake11.snake:
+                        self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
+                                       boardtop + self.snakes[i].current_y_head * self.square_height(),
+                                       'head1.png')
+
+                        for j, pos in enumerate(self.snakes[i].snake):
+                            if pos[0] == self.snakes[i].current_x_head and pos[1] == self.snakes[i].current_y_head:
+                                pass
+                            elif j == len(self.snakes[i].snake) - 1:
+                                self.draw_tail(painter, rect.left() + pos[0] * self.square_width(),
+                                               boardtop + pos[1] * self.square_height(), 'tail1.png')
+                            else:
+                                self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
+                                               boardtop + pos[1] * self.square_height(), 'body1.png')
+
+                    elif self.snakes[i] == self.snake22.snake:
+                            pass
+                    elif self.snakes[i] == self.snake33.snake:
+                            pass
+                    elif self.snakes[i] == self.snake44.snake:
+                            pass
 
         for pos in self.food.pos:
             self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
