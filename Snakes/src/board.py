@@ -23,13 +23,13 @@ class Board(QFrame):
         self.num_of_players = len(usernames)
         self.snakes = []
         self.snake1 = Snake()
-        self.snake11 = Snake()      # druga zmija prvog igraca
+        self.snake11 = Snake()  # druga zmija prvog igraca
         self.snake2 = Snake()
-        self.snake22 = Snake()      # druga zmija drugog igraca
+        self.snake22 = Snake()  # druga zmija drugog igraca
         self.snake3 = Snake()
-        self.snake33 = Snake()      # druga zmija treceg igraca
+        self.snake33 = Snake()  # druga zmija treceg igraca
         self.snake4 = Snake()
-        self.snake44 = Snake()      # druga zmija cetvrtog igraca
+        self.snake44 = Snake()  # druga zmija cetvrtog igraca
         self.board = []
         self.steps = 1
         self.passed = False
@@ -185,7 +185,7 @@ class Board(QFrame):
         rect = self.contentsRect()
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
 
-        #for i in range(self.num_of_players):
+        # for i in range(self.num_of_players):
         # promenio sam petlju da se krece kroz sve ZMIJE a ne sve IGRACE
         for i in range(len(self.snakes)):
             if self.snakes[i].is_dead:
@@ -193,7 +193,7 @@ class Board(QFrame):
             else:
                 # ako je indeks i manji ili jednak broju igraca to znaci da iscrtavam samo prve 2-4 zmije
                 # to jest, glavne zmije
-                if i <= self.num_of_players:    # iscrtavanje osnovnih zmija
+                if i <= self.num_of_players:  # iscrtavanje osnovnih zmija
                     self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                    boardtop + self.snakes[i].current_y_head * self.square_height(),
                                    'head' + str(i + 1) + '.png')
@@ -212,7 +212,7 @@ class Board(QFrame):
                 # ako je naredna zmija == snake11, nacrtacu zmiju snake1, posto joj je to "roditeljska" zmija
                 else:
                     # child zmije1
-                    if self.snakes[i].snake == self.snake11.snake:
+                    if self.snakes[i] == self.snake11:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head1.png')
@@ -227,7 +227,7 @@ class Board(QFrame):
                                 self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
                                                boardtop + pos[1] * self.square_height(), 'body1.png')
                     # child zmije2
-                    elif self.snakes[i].snake == self.snake22.snake:
+                    elif self.snakes[i] == self.snake22:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head2.png')
@@ -242,7 +242,7 @@ class Board(QFrame):
                                 self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
                                                boardtop + pos[1] * self.square_height(), 'body2.png')
                     # child zmije3
-                    elif self.snakes[i].snake == self.snake33.snake:
+                    elif self.snakes[i] == self.snake33:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head3.png')
@@ -257,7 +257,7 @@ class Board(QFrame):
                                 self.draw_body(painter, rect.left() + pos[0] * self.square_width(),
                                                boardtop + pos[1] * self.square_height(), 'body3.png')
                     # child zmije4
-                    elif self.snakes[i].snake == self.snake44.snake:
+                    elif self.snakes[i] == self.snake44:
                         self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                        boardtop + self.snakes[i].current_y_head * self.square_height(),
                                        'head4.png')
@@ -327,10 +327,10 @@ class Board(QFrame):
 
         # proveravam da li je aktivna zmija DUZA ili JEDNAKA 10 polja, ako jeste, moguce je "roditi" novu
         elif key == Qt.Key_S:
-            if len(self.snakes[self.active_snake].snake) >= 10:
-                self.snakes[self.active_snake].direction = 'SPLIT'
+            if len(self.snakes[self.active_snake].snake) >= 5:
+                # self.snakes[self.active_snake].direction = 'SPLIT'
                 self.flag = True
-                #self.split_snake(self.active_snake)
+                self.split_snake(self.active_snake)
 
         elif key == Qt.Key_N:
             self.change_active_snake()
@@ -346,13 +346,17 @@ class Board(QFrame):
 
     def split_snake(self, active_snake: int):
         if active_snake == 0:
-            if len(self.player1.snakes) < 2:    # ne dozvoljavam vise od dve zmije po igracu
+            if len(self.player1.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
                 self.snake11.snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
                 self.snake11.current_x_head = self.snake11.snake[1][1]
                 self.snake11.current_y_head = self.snake11.snake[0][1]
                 self.snake11.direction = 'RIGHT'
                 self.player1.snakes.append(self.snake11)
                 self.snakes.append(self.snake11)
+                self.snake11.grow_snake = True
+
+                for i in range(5):
+                    self.move_snake(2)
 
         elif active_snake == 1:
             if len(self.player2.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
@@ -362,6 +366,10 @@ class Board(QFrame):
                 self.snake22.direction = 'LEFT'
                 self.player2.snakes.append(self.snake22)
                 self.snakes.append(self.snake22)
+                self.snake22.grow_snake = True
+
+                for i in range(5):
+                    pass
 
         elif active_snake == 2:
             if len(self.player3.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
@@ -371,6 +379,10 @@ class Board(QFrame):
                 self.snake33.direction = 'DOWN'
                 self.player3.snakes.append(self.snake33)
                 self.snakes.append(self.snake33)
+                self.snake33.grow_snake = True
+
+                for i in range(5):
+                    pass
 
         elif active_snake == 3:
             if len(self.player4.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
@@ -380,12 +392,16 @@ class Board(QFrame):
                 self.snake44.direction = 'UP'
                 self.player4.snakes.append(self.snake44)
                 self.snakes.append(self.snake44)
+                self.snake44.grow_snake = True
+
+                for i in range(5):
+                    pass
 
     def move_snake(self, i: int):
         if self.key_presses <= len(self.snakes[self.active_snake].snake):
-            if self.snakes[i].direction == 'SPLIT':
-                self.split_snake(i)
-                self.flag = False
+            # if self.snakes[i].direction == 'SPLIT':
+            #     self.split_snake(i)
+            #     self.flag = False
 
             if self.snakes[i].direction == 'LEFT':
 
