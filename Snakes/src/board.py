@@ -386,16 +386,6 @@ class Board(QFrame):
                 self.snakes[self.active_snake].is_dead = True
                 self.update()
 
-    def is_collision(self):
-
-        for i in range(len(self.snakes)):
-            if i == self.active_snake:
-                continue
-            for j in range(len(self.snakes[i].snake)):
-                if self.snakes[self.active_snake].snake[0] == self.snakes[i].snake[j] and not self.snakes[i].is_dead:
-                    self.snakes[self.active_snake].is_dead = True
-                    self.update()
-
     def wall_collision(self):
         pass
 
@@ -403,13 +393,10 @@ class Board(QFrame):
         if event.timerId() == self.timer.timerId():
             self.is_suicide()
             self.is_food_collision()
-            self.is_collision()
 
             if self.flag:
                 self.move_snake(self.active_snake)
             self.update()
-
-
 
     def is_food_collision(self):
         for pos in self.food.pos:
