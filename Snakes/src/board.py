@@ -21,6 +21,7 @@ class Board(QFrame):
         self.usernames = usernames
         self.game_speed = speed
         self.num_of_players = len(usernames)
+        self.index_of_splitted_snake = 0
         self.snakes = []
         self.snake1 = Snake()
         self.snake11 = Snake()  # druga zmija prvog igraca
@@ -193,7 +194,7 @@ class Board(QFrame):
             else:
                 # ako je indeks i manji ili jednak broju igraca to znaci da iscrtavam samo prve 2-4 zmije
                 # to jest, glavne zmije
-                if i <= self.num_of_players:  # iscrtavanje osnovnih zmija
+                if i < self.num_of_players:  # iscrtavanje osnovnih zmija
                     self.draw_head(painter, rect.left() + self.snakes[i].current_x_head * self.square_width(),
                                    boardtop + self.snakes[i].current_y_head * self.square_height(),
                                    'head' + str(i + 1) + '.png')
@@ -360,7 +361,9 @@ class Board(QFrame):
                 self.snake11.grow_snake = True
 
                 for i in range(5):
-                    self.move_snake(2)
+                    self.move_snake(self.num_of_players + self.index_of_splitted_snake)
+
+                self.index_of_splitted_snake += 1
 
         elif active_snake == 1:
             if len(self.player2.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
@@ -373,7 +376,9 @@ class Board(QFrame):
                 self.snake22.grow_snake = True
 
                 for i in range(5):
-                    pass
+                    self.move_snake(self.num_of_players + self.index_of_splitted_snake)
+
+                self.index_of_splitted_snake += 1
 
         elif active_snake == 2:
             if len(self.player3.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
@@ -386,7 +391,9 @@ class Board(QFrame):
                 self.snake33.grow_snake = True
 
                 for i in range(5):
-                    pass
+                    self.move_snake(self.num_of_players + self.index_of_splitted_snake)
+
+                self.index_of_splitted_snake += 1
 
         elif active_snake == 3:
             if len(self.player4.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
@@ -399,7 +406,9 @@ class Board(QFrame):
                 self.snake44.grow_snake = True
 
                 for i in range(5):
-                    pass
+                    self.move_snake(self.num_of_players + self.index_of_splitted_snake)
+
+                self.index_of_splitted_snake += 1
 
     def move_snake(self, i: int):
         if self.key_presses <= len(self.snakes[self.active_snake].snake):
