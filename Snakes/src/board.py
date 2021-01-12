@@ -333,8 +333,8 @@ class Board(QFrame):
         elif key == Qt.Key_S:
             if len(self.snakes[self.active_snake].snake) >= 5:
                 # self.snakes[self.active_snake].direction = 'SPLIT'
-                self.flag = True
                 self.split_snake(self.active_snake)
+
 
         elif key == Qt.Key_N:
             self.change_active_snake()
@@ -359,6 +359,7 @@ class Board(QFrame):
                 self.player1.snakes.append(self.snake11)
                 self.snakes.append(self.snake11)
                 self.snake11.grow_snake = True
+                self.flag = True
 
                 for i in range(5):
                     self.move_snake(self.num_of_players + self.index_of_splitted_snake)
@@ -374,6 +375,7 @@ class Board(QFrame):
                 self.player2.snakes.append(self.snake22)
                 self.snakes.append(self.snake22)
                 self.snake22.grow_snake = True
+                self.flag = True
 
                 for i in range(5):
                     self.move_snake(self.num_of_players + self.index_of_splitted_snake)
@@ -389,6 +391,7 @@ class Board(QFrame):
                 self.player3.snakes.append(self.snake33)
                 self.snakes.append(self.snake33)
                 self.snake33.grow_snake = True
+                self.flag = True
 
                 for i in range(5):
                     self.move_snake(self.num_of_players + self.index_of_splitted_snake)
@@ -404,6 +407,7 @@ class Board(QFrame):
                 self.player4.snakes.append(self.snake44)
                 self.snakes.append(self.snake44)
                 self.snake44.grow_snake = True
+                self.flag = True
 
                 for i in range(5):
                     self.move_snake(self.num_of_players + self.index_of_splitted_snake)
