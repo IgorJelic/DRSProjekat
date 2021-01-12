@@ -416,12 +416,8 @@ class Board(QFrame):
 
                 self.index_of_splitted_snake += 1
 
-    def move_snake(self, i: int):
+    def move_snake(self, i: int):     # i = active_snake
         if self.key_presses <= len(self.snakes[self.active_snake].snake):
-            # if self.snakes[i].direction == 'SPLIT':
-            #     self.split_snake(i)
-            #     self.flag = False
-
             if self.snakes[i].direction == 'LEFT':
 
                 self.snakes[i].current_x_head, self.snakes[i].current_y_head = self.snakes[i].current_x_head - 1, \
