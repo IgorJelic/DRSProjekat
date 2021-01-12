@@ -301,6 +301,7 @@ class Board(QFrame):
     def keyPressEvent(self, event):
         key = event.key()
         # for i in range(self.num_of_players):
+
         if key == Qt.Key_Left:
             if self.snakes[self.active_snake].direction != 'RIGHT':
                 self.snakes[self.active_snake].direction = 'LEFT'
@@ -312,6 +313,7 @@ class Board(QFrame):
                 self.snakes[self.active_snake].direction = 'RIGHT'
                 self.flag = True
                 self.key_presses = self.key_presses + 1
+
 
         elif key == Qt.Key_Down:
             if self.snakes[self.active_snake].direction != 'UP':
@@ -325,6 +327,7 @@ class Board(QFrame):
                 self.flag = True
                 self.key_presses = self.key_presses + 1
 
+
         # proveravam da li je aktivna zmija DUZA ili JEDNAKA 10 polja, ako jeste, moguce je "roditi" novu
         elif key == Qt.Key_S:
             if len(self.snakes[self.active_snake].snake) >= 5:
@@ -335,6 +338,7 @@ class Board(QFrame):
         elif key == Qt.Key_N:
             self.change_active_snake()
             self.t.cancel()
+
 
             self.t.start()
             if self.game_speed == 1:
@@ -439,6 +443,18 @@ class Board(QFrame):
             else:
                 self.snakes[i].grow_snake = False
 
+            if self.key_presses == len(self.snakes[self.active_snake].snake):
+                self.change_active_snake()
+                self.t.cancel()
+
+                self.t.start()
+                if self.game_speed == 1:
+                    self.cntdwn = 15
+                elif self.game_speed == 2:
+                    self.cntdwn = 12
+                elif self.game_speed == 3:
+                    self.cntdwn = 5
+
     def is_suicide(self):
 
         for j in range(len(self.snakes[self.active_snake].snake)):
@@ -446,8 +462,8 @@ class Board(QFrame):
                 continue
             if self.snakes[self.active_snake].snake[0] == self.snakes[self.active_snake].snake[j]:
                 self.snakes[self.active_snake].is_dead = True
+                self.change_active_snake()
                 self.update()
-
 
 
     def timerEvent(self, event):
@@ -455,7 +471,6 @@ class Board(QFrame):
             self.is_suicide()
             self.is_food_collision()
             self.wall_collision()
-
 
             if self.flag:
                 self.move_snake(self.active_snake)
@@ -505,6 +520,9 @@ class Board(QFrame):
             self.setStyleSheet('border-image: url(' + load_style_res('grassp3.png') + ') 0 0 0 0 stretch center')
         elif self.active_snake == 3:
             self.setStyleSheet('border-image: url(' + load_style_res('grassp4.png') + ') 0 0 0 0 stretch center')
+
+    def check_winner(self):
+        pass
 
     def countdown(self):
         if self.cntdwn == 0:
