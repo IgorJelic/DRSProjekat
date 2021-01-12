@@ -345,6 +345,12 @@ class Board(QFrame):
             elif self.game_speed == 3:
                 self.cntdwn = 5
 
+        elif key == Qt.Key_Tab:
+            self.change_active_player_snake(self.active_snake)
+
+    def change_active_player_snake(self, active_snake: int):
+        pass
+
     def split_snake(self, active_snake: int):
         if active_snake == 0:
             if len(self.player1.snakes) < 2:  # ne dozvoljavam vise od dve zmije po igracu
