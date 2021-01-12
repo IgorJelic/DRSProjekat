@@ -315,7 +315,6 @@ class Board(QFrame):
                 self.flag = True
                 self.key_presses = self.key_presses + 1
 
-
         elif key == Qt.Key_Down:
             if self.snakes[self.active_snake].direction != 'UP':
                 self.snakes[self.active_snake].direction = 'DOWN'
@@ -328,18 +327,15 @@ class Board(QFrame):
                 self.flag = True
                 self.key_presses = self.key_presses + 1
 
-
         # proveravam da li je aktivna zmija DUZA ili JEDNAKA 10 polja, ako jeste, moguce je "roditi" novu
         elif key == Qt.Key_S:
             if len(self.snakes[self.active_snake].snake) >= 5:
                 # self.snakes[self.active_snake].direction = 'SPLIT'
                 self.split_snake(self.active_snake)
 
-
         elif key == Qt.Key_N:
             self.change_active_snake()
             self.t.cancel()
-
 
             self.t.start()
             if self.game_speed == 1:
@@ -488,7 +484,6 @@ class Board(QFrame):
                     self.snakes[self.active_snake].is_dead = True
                     self.update()
 
-
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
             self.is_suicide()
@@ -516,12 +511,14 @@ class Board(QFrame):
         y_top = 1
 
         for i in range(2, 38):
-            if self.snakes[self.active_snake].snake[0] == [x_left, i] or self.snakes[self.active_snake].snake[0] == [x_right, i]:
+            if self.snakes[self.active_snake].snake[0] == [x_left, i] \
+                    or self.snakes[self.active_snake].snake[0] == [x_right, i]:
                 self.snakes[self.active_snake].is_dead = True
                 self.update()
 
         for j in range(2, 58):
-            if self.snakes[self.active_snake].snake[0] == [j, y_bottom] or self.snakes[self.active_snake].snake[0] == [j, y_top]:
+            if self.snakes[self.active_snake].snake[0] == [j, y_bottom] \
+                    or self.snakes[self.active_snake].snake[0] == [j, y_top]:
                 self.snakes[self.active_snake].is_dead = True
                 self.update()
 
