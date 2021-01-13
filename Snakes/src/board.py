@@ -142,7 +142,7 @@ class Board(QFrame):
         elif self.num_of_players == 3:
             for i in range(10):
                 self.food.drop_food()
-        elif self.num_of_players == 3:
+        elif self.num_of_players == 4:
             for i in range(8):
                 self.food.drop_food()
 
