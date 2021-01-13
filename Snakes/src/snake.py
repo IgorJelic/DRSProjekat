@@ -7,3 +7,4 @@ class Snake(object):
         self.direction = None
         self.grow_snake = False
         self.is_dead = False
+        self.is_active = False
