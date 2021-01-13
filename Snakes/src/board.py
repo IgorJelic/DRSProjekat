@@ -15,7 +15,7 @@ class Board(QFrame):
     WIDTHINBLOCKS = 60
     HEIGHTINBLOCKS = 40
 
-    def __init__(self, parent, usernames: list, speed: int):
+    def __init__(self, parent, usernames: list, speed: int, multiple: bool):
         super(Board, self).__init__(parent)
         self.timer = QBasicTimer()
         self.usernames = usernames
@@ -23,7 +23,7 @@ class Board(QFrame):
         self.num_of_players = len(usernames)
         self.index_of_splitted_snake = 0
         self.num_of_active_snakes = self.num_of_players  # sluzi u funkciji food kolizija
-        self.tab_mode = True
+        self.tab_mode = multiple
         self.snakes = []
 
         self.players = []

@@ -1,9 +1,9 @@
 import winsound
 import game
 
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon, QImage, QPalette, QBrush, QFont
-from PyQt5.QtWidgets import QWidget, QMessageBox, QLabel, QDesktopWidget, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QWidget, QMessageBox, QLabel, QDesktopWidget, QLineEdit, QPushButton, QCheckBox
 
 from helpers import load_res
 
@@ -74,10 +74,12 @@ from helpers import load_res
 
 
 class Username2Window(QWidget):
+
     def __init__(self, speed: int):
         super(Username2Window, self).__init__()
         self.usernames = []
         self.game_speed = speed
+        self.multiple_snakes = True
         self.game_window = None
 
         self.setGeometry(100, 100, 960, 720)
@@ -126,6 +128,14 @@ class Username2Window(QWidget):
         self.usernameEdit2.setFixedSize(400, 70)
         self.usernameEdit2.move(80, 400)
 
+        self.cb = QCheckBox('Multiple snakes', self)
+        self.cb.setFont(QFont(font))
+        self.cb.setStyleSheet("color: black; font-size:30px")
+        self.cb.setMinimumSize(150, 70)
+        self.cb.move(350, 620)
+        self.cb.toggle()
+        self.cb.stateChanged.connect(self.change_checkbox)
+
         self.start_button = QPushButton(self)
         self.start_button.setText("Start")
         self.start_button.setFont(QFont(font))
@@ -137,6 +147,12 @@ class Username2Window(QWidget):
         self.start_button.move(150, 600)
 
         self.setPalette(palette)
+
+    def change_checkbox(self, state):
+        if state == Qt.Checked:
+            self.multiple_snakes = True
+        else:
+            self.multiple_snakes = False
 
     def validate(self, usernameEdit1=None, usernameEdit2=None):
         if (usernameEdit1 != "") & (usernameEdit2 != ""):
@@ -151,7 +167,8 @@ class Username2Window(QWidget):
             self.usernames.append(self.usernameEdit2.text())
 
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames, self.game_speed)
+
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -163,6 +180,7 @@ class Username3Window(QWidget):
         super(Username3Window, self).__init__()
         self.game_window = None
         self.usernames = []
+        self.multiple_snakes = True
         self.game_speed = speed
 
         self.setGeometry(100, 100, 960, 720)
@@ -227,6 +245,14 @@ class Username3Window(QWidget):
         self.usernameEdit3.setFixedSize(400, 70)
         self.usernameEdit3.move(500, 200)
 
+        self.cb = QCheckBox('Multiple snakes', self)
+        self.cb.setFont(QFont(font))
+        self.cb.setStyleSheet("color: black; font-size:30px")
+        self.cb.setMinimumSize(150, 70)
+        self.cb.move(350, 620)
+        self.cb.toggle()
+        self.cb.stateChanged.connect(self.change_checkbox)
+
         self.start_button = QPushButton(self)
         self.start_button.setText("Start")
         self.start_button.setFont(QFont(font))
@@ -238,6 +264,12 @@ class Username3Window(QWidget):
         self.start_button.move(150, 600)
 
         self.setPalette(palette)
+
+    def change_checkbox(self, state):
+        if state == Qt.Checked:
+            self.multiple_snakes = True
+        else:
+            self.multiple_snakes = False
 
     def validate(self, usernameEdit1=None, usernameEdit2=None, usernameEdit3=None):
         if (usernameEdit1 != "") & (usernameEdit2 != "") & (usernameEdit3 != ""):
@@ -253,7 +285,7 @@ class Username3Window(QWidget):
             self.usernames.append(self.usernameEdit2.text())
             self.usernames.append(self.usernameEdit3.text())
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames, self.game_speed)
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -265,6 +297,7 @@ class Username4Window(QWidget):
         super(Username4Window, self).__init__()
         self.game_window = None
         self.game_speed = speed
+        self.multiple_snakes = True
         self.usernames = []
 
         self.setGeometry(100, 100, 960, 720)
@@ -345,6 +378,14 @@ class Username4Window(QWidget):
         self.usernameEdit4.setFixedSize(400, 70)
         self.usernameEdit4.move(500, 400)
 
+        self.cb = QCheckBox('Multiple snakes', self)
+        self.cb.setFont(QFont(font))
+        self.cb.setStyleSheet("color: black; font-size:30px")
+        self.cb.setMinimumSize(150, 70)
+        self.cb.move(350, 620)
+        self.cb.toggle()
+        self.cb.stateChanged.connect(self.change_checkbox)
+
         self.start_button = QPushButton(self)
         self.start_button.setText("Start")
         self.start_button.setFont(QFont(font))
@@ -357,6 +398,12 @@ class Username4Window(QWidget):
 
         self.setPalette(palette)
 
+    def change_checkbox(self, state):
+        if state == Qt.Checked:
+            self.multiple_snakes = True
+        else:
+            self.multiple_snakes = False
+
     def validate(self, usernameEdit1=None, usernameEdit2=None, usernameEdit3=None, usernameEdit4=None):
         if (usernameEdit1 != "") & (usernameEdit2 != "") & (usernameEdit3 != "") & (usernameEdit4 != ""):
             return True
@@ -364,16 +411,17 @@ class Username4Window(QWidget):
             return False
 
     def start_button_pressed(self):
-        if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text(), self.usernameEdit4.text()):
+        if self.validate(self.usernameEdit1.text(), self.usernameEdit2.text(), self.usernameEdit3.text(),
+                         self.usernameEdit4.text()):
             self.hide()
 
             self.usernames.append(self.usernameEdit1.text())
             self.usernames.append(self.usernameEdit2.text())
             self.usernames.append(self.usernameEdit3.text())
             self.usernames.append(self.usernameEdit4.text())
-            #winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC) hocu da kad se klikne START da se cuje taj zvuk zmije jednom
+            # winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC) hocu da kad se klikne START da se cuje taj zvuk zmije jednom
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames, self.game_speed)
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
