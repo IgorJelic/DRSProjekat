@@ -21,8 +21,7 @@ class Board(QFrame):
         self.usernames = usernames
         self.game_speed = speed
         self.num_of_players = len(usernames)
-        self.index_of_splitted_snake = 0
-        self.num_of_active_snakes = self.num_of_players  # sluzi u funkciji food kolizija
+        self.combined_length = 0
         self.tab_mode = multiple
         self.snakes = []
 
@@ -280,8 +279,8 @@ class Board(QFrame):
             self.active_snake = 0
 
     def split_snake(self, active_player: int):
-        if active_player == 0:
-            if len(self.players[active_player].snakes) < 2:
+        if len(self.players[active_player].snakes) < 2:
+            if active_player == 0:
                 self.players[0].snakes.append(Snake())
                 self.players[0].snakes[1].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
                 self.players[0].snakes[1].current_x_head = self.players[0].snakes[1].snake[1][1]
@@ -291,8 +290,7 @@ class Board(QFrame):
                 self.players[0].snakes[1].grow_snake = True
                 self.flag = True
 
-        if active_player == 1:
-            if len(self.players[active_player].snakes) < 2:
+            if active_player == 1:
                 self.players[1].snakes.append(Snake())
 
                 self.players[1].snakes[1].snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
@@ -302,8 +300,7 @@ class Board(QFrame):
 
                 self.players[1].snakes[1].grow_snake = True
                 self.flag = True
-        if active_player == 2:
-            if len(self.players[active_player].snakes) < 2:
+            if active_player == 2:
                 self.players[2].snakes.append(Snake())
 
                 self.players[2].snakes[1].snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
@@ -313,8 +310,7 @@ class Board(QFrame):
                 # self.snakes.append(self.snake1)
                 self.players[2].snakes[1].grow_snake = True
                 self.flag = True
-        if active_player == 3:
-            if len(self.players[active_player].snakes) < 2:
+            if active_player == 3:
                 self.players[3].snakes.append(Snake())
 
                 self.players[3].snakes[1].snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
@@ -324,39 +320,41 @@ class Board(QFrame):
 
                 self.players[3].snakes[1].grow_snake = True
                 self.flag = True
-        for i in range(5):
-            self.move_snake(active_player, 1)
+            for i in range(5):
+                self.move_snake(active_player, 1)
 
     def move_snake(self, ap: int, i: int):  # i = active_snake
+
+        # print(str(self.combined_length))
         if self.key_presses <= len(self.players[self.active_player].snakes[self.active_snake].snake):
             if self.players[ap].snakes[i].direction == 'LEFT':
 
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
-                self.players[ap].snakes[i].current_x_head - 1, \
-                self.players[ap].snakes[i].current_y_head
+                    self.players[ap].snakes[i].current_x_head - 1, \
+                    self.players[ap].snakes[i].current_y_head
                 self.flag = False
                 self.moves = self.moves - 1
                 if self.players[ap].snakes[i].current_x_head < 0:
                     self.players[ap].snakes[i].current_x_head = Board.WIDTHINBLOCKS - 1
             if self.players[ap].snakes[i].direction == 'RIGHT':
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
-                self.players[ap].snakes[i].current_x_head + 1, \
-                self.players[ap].snakes[i].current_y_head
+                    self.players[ap].snakes[i].current_x_head + 1, \
+                    self.players[ap].snakes[i].current_y_head
                 self.flag = False
                 if self.players[ap].snakes[i].current_x_head == Board.WIDTHINBLOCKS:
                     self.players[ap].snakes[i].current_x_head = 0
 
             if self.players[ap].snakes[i].direction == 'DOWN':
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
-                self.players[ap].snakes[i].current_x_head, \
-                self.players[ap].snakes[i].current_y_head + 1
+                    self.players[ap].snakes[i].current_x_head, \
+                    self.players[ap].snakes[i].current_y_head + 1
                 self.flag = False
                 if self.players[ap].snakes[i].current_y_head == Board.HEIGHTINBLOCKS:
                     self.players[ap].snakes[i].current_y_head = 0
             if self.players[ap].snakes[i].direction == 'UP':
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
-                self.players[ap].snakes[i].current_x_head, \
-                self.players[ap].snakes[i].current_y_head - 1
+                    self.players[ap].snakes[i].current_x_head, \
+                    self.players[ap].snakes[i].current_y_head - 1
                 self.flag = False
                 if self.players[ap].snakes[i].current_y_head < 0:
                     self.players[ap].snakes[i].current_y_head = Board.HEIGHTINBLOCKS
@@ -399,7 +397,7 @@ class Board(QFrame):
                 for x in range(len(self.players[i].snakes[j].snake)):
                     if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
                             self.players[i].snakes[j].snake[x]:
-                        if i == self.active_player and j == self.active_snake:
+                        if i == self.active_player:
                             continue
                         self.players[self.active_player].snakes[self.active_snake].is_dead = True
                         self.update()
@@ -449,25 +447,20 @@ class Board(QFrame):
     def change_active_player(self):
         self.flag = False
         self.key_presses = 0
-        self.active_player = self.active_player + 1
-        self.active_snake = 0
-        if self.active_player == self.num_of_players:
+        if self.active_player < self.num_of_players - 1:
+            self.active_player += 1
+            for i in range(len(self.players[self.active_player].snakes)):
+                if not self.players[self.active_player].snakes[i].is_dead:
+                    self.active_snake = i
+                    self.setStyleSheet(
+                        'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
+                        ') 0 0 0 0 stretch center')
+                    break
+        else:
+
             self.active_player = 0
-
-        if self.players[self.active_player].snakes[self.active_snake].is_dead:
-            if self.active_snake == 0:
-                self.active_snake = 1
-            else:
-                self.active_snake = 0
-
-        if self.active_player == 0:
-            self.setStyleSheet('border-image: url(' + load_style_res('grassp1.png') + ') 0 0 0 0 stretch center')
-        elif self.active_player == 1:
-            self.setStyleSheet('border-image: url(' + load_style_res('grassp2.png') + ') 0 0 0 0 stretch center')
-        elif self.active_player == 2:
-            self.setStyleSheet('border-image: url(' + load_style_res('grassp3.png') + ') 0 0 0 0 stretch center')
-        elif self.active_player == 3:
-            self.setStyleSheet('border-image: url(' + load_style_res('grassp4.png') + ') 0 0 0 0 stretch center')
+            self.setStyleSheet('border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
+                               ') 0 0 0 0 stretch center')
 
     def check_winner(self):
         pass
@@ -481,7 +474,7 @@ class Board(QFrame):
             elif self.game_speed == 3:
                 self.cntdwn = 10
         self.cntdwn -= 1
-        print(str(self.cntdwn))
+        # print(str(self.cntdwn))
 
-        self.msg2statusbar.emit(self.usernames[self.active_snake] + '\'s turn. ' + str(self.cntdwn + 1)
+        self.msg2statusbar.emit(self.players[self.active_player].name + '\'s turn. ' + str(self.cntdwn + 1)
                                 + ' seconds left')
