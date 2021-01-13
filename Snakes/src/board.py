@@ -31,18 +31,18 @@ class Board(QFrame):
             self.players.append(Player(usernames[k]))
             self.players[k].snakes.append(Snake())
 
-        #self.snake1 = Snake()
-        #self.snake11 = Snake()  # druga zmija prvog igraca
-        #self.snake2 = Snake()
-        #self.snake22 = Snake()  # druga zmija drugog igraca
-        #self.snake3 = Snake()
-        #self.snake33 = Snake()  # druga zmija treceg igraca
-        #self.snake4 = Snake()
-        #self.snake44 = Snake()  # druga zmija cetvrtog igraca
-        #self.INDEX_SNAKE11 = 0
-        #self.INDEX_SNAKE22 = 1
-        #self.INDEX_SNAKE33 = 2
-        #self.INDEX_SNAKE44 = 3
+        # self.snake1 = Snake()
+        # self.snake11 = Snake()  # druga zmija prvog igraca
+        # self.snake2 = Snake()
+        # self.snake22 = Snake()  # druga zmija drugog igraca
+        # self.snake3 = Snake()
+        # self.snake33 = Snake()  # druga zmija treceg igraca
+        # self.snake4 = Snake()
+        # self.snake44 = Snake()  # druga zmija cetvrtog igraca
+        # self.INDEX_SNAKE11 = 0
+        # self.INDEX_SNAKE22 = 1
+        # self.INDEX_SNAKE33 = 2
+        # self.INDEX_SNAKE44 = 3
 
         self.board = []
         self.steps = 1
@@ -327,32 +327,36 @@ class Board(QFrame):
         for i in range(5):
             self.move_snake(active_player, 1)
 
-    def move_snake(self, ap: int, i: int):     # i = active_snake
+    def move_snake(self, ap: int, i: int):  # i = active_snake
         if self.key_presses <= len(self.players[self.active_player].snakes[self.active_snake].snake):
             if self.players[ap].snakes[i].direction == 'LEFT':
 
-                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = self.players[ap].snakes[i].current_x_head - 1, \
-                                                                               self.players[ap].snakes[i].current_y_head
+                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
+                self.players[ap].snakes[i].current_x_head - 1, \
+                self.players[ap].snakes[i].current_y_head
                 self.flag = False
                 self.moves = self.moves - 1
                 if self.players[ap].snakes[i].current_x_head < 0:
                     self.players[ap].snakes[i].current_x_head = Board.WIDTHINBLOCKS - 1
             if self.players[ap].snakes[i].direction == 'RIGHT':
-                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = self.players[ap].snakes[i].current_x_head + 1, \
-                                                                               self.players[ap].snakes[i].current_y_head
+                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
+                self.players[ap].snakes[i].current_x_head + 1, \
+                self.players[ap].snakes[i].current_y_head
                 self.flag = False
                 if self.players[ap].snakes[i].current_x_head == Board.WIDTHINBLOCKS:
                     self.players[ap].snakes[i].current_x_head = 0
 
             if self.players[ap].snakes[i].direction == 'DOWN':
-                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = self.players[ap].snakes[i].current_x_head, \
-                                                                               self.players[ap].snakes[i].current_y_head + 1
+                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
+                self.players[ap].snakes[i].current_x_head, \
+                self.players[ap].snakes[i].current_y_head + 1
                 self.flag = False
                 if self.players[ap].snakes[i].current_y_head == Board.HEIGHTINBLOCKS:
                     self.players[ap].snakes[i].current_y_head = 0
             if self.players[ap].snakes[i].direction == 'UP':
-                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = self.players[ap].snakes[i].current_x_head, \
-                                                                               self.players[ap].snakes[i].current_y_head - 1
+                self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
+                self.players[ap].snakes[i].current_x_head, \
+                self.players[ap].snakes[i].current_y_head - 1
                 self.flag = False
                 if self.players[ap].snakes[i].current_y_head < 0:
                     self.players[ap].snakes[i].current_y_head = Board.HEIGHTINBLOCKS
@@ -365,7 +369,7 @@ class Board(QFrame):
             else:
                 self.players[ap].snakes[i].grow_snake = False
 
-            #if self.key_presses == len(self.snakes[self.active_snake].snake):
+            # if self.key_presses == len(self.snakes[self.active_snake].snake):
             #    self.change_active_snake()
             #    self.t.cancel()
 
@@ -382,28 +386,30 @@ class Board(QFrame):
         for j in range(len(self.players[self.active_player].snakes[self.active_snake].snake)):
             if j == 0:
                 continue
-            if self.players[self.active_player].snakes[self.active_snake].snake[0] ==\
+            if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
                     self.players[self.active_player].snakes[self.active_snake].snake[j]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
                 self.change_active_player()
                 self.update()
 
-    #def is_collision(self):
+    def snake_collision(self):
 
-     #   for i in range(len(self.snakes)):
-      #      if i == self.active_snake:
-       #         continue
-        #    for j in range(len(self.snakes[i].snake)):
-         #       if self.snakes[self.active_snake].snake[0] == self.snakes[i].snake[j] and not self.snakes[i].is_dead:
-          #          self.snakes[self.active_snake].is_dead = True
-           #         self.update()
+        for i in range(len(self.players)):
+            for j in range(len(self.players[i].snakes)):
+                for x in range(len(self.players[i].snakes[j].snake)):
+                    if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
+                            self.players[i].snakes[j].snake[x]:
+                        if i == self.active_player and j == self.active_snake:
+                            continue
+                        self.players[self.active_player].snakes[self.active_snake].is_dead = True
+                        self.update()
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
             self.is_suicide()
             self.is_food_collision()
             self.wall_collision()
-            #self.is_collision()
+            self.snake_collision()
 
             if self.flag:
                 self.move_snake(self.active_player, self.active_snake)
