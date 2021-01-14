@@ -151,7 +151,7 @@ class Board(QFrame):
     def start(self):
 
         self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got ' + str(self.cntdwn + 1) +
-                                'seconds ')
+                                ' seconds ')
 
         self.timer.start(Board.SPEED, self)
 
@@ -473,4 +473,4 @@ class Board(QFrame):
         self.cntdwn -= 1
 
         self.msg2statusbar.emit(self.players[self.active_player].name + '\'s turn. ' + str(self.cntdwn + 1)
-                                + ' seconds left')
+                                + ' seconds left.' + ' Snake ' + str(self.active_snake + 1) + ' active')
