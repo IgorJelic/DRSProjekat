@@ -279,8 +279,9 @@ class Board(QFrame):
             self.active_snake = 0
 
     def split_snake(self, active_player: int):
-        if len(self.players[active_player].snakes) < 2:
-            if active_player == 0:
+        if active_player == 0:
+            if len(self.players[active_player].snakes) < 2:
+
                 self.players[0].snakes.append(Snake())
                 self.players[0].snakes[1].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
                 self.players[0].snakes[1].current_x_head = self.players[0].snakes[1].snake[1][1]
@@ -289,8 +290,12 @@ class Board(QFrame):
                 # self.snakes.append(self.snake1)
                 self.players[0].snakes[1].grow_snake = True
                 self.flag = True
+                for i in range(5):
+                    self.move_snake(active_player, 1)
 
-            if active_player == 1:
+        if active_player == 1:
+            if len(self.players[active_player].snakes) < 2:
+
                 self.players[1].snakes.append(Snake())
 
                 self.players[1].snakes[1].snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
@@ -300,7 +305,11 @@ class Board(QFrame):
 
                 self.players[1].snakes[1].grow_snake = True
                 self.flag = True
-            if active_player == 2:
+                for i in range(5):
+                    self.move_snake(active_player, 1)
+        if active_player == 2:
+            if len(self.players[active_player].snakes) < 2:
+
                 self.players[2].snakes.append(Snake())
 
                 self.players[2].snakes[1].snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
@@ -310,7 +319,11 @@ class Board(QFrame):
                 # self.snakes.append(self.snake1)
                 self.players[2].snakes[1].grow_snake = True
                 self.flag = True
-            if active_player == 3:
+                for i in range(5):
+                    self.move_snake(active_player, 1)
+        if active_player == 3:
+            if len(self.players[active_player].snakes) < 2:
+
                 self.players[3].snakes.append(Snake())
 
                 self.players[3].snakes[1].snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
@@ -320,8 +333,8 @@ class Board(QFrame):
 
                 self.players[3].snakes[1].grow_snake = True
                 self.flag = True
-            for i in range(5):
-                self.move_snake(active_player, 1)
+                for i in range(5):
+                    self.move_snake(active_player, 1)
 
     def move_snake(self, ap: int, i: int):  # i = active_snake
 
