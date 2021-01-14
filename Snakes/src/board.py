@@ -54,16 +54,16 @@ class Board(QFrame):
         self.t = None
 
         if self.game_speed == 1:
-            self.t = PerpetualTimer(15, self.change_active_snake)
+            self.t = PerpetualTimer(15, self.change_active_player)
 
         elif self.game_speed == 2:
-            self.t = PerpetualTimer(12, self.change_active_snake)
+            self.t = PerpetualTimer(12, self.change_active_player)
 
         elif self.game_speed == 3:
-            self.t = PerpetualTimer(10, self.change_active_snake)
+            self.t = PerpetualTimer(10, self.change_active_player)
 
         else:
-            self.t = PerpetualTimer(15, self.change_active_snake)
+            self.t = PerpetualTimer(15, self.change_active_player)
 
         self.t.start()
         r = PerpetualTimer(0.985, self.countdown)
