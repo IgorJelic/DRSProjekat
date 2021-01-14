@@ -30,19 +30,6 @@ class Board(QFrame):
             self.players.append(Player(usernames[k]))
             self.players[k].snakes.append(Snake())
 
-        # self.snake1 = Snake()
-        # self.snake11 = Snake()  # druga zmija prvog igraca
-        # self.snake2 = Snake()
-        # self.snake22 = Snake()  # druga zmija drugog igraca
-        # self.snake3 = Snake()
-        # self.snake33 = Snake()  # druga zmija treceg igraca
-        # self.snake4 = Snake()
-        # self.snake44 = Snake()  # druga zmija cetvrtog igraca
-        # self.INDEX_SNAKE11 = 0
-        # self.INDEX_SNAKE22 = 1
-        # self.INDEX_SNAKE33 = 2
-        # self.INDEX_SNAKE44 = 3
-
         self.board = []
         self.steps = 1
         self.passed = False
@@ -147,7 +134,7 @@ class Board(QFrame):
 
         self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
-        # self.setStyleSheet('border-image: url(' + load_style_res('grass.png') + ') 0 0 0 0 stretch center')
+
         if self.num_of_players == 2:
             self.setStyleSheet('border-image: url(' + load_style_res('grass2ps.png') + ') 0 0 0 0 stretch center')
         elif self.num_of_players == 3:
@@ -173,8 +160,6 @@ class Board(QFrame):
         rect = self.contentsRect()
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
 
-        # for i in range(self.num_of_players):
-        # promenio sam petlju da se krece kroz sve ZMIJE a ne sve IGRACE
         for i in range(len(self.players)):
             for x in range(len(self.players[i].snakes)):
                 if not self.players[i].snakes[x].is_dead:
@@ -249,7 +234,6 @@ class Board(QFrame):
                 self.flag = True
                 self.key_presses = self.key_presses + 1
 
-        # proveravam da li je aktivna zmija DUZA ili JEDNAKA 10 polja, ako jeste, moguce je "roditi" novu
         elif key == Qt.Key_S:
             if self.tab_mode:
                 if len(self.players[self.active_player].snakes[self.active_snake].snake) >= 5:
@@ -316,7 +300,6 @@ class Board(QFrame):
                 self.players[2].snakes[1].current_x_head = self.players[2].snakes[1].snake[1][1]
                 self.players[2].snakes[1].current_y_head = self.players[2].snakes[1].snake[0][1]
                 self.players[2].snakes[1].direction = 'DOWN'
-                # self.snakes.append(self.snake1)
                 self.players[2].snakes[1].grow_snake = True
                 self.flag = True
                 for i in range(5):
@@ -338,7 +321,6 @@ class Board(QFrame):
 
     def move_snake(self, ap: int, i: int):  # i = active_snake
 
-        # print(str(self.combined_length))
         if self.key_presses <= len(self.players[self.active_player].snakes[self.active_snake].snake):
             if self.players[ap].snakes[i].direction == 'LEFT':
 
@@ -489,7 +471,6 @@ class Board(QFrame):
             elif self.game_speed == 3:
                 self.cntdwn = 10
         self.cntdwn -= 1
-        # print(str(self.cntdwn))
 
         self.msg2statusbar.emit(self.players[self.active_player].name + '\'s turn. ' + str(self.cntdwn + 1)
                                 + ' seconds left')
