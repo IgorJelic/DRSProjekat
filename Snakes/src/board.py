@@ -394,6 +394,8 @@ class Board(QFrame):
 
         for i in range(len(self.players)):
             for j in range(len(self.players[i].snakes)):
+                if self.players[i].snakes[j].is_dead:
+                    continue
                 for x in range(len(self.players[i].snakes[j].snake)):
                     if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
                             self.players[i].snakes[j].snake[x]:
