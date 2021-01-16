@@ -1,8 +1,11 @@
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
 from PyQt5.QtWidgets import QFrame
-
+import random
+import time
 from food import Food
+from bonus import Bonus
+from malus import Malus
 from helpers import load_style_res, load_res
 from player import Player
 from ppt_timer import PerpetualTimer
@@ -25,10 +28,24 @@ class Board(QFrame):
         self.tab_mode = multiple
         self.snakes = []
 
+
         self.players = []
         for k in range(len(self.usernames)):
             self.players.append(Player(usernames[k]))
             self.players[k].snakes.append(Snake())
+
+        # self.snake1 = Snake()
+        # self.snake11 = Snake()  # druga zmija prvog igraca
+        # self.snake2 = Snake()
+        # self.snake22 = Snake()  # druga zmija drugog igraca
+        # self.snake3 = Snake()
+        # self.snake33 = Snake()  # druga zmija treceg igraca
+        # self.snake4 = Snake()
+        # self.snake44 = Snake()  # druga zmija cetvrtog igraca
+        # self.INDEX_SNAKE11 = 0
+        # self.INDEX_SNAKE22 = 1
+        # self.INDEX_SNAKE33 = 2
+        # self.INDEX_SNAKE44 = 3
 
         self.board = []
         self.steps = 1
@@ -39,6 +56,12 @@ class Board(QFrame):
         self.key_presses = 0
         self.flag = False
         self.t = None
+
+        self.b = None
+        self.m = None
+
+        self.bonus_timer = PerpetualTimer(random.randint(5, 20), self.deus_ex_machine_bonus)
+        self.malus_timer = PerpetualTimer(random.randint(5, 20), self.deus_ex_machine_malus)
 
         if self.game_speed == 1:
             self.t = PerpetualTimer(15, self.change_active_player)
@@ -56,6 +79,8 @@ class Board(QFrame):
         r = PerpetualTimer(0.985, self.countdown)
         r.start()
         self.cntdwn = 0
+        self.bonus_timer.start()
+        self.malus_timer.start()
 
         if self.num_of_players == 2:
             self.players[0].snakes[0].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
@@ -121,6 +146,8 @@ class Board(QFrame):
                     self.move_snake(i, x)
 
         self.food = Food()
+        self.bonus = Bonus()
+        self.malus = Malus()
 
         if self.num_of_players == 2:
             for i in range(12):
@@ -128,13 +155,15 @@ class Board(QFrame):
         elif self.num_of_players == 3:
             for i in range(10):
                 self.food.drop_food()
+
         elif self.num_of_players == 4:
             for i in range(8):
                 self.food.drop_food()
 
+
         self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
-
+        # self.setStyleSheet('border-image: url(' + load_style_res('grass.png') + ') 0 0 0 0 stretch center')
         if self.num_of_players == 2:
             self.setStyleSheet('border-image: url(' + load_style_res('grass2ps.png') + ') 0 0 0 0 stretch center')
         elif self.num_of_players == 3:
@@ -151,7 +180,7 @@ class Board(QFrame):
     def start(self):
 
         self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got ' + str(self.cntdwn + 1) +
-                                ' seconds ')
+                                'seconds ')
 
         self.timer.start(Board.SPEED, self)
 
@@ -160,6 +189,8 @@ class Board(QFrame):
         rect = self.contentsRect()
         boardtop = rect.bottom() - Board.HEIGHTINBLOCKS * self.square_height()
 
+        # for i in range(self.num_of_players):
+        # promenio sam petlju da se krece kroz sve ZMIJE a ne sve IGRACE
         for i in range(len(self.players)):
             for x in range(len(self.players[i].snakes)):
                 if not self.players[i].snakes[x].is_dead:
@@ -183,8 +214,20 @@ class Board(QFrame):
         for pos in self.food.pos:
             self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
                            boardtop + pos[1] * self.square_height(), 'apple.png')
+        for pos in self.bonus.pos:
+            self.draw_bonus_or_malus(painter, rect.left() + pos[0] * self.square_width(),
+                           boardtop + pos[1] * self.square_height(), 'apple.png')
+        for pos in self.malus.pos:
+            self.draw_bonus_or_malus(painter, rect.left() + pos[0] * self.square_width(),
+                           boardtop + pos[1] * self.square_height(), 'apple.png')
 
     def draw_food(self, painter, x, y, file):
+
+        image = QImage(load_res(file))
+
+        painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
+
+    def draw_bonus_or_malus(self, painter, x, y, file):
 
         image = QImage(load_res(file))
 
@@ -234,6 +277,7 @@ class Board(QFrame):
                 self.flag = True
                 self.key_presses = self.key_presses + 1
 
+        # proveravam da li je aktivna zmija DUZA ili JEDNAKA 10 polja, ako jeste, moguce je "roditi" novu
         elif key == Qt.Key_S:
             if self.tab_mode:
                 if len(self.players[self.active_player].snakes[self.active_snake].snake) >= 5:
@@ -300,6 +344,7 @@ class Board(QFrame):
                 self.players[2].snakes[1].current_x_head = self.players[2].snakes[1].snake[1][1]
                 self.players[2].snakes[1].current_y_head = self.players[2].snakes[1].snake[0][1]
                 self.players[2].snakes[1].direction = 'DOWN'
+                # self.snakes.append(self.snake1)
                 self.players[2].snakes[1].grow_snake = True
                 self.flag = True
                 for i in range(5):
@@ -321,6 +366,7 @@ class Board(QFrame):
 
     def move_snake(self, ap: int, i: int):  # i = active_snake
 
+        # print(str(self.combined_length))
         if self.key_presses <= len(self.players[self.active_player].snakes[self.active_snake].snake):
             if self.players[ap].snakes[i].direction == 'LEFT':
 
@@ -417,8 +463,40 @@ class Board(QFrame):
                     if pos == self.players[i].snakes[x].snake[0]:
                         self.food.pos.remove(pos)
                         self.food.drop_food()
-
                         self.players[i].snakes[x].grow_snake = True
+
+    def deus_ex_machine_bonus(self):
+        self.bonus_timer.cancel()
+        self.bonus.drop_bonus()
+        time.sleep(2)
+        for pos in self.bonus.pos:
+            for i in range(len(self.players)):
+                for x in range(len(self.players[i].snakes)):
+                    if pos == self.players[i].snakes[x].snake[0]:
+                        self.bonus.pos.remove(pos)
+                        self.players[i].snakes[x].grow_snake = True
+                        self.bonus_timer.start()
+
+                    else:
+                        self.bonus.pos.remove(pos)
+                        self.bonus_timer.start()
+
+
+    def deus_ex_machine_malus(self):
+        self.malus_timer.cancel()
+        self.malus.drop_malus()
+        time.sleep(2)
+        for pos in self.malus.pos:
+            for i in range(len(self.players)):
+                for x in range(len(self.players[i].snakes)):
+                    if pos == self.players[i].snakes[x].snake[0]:
+                        self.food.pos.remove(pos)
+                        self.players[i].snakes[x].snake.pop()
+                        self.malus_timer.start()
+                    else:
+                        self.malus.pos.remove(pos)
+                        self.malus_timer.start()
+
 
     def wall_collision(self):
         x_left = 1
@@ -471,6 +549,7 @@ class Board(QFrame):
             elif self.game_speed == 3:
                 self.cntdwn = 10
         self.cntdwn -= 1
+        # print(str(self.cntdwn))
 
         self.msg2statusbar.emit(self.players[self.active_player].name + '\'s turn. ' + str(self.cntdwn + 1)
-                                + ' seconds left.' + ' Snake ' + str(self.active_snake + 1) + ' active')
+                                + ' seconds left')
