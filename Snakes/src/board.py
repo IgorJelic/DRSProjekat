@@ -454,10 +454,14 @@ class Board(QFrame):
                         ') 0 0 0 0 stretch center')
                     break
         else:
-
             self.active_player = 0
-            self.setStyleSheet('border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
-                               ') 0 0 0 0 stretch center')
+            for i in range(len(self.players[self.active_player].snakes)):
+                if not self.players[self.active_player].snakes[i].is_dead:
+                    self.active_snake = i
+                    self.setStyleSheet(
+                        'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
+                        ') 0 0 0 0 stretch center')
+                    break
 
     def check_winner(self):
         pass
