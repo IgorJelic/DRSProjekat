@@ -4,3 +4,4 @@ class Player(object):
         self.name = name
         self.snakes = []
         self.score = 0
+        self.is_dead = False
