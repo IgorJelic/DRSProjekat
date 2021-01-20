@@ -28,7 +28,7 @@ class Board(QFrame):
         self.tab_mode = multiple
         self.snakes = []
 
-self.alive = self.num_of_players
+
         self.players = []
         for k in range(len(self.usernames)):
             self.players.append(Player(usernames[k]))
