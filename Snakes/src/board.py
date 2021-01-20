@@ -413,7 +413,7 @@ class Board(QFrame):
                         if i == self.active_player:
                             continue
                         self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                        if len(self.players[self.active_player].snakes) > 1 and self.players[self.active_player].is_dead\
+                        if len(self.players[self.active_player].snakes) > 1 and self.players[self.active_player].is_dead \
                                 == False:
                             self.change_active_snake()
                         else:
@@ -474,6 +474,7 @@ class Board(QFrame):
     def change_active_player(self):
         self.flag = False
         self.key_presses = 0
+
         if self.active_player < len(self.players) - 1:
             i = self.active_player + 1
         else:
@@ -487,11 +488,18 @@ class Board(QFrame):
                         break
                 self.active_player = i
                 break
-            i += 1
+            else:
+
+                if i + 1 == len(self.players):
+                    i = 0
+                else:
+                    i += 1
+
+                continue
 
         self.setStyleSheet(
-                'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
-                ') 0 0 0 0 stretch center')
+            'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
+            ') 0 0 0 0 stretch center')
 
     def check_winner(self):
         pass

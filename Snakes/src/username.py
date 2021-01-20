@@ -8,71 +8,6 @@ from PyQt5.QtWidgets import QWidget, QMessageBox, QLabel, QDesktopWidget, QLineE
 from helpers import load_res
 
 
-# class Username1Window(QWidget):
-#     def __init__(self):
-#         super(Username1Window, self).__init__()
-#         self.usernames = []
-#         self.game_window = None
-#
-#         self.setGeometry(100, 100, 960, 720)
-#         self.setWindowTitle('1Player')
-#         screen = QDesktopWidget().screenGeometry()
-#         size = self.geometry()
-#         self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
-#         self.setWindowIcon(QIcon(load_res('icon.png')))
-#
-#         image = QImage(load_res('wp2409705.jpg'))
-#         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
-#         palette = QPalette()
-#         palette.setBrush(QPalette.Window, QBrush(scale_image))
-#
-#         font = "Spongeboy Me Bob"
-#
-#         self.usernameLabel = QLabel('PLAYER 1: ', self)
-#         font_label = self.usernameLabel.font()
-#         font_label.setPointSize(20)
-#         font_label.setFamily(font)
-#         self.usernameLabel.setFont(font_label)
-#         self.usernameLabel.setFixedSize(250, 150)
-#         self.usernameLabel.move(80, 150)
-#
-#         self.usernameEdit = QLineEdit(self)
-#         font_edit = self.usernameEdit.font()
-#         font_edit.setPointSize(22)
-#         font_edit.setFamily(font)
-#         self.usernameEdit.setFont(font_edit)
-#         self.usernameEdit.setFixedSize(400, 70)
-#         self.usernameEdit.move(80, 250)
-#
-#         self.start_button = QPushButton(self)
-#         self.start_button.setText("Start")
-#         self.start_button.setFont(QFont(font))
-#         self.start_button.setStyleSheet("color: black; font-size:46px; background-color: green")
-#         self.start_button.setToolTip("Start the game")
-#         self.start_button.clicked.connect(self.start_button_pressed)
-#         self.start_button.resize(self.start_button.sizeHint())
-#         self.start_button.setMinimumSize(150, 100)
-#         self.start_button.move(150, 600)
-#
-#         self.setPalette(palette)
-#
-#     def validate(self, usernameEdit=None):
-#         if usernameEdit != "":
-#             return True
-#         else:
-#             return False
-#
-#     def start_button_pressed(self):
-#         if self.validate(self.usernameEdit.text()):
-#             self.hide()
-#             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-#             self.game_window = game.SnakeGame(self.usernames) # SREDITI KONSTRUKTOR SnakeGame, prosledjujemo vrv i username-ove?
-#             self.game_window.show()
-#         else:
-#             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
-#             pass
-
-
 class Username2Window(QWidget):
 
     def __init__(self, speed: int):
@@ -93,6 +28,7 @@ class Username2Window(QWidget):
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
+        self.setFixedSize(self.size())
 
         font = "Spongeboy Me Bob"
 
@@ -194,6 +130,7 @@ class Username3Window(QWidget):
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
+        self.setFixedSize(self.size())
 
         font = "Spongeboy Me Bob"
 
@@ -311,6 +248,7 @@ class Username4Window(QWidget):
         scale_image = image.scaled(QSize(960, 720))  # resize Image to widgets size
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(scale_image))
+        self.setFixedSize(self.size())
 
         font = "Spongeboy Me Bob"
 
