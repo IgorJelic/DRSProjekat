@@ -8,3 +8,4 @@ class Snake(object):
         self.grow_snake = False
         self.is_dead = False
         self.is_active = False
+        self.moves_left = 5
