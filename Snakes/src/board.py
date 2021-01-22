@@ -261,66 +261,40 @@ class Board(QFrame):
     def split_snake(self, active_player: int):
         self.check_number_of_alive_snakes()
         new_snake = Snake()
+        snake = []
         if self.players[active_player].can_split:
 
-            if self.players[active_player].snakes[self.active_snake].direction == 'RIGHT':
-                new_snake.snake = [
-                    [self.players[active_player].snakes[self.active_snake].snake[0][0],
-                     self.players[active_player].snakes[self.active_snake].snake[0][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[1][0],
-                     self.players[active_player].snakes[self.active_snake].snake[1][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[2][0],
-                     self.players[active_player].snakes[self.active_snake].snake[2][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[3][0],
-                     self.players[active_player].snakes[self.active_snake].snake[3][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[4][0],
-                     self.players[active_player].snakes[self.active_snake].snake[4][1] - 3]]
-            elif self.players[active_player].snakes[self.active_snake].direction == 'LEFT':
-                new_snake.snake = [
-                    [self.players[active_player].snakes[self.active_snake].snake[0][0],
-                     self.players[active_player].snakes[self.active_snake].snake[0][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[1][0],
-                     self.players[active_player].snakes[self.active_snake].snake[1][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[2][0],
-                     self.players[active_player].snakes[self.active_snake].snake[2][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[3][0],
-                     self.players[active_player].snakes[self.active_snake].snake[3][1] - 3],
-                    [self.players[active_player].snakes[self.active_snake].snake[4][0],
-                     self.players[active_player].snakes[self.active_snake].snake[4][1] - 3]]
-            elif self.players[active_player].snakes[self.active_snake].direction == 'UP':
-                new_snake.snake = [
-                    [self.players[active_player].snakes[self.active_snake].snake[0][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[0][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[1][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[1][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[2][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[2][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[3][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[3][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[4][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[4][1]]]
-            elif self.players[active_player].snakes[self.active_snake].direction == 'DOWN':
-                new_snake.snake = [
-                    [self.players[active_player].snakes[self.active_snake].snake[0][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[0][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[1][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[1][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[2][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[2][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[3][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[3][1]],
-                    [self.players[active_player].snakes[self.active_snake].snake[4][0] - 3,
-                     self.players[active_player].snakes[self.active_snake].snake[4][1]]]
-
+            if self.players[active_player].snakes[self.active_snake].direction == 'RIGHT' or \
+                    self.players[active_player].snakes[self.active_snake].direction == 'LEFT':
+                for i in range(5):
+                    snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
+                                  self.players[active_player].snakes[self.active_snake].snake[i][1] - 3])
+                if not self.check_split_collision(snake):
+                    snake.clear()
+                    for i in range(5):
+                        snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
+                                      self.players[active_player].snakes[self.active_snake].snake[i][1] + 3])
+                    if not self.check_split_collision(snake):
+                        return
+            elif self.players[active_player].snakes[self.active_snake].direction == 'UP' or \
+                    self.players[active_player].snakes[self.active_snake].direction == 'DOWN':
+                for i in range(5):
+                    snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0] - 3,
+                                  self.players[active_player].snakes[self.active_snake].snake[i][1]])
+                if not self.check_split_collision(snake):
+                    snake.clear()
+                    for i in range(5):
+                        snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0] + 3,
+                                      self.players[active_player].snakes[self.active_snake].snake[i][1]])
+                    if not self.check_split_collision(snake):
+                        return
+            new_snake.snake = snake
             new_snake.direction = self.players[active_player].snakes[self.active_snake].direction
-            print(self.check_split_collision(new_snake))
 
             new_snake.current_x_head = new_snake.snake[0][0]
             new_snake.current_y_head = new_snake.snake[0][1]
-            if self.check_split_collision(new_snake):
-                print("Unable to split")
-            else:
-                self.players[active_player].snakes.append(new_snake)
+
+            self.players[active_player].snakes.append(new_snake)
 
     def move_snake(self, ap: int, i: int):
 
@@ -411,14 +385,31 @@ class Board(QFrame):
                         self.update()
 
     def check_split_collision(self, snake) -> bool:
-
+        can_split = True
+        x_left = 1
+        x_right = 58
+        y_bottom = 38
+        y_top = 1
         for x in range(len(self.players)):
             for j in range(len(self.players[x].snakes)):
                 for q in range(len(self.players[x].snakes[j].snake)):
                     for t in range(5):
-                        if snake.snake[t] == self.players[x].snakes[j].snake[q]:
-                            snake.is_dead = True
-        return snake.is_dead
+                        if snake[t] == self.players[x].snakes[j].snake[q]:
+                            can_split = False
+        for i in range(2, 38):
+            for x in range(5):
+                if snake[x] == [x_left, i] \
+                        or snake[x] == [x_right, i]:
+                    can_split = False
+        for j in range(2, 58):
+            for x in range(5):
+                if snake[x] == [j, y_bottom] \
+                        or snake[x] == [j, y_top]:
+                    can_split = False
+        if not can_split:
+            self.msg2statusbar.emit('Splitting is currently impossible')
+
+        return can_split
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
