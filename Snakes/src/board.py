@@ -261,6 +261,7 @@ class Board(QFrame):
                 continue
 
     def split_snake(self, active_player: int):
+        self.check_number_of_alive_snakes()
         if self.players[active_player].can_split:
             i = len(self.players[active_player].snakes)
             self.players[active_player].snakes.append(Snake())
@@ -336,17 +337,16 @@ class Board(QFrame):
             if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
                     self.players[self.active_player].snakes[self.active_snake].snake[j]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                if len(self.players[self.active_player].snakes) > 1 and self.players[self.active_player].is_dead \
-                        == False:
-                    self.change_active_snake()
+                self.check_if_alive()
+                if self.players[self.active_player].is_dead:
+                    self.change_active_player()
 
                 else:
-                    self.change_active_player()
+                    self.change_active_snake()
                 break
         self.update()
 
     def snake_collision(self):
-
         for i in range(len(self.players)):
             for j in range(len(self.players[i].snakes)):
                 if self.players[i].snakes[j].is_dead:
@@ -357,8 +357,8 @@ class Board(QFrame):
                         if i == self.active_player:
                             continue
                         self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                        if len(self.players[self.active_player].snakes) > 1 and self.players[self.active_player].is_dead \
-                                == False:
+                        self.check_if_alive()
+                        if not self.players[self.active_player].is_dead:
                             self.change_active_snake()
                         else:
                             self.change_active_player()
@@ -370,8 +370,6 @@ class Board(QFrame):
             self.is_food_collision()
             self.wall_collision()
             self.snake_collision()
-            self.check_if_alive()
-            self.check_number_of_alive_snakes()
             if self.flag:
                 self.move_snake(self.active_player, self.active_snake)
             self.update()
@@ -396,22 +394,22 @@ class Board(QFrame):
             if self.players[self.active_player].snakes[self.active_snake].snake[0] == [x_left, i] \
                     or self.players[self.active_player].snakes[self.active_snake].snake[0] == [x_right, i]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                if len(self.players[self.active_player].snakes) > 1 and self.players[
-                    self.active_player].is_dead == False:
-                    self.change_active_snake()
-                else:
+                self.check_if_alive()
+                if self.players[self.active_player].is_dead:
                     self.change_active_player()
+                else:
+                    self.change_active_snake()
                 self.update()
 
         for j in range(2, 58):
             if self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_bottom] \
                     or self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_top]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                if len(self.players[self.active_player].snakes) > 1 and self.players[
-                    self.active_player].is_dead == False:
-                    self.change_active_snake()
-                else:
+                self.check_if_alive()
+                if self.players[self.active_player].is_dead:
                     self.change_active_player()
+                else:
+                    self.change_active_snake()
                 self.update()
 
     def change_active_player(self):
@@ -437,7 +435,6 @@ class Board(QFrame):
                     i = 0
                 else:
                     i += 1
-
                 continue
 
         self.setStyleSheet(
