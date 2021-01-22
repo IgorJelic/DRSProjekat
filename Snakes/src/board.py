@@ -27,7 +27,7 @@ class Board(QFrame):
         self.tab_mode = multiple
         self.alive = self.num_of_players
         self.players = []
-        self.next_pressed = False
+        self.normal_skip = False
         for k in range(len(self.usernames)):
             self.players.append(Player(usernames[k]))
             self.players[k].snakes.append(Snake())
@@ -42,15 +42,19 @@ class Board(QFrame):
         self.flag = False
         self.t = None
         if self.game_speed == 1:
+            self.normal_skip = True
             self.t = PerpetualTimer(15, self.change_active_player)
 
         elif self.game_speed == 2:
+            self.normal_skip = True
             self.t = PerpetualTimer(12, self.change_active_player)
 
         elif self.game_speed == 3:
+            self.normal_skip = True
             self.t = PerpetualTimer(10, self.change_active_player)
 
         else:
+            self.normal_skip = True
             self.t = PerpetualTimer(15, self.change_active_player)
 
         self.t.start()
@@ -229,7 +233,7 @@ class Board(QFrame):
                     self.split_snake(self.active_player)
 
         elif key == Qt.Key_N:
-            self.next_pressed = True
+            self.normal_skip = True
             self.change_active_player()
             self.t.cancel()
 
@@ -345,7 +349,6 @@ class Board(QFrame):
                 self.check_if_alive()
                 if self.players[self.active_player].is_dead:
                     self.change_active_player()
-
                 else:
                     self.change_active_snake()
                 break
@@ -415,9 +418,9 @@ class Board(QFrame):
                 self.update()
 
     def change_active_player(self):
-        if not self.next_pressed:
-            time.sleep(0.3)
-        self.next_pressed = False
+        if not self.normal_skip:
+            time.sleep(1)
+        self.normal_skip = False
         self.flag = False
         for i in self.players[self.active_player].snakes:
             i.steps_moved = 0
