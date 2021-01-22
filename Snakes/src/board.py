@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
 from PyQt5.QtWidgets import QFrame
@@ -25,7 +27,7 @@ class Board(QFrame):
         self.tab_mode = multiple
         self.alive = self.num_of_players
         self.players = []
-
+        self.next_pressed = False
         for k in range(len(self.usernames)):
             self.players.append(Player(usernames[k]))
             self.players[k].snakes.append(Snake())
@@ -227,6 +229,7 @@ class Board(QFrame):
                     self.split_snake(self.active_player)
 
         elif key == Qt.Key_N:
+            self.next_pressed = True
             self.change_active_player()
             self.t.cancel()
 
@@ -331,6 +334,8 @@ class Board(QFrame):
             else:
                 self.players[ap].snakes[i].grow_snake = False
 
+            self.check_collisions()
+
     def is_suicide(self):
 
         for j in range(2, len(self.players[self.active_player].snakes[self.active_snake].snake)):
@@ -366,10 +371,7 @@ class Board(QFrame):
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
-            self.is_suicide()
-            self.is_food_collision()
-            self.wall_collision()
-            self.snake_collision()
+
             if self.flag:
                 self.move_snake(self.active_player, self.active_snake)
             self.update()
@@ -413,6 +415,9 @@ class Board(QFrame):
                 self.update()
 
     def change_active_player(self):
+        if not self.next_pressed:
+            time.sleep(0.3)
+        self.next_pressed = False
         self.flag = False
         for i in self.players[self.active_player].snakes:
             i.steps_moved = 0
@@ -471,3 +476,10 @@ class Board(QFrame):
             self.players[self.active_player].can_split = True
         else:
             self.players[self.active_player].can_split = False
+
+    def check_collisions(self):
+        self.is_suicide()
+        self.is_food_collision()
+        self.wall_collision()
+        self.snake_collision()
+        self.update()
