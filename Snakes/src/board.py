@@ -27,6 +27,7 @@ class Board(QFrame):
         self.combined_length = 0
         self.tab_mode = multiple
         self.players = []
+        self.interrupt_skip = False
         for k in range(len(self.usernames)):
             self.players.append(Player(usernames[k]))
             self.players[k].snakes.append(Snake())
@@ -48,86 +49,74 @@ class Board(QFrame):
         self.malus_timer = PerpetualTimer(random.randint(5, 20), self.deus_ex_machine_malus)
 
         if self.game_speed == 1:
-            self.t = PerpetualTimer(15, self.change_active_player)
+
+            self.t = PerpetualTimer(15.05, self.change_active_player)
 
         elif self.game_speed == 2:
-            self.t = PerpetualTimer(12, self.change_active_player)
+
+            self.t = PerpetualTimer(12.05, self.change_active_player)
 
         elif self.game_speed == 3:
-            self.t = PerpetualTimer(10, self.change_active_player)
+
+            self.t = PerpetualTimer(10.05, self.change_active_player)
 
         else:
             self.t = PerpetualTimer(15, self.change_active_player)
 
+        self.r = PerpetualTimer(0.995, self.countdown)
+        self.r.start()
         self.t.start()
-        r = PerpetualTimer(0.985, self.countdown)
-        r.start()
         self.cntdwn = 0
         self.bonus_timer.start()
         self.malus_timer.start()
 
         if self.num_of_players == 2:
-            self.players[0].snakes[0].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
-            self.players[0].snakes[0].current_x_head = self.players[0].snakes[0].snake[1][1]
+            self.players[0].snakes[0].snake = [[14, 35], [13, 35], [12, 35], [11, 35], [10, 35]]
+            self.players[0].snakes[0].current_x_head = self.players[0].snakes[0].snake[0][0]
             self.players[0].snakes[0].current_y_head = self.players[0].snakes[0].snake[0][1]
             self.players[0].snakes[0].direction = 'RIGHT'
-            self.players[0].snakes[0].grow_snake = True
 
-            self.players[1].snakes[0].snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
-            self.players[1].snakes[0].current_x_head = self.players[1].snakes[0].snake[1][1]
+            self.players[1].snakes[0].snake = [[46, 5], [47, 5], [48, 5], [49, 5], [50, 5]]
+            self.players[1].snakes[0].current_x_head = self.players[1].snakes[0].snake[0][0]
             self.players[1].snakes[0].current_y_head = self.players[1].snakes[0].snake[0][1]
             self.players[1].snakes[0].direction = 'LEFT'
-            self.players[1].snakes[0].grow_snake = True
 
         elif self.num_of_players == 3:
-            self.players[0].snakes[0].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
-            self.players[0].snakes[0].current_x_head = self.players[0].snakes[0].snake[1][1]
+            self.players[0].snakes[0].snake = [[14, 35], [13, 35], [12, 35], [11, 35], [10, 35]]
+            self.players[0].snakes[0].current_x_head = self.players[0].snakes[0].snake[0][0]
             self.players[0].snakes[0].current_y_head = self.players[0].snakes[0].snake[0][1]
             self.players[0].snakes[0].direction = 'RIGHT'
-            self.players[0].snakes[0].grow_snake = True
 
-            self.players[1].snakes[0].snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
-            self.players[1].snakes[0].current_x_head = self.players[1].snakes[0].snake[1][1]
+            self.players[1].snakes[0].snake = [[46, 5], [47, 5], [48, 5], [49, 5], [50, 5]]
+            self.players[1].snakes[0].current_x_head = self.players[1].snakes[0].snake[0][0]
             self.players[1].snakes[0].current_y_head = self.players[1].snakes[0].snake[0][1]
             self.players[1].snakes[0].direction = 'LEFT'
-            self.players[1].snakes[0].grow_snake = True
 
-            self.players[2].snakes[0].snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
-            self.players[2].snakes[0].current_x_head = self.players[2].snakes[0].snake[1][1]
+            self.players[2].snakes[0].snake = [[10, 10], [10, 9], [10, 8], [10, 7], [10, 6]]
+            self.players[2].snakes[0].current_x_head = self.players[2].snakes[0].snake[0][0]
             self.players[2].snakes[0].current_y_head = self.players[2].snakes[0].snake[0][1]
             self.players[2].snakes[0].direction = 'DOWN'
-            self.players[2].snakes[0].grow_snake = True
 
         elif self.num_of_players == 4:
-            self.players[0].snakes[0].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
-            self.players[0].snakes[0].current_x_head = self.players[0].snakes[0].snake[1][1]
+            self.players[0].snakes[0].snake = [[14, 35], [13, 35], [12, 35], [11, 35], [10, 35]]
+            self.players[0].snakes[0].current_x_head = self.players[0].snakes[0].snake[0][0]
             self.players[0].snakes[0].current_y_head = self.players[0].snakes[0].snake[0][1]
             self.players[0].snakes[0].direction = 'RIGHT'
-            self.players[0].snakes[0].grow_snake = True
 
-            self.players[1].snakes[0].snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
-            self.players[1].snakes[0].current_x_head = self.players[1].snakes[0].snake[1][1]
+            self.players[1].snakes[0].snake = [[46, 5], [47, 5], [48, 5], [49, 5], [50, 5]]
+            self.players[1].snakes[0].current_x_head = self.players[1].snakes[0].snake[0][0]
             self.players[1].snakes[0].current_y_head = self.players[1].snakes[0].snake[0][1]
             self.players[1].snakes[0].direction = 'LEFT'
-            self.players[1].snakes[0].grow_snake = True
 
-            self.players[2].snakes[0].snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
-            self.players[2].snakes[0].current_x_head = self.players[2].snakes[0].snake[1][1]
+            self.players[2].snakes[0].snake = [[10, 10], [10, 9], [10, 8], [10, 7], [10, 6]]
+            self.players[2].snakes[0].current_x_head = self.players[2].snakes[0].snake[0][0]
             self.players[2].snakes[0].current_y_head = self.players[2].snakes[0].snake[0][1]
             self.players[2].snakes[0].direction = 'DOWN'
-            self.players[2].snakes[0].grow_snake = True
 
-            self.players[3].snakes[0].snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
-            self.players[3].snakes[0].current_x_head = self.players[3].snakes[0].snake[1][1]
+            self.players[3].snakes[0].snake = [[50, 30], [50, 31], [50, 32], [50, 33], [50, 34]]
+            self.players[3].snakes[0].current_x_head = self.players[3].snakes[0].snake[0][0]
             self.players[3].snakes[0].current_y_head = self.players[3].snakes[0].snake[0][1]
             self.players[3].snakes[0].direction = 'UP'
-
-            self.players[3].snakes[0].grow_snake = True
-
-        for mvmt in range(5):
-            for i in range(self.num_of_players):
-                for x in range(len(self.players[i].snakes)):
-                    self.move_snake(i, x)
 
         self.food = Food()
         self.bonus = Bonus()
@@ -139,14 +128,13 @@ class Board(QFrame):
         elif self.num_of_players == 3:
             for i in range(10):
                 self.food.drop_food()
-
         elif self.num_of_players == 4:
             for i in range(8):
                 self.food.drop_food()
 
         self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
-        # self.setStyleSheet('border-image: url(' + load_style_res('grass.png') + ') 0 0 0 0 stretch center')
+
         if self.num_of_players == 2:
             self.setStyleSheet('border-image: url(' + load_style_res('grass2ps.png') + ') 0 0 0 0 stretch center')
         elif self.num_of_players == 3:
@@ -163,7 +151,7 @@ class Board(QFrame):
     def start(self):
 
         self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got ' + str(self.cntdwn + 1) +
-                                'seconds ')
+                                ' seconds ')
 
         self.timer.start(Board.SPEED, self)
 
@@ -245,25 +233,21 @@ class Board(QFrame):
             if self.players[self.active_player].snakes[self.active_snake].direction != 'RIGHT':
                 self.players[self.active_player].snakes[self.active_snake].direction = 'LEFT'
                 self.flag = True
-                self.key_presses = self.key_presses + 1
 
         elif key == Qt.Key_Right:
             if self.players[self.active_player].snakes[self.active_snake].direction != 'LEFT':
                 self.players[self.active_player].snakes[self.active_snake].direction = 'RIGHT'
                 self.flag = True
-                self.key_presses = self.key_presses + 1
 
         elif key == Qt.Key_Down:
             if self.players[self.active_player].snakes[self.active_snake].direction != 'UP':
                 self.players[self.active_player].snakes[self.active_snake].direction = 'DOWN'
                 self.flag = True
-                self.key_presses = self.key_presses + 1
 
         elif key == Qt.Key_Up:
             if self.players[self.active_player].snakes[self.active_snake].direction != 'DOWN':
                 self.players[self.active_player].snakes[self.active_snake].direction = 'UP'
                 self.flag = True
-                self.key_presses = self.key_presses + 1
 
         elif key == Qt.Key_S:
             if self.tab_mode:
@@ -271,16 +255,8 @@ class Board(QFrame):
                     self.split_snake(self.active_player)
 
         elif key == Qt.Key_N:
+            self.interrupt_skip = True
             self.change_active_player()
-            self.t.cancel()
-
-            self.t.start()
-            if self.game_speed == 1:
-                self.cntdwn = 15
-            elif self.game_speed == 2:
-                self.cntdwn = 12
-            elif self.game_speed == 3:
-                self.cntdwn = 5
 
         elif key == Qt.Key_Tab:
             if len(self.players[self.active_player].snakes) > 1:
@@ -300,77 +276,54 @@ class Board(QFrame):
                 self.active_snake = 0
 
     def split_snake(self, active_player: int):
-        if active_player == 0:
-            if len(self.players[active_player].snakes) < 2:
+        self.check_number_of_alive_snakes()
+        new_snake = Snake()
+        snake = []
+        if self.players[active_player].can_split:
 
-                self.players[0].snakes.append(Snake())
-                self.players[0].snakes[1].snake = [[40, 35], [15, 10], [0, 17], [0, 40]]
-                self.players[0].snakes[1].current_x_head = self.players[0].snakes[1].snake[1][1]
-                self.players[0].snakes[1].current_y_head = self.players[0].snakes[1].snake[0][1]
-                self.players[0].snakes[1].direction = 'RIGHT'
-                self.players[0].snakes[1].grow_snake = True
-                k = self.key_presses
-                self.key_presses = 0
+            if self.players[active_player].snakes[self.active_snake].direction == 'RIGHT' or \
+                    self.players[active_player].snakes[self.active_snake].direction == 'LEFT':
                 for i in range(5):
-                    self.move_snake(active_player, 1)
-                self.key_presses = k
-        if active_player == 1:
-            if len(self.players[active_player].snakes) < 2:
-
-                self.players[1].snakes.append(Snake())
-
-                self.players[1].snakes[1].snake = [[0, 5], [0, 50], [0, 17], [0, 40]]
-                self.players[1].snakes[1].current_x_head = self.players[1].snakes[1].snake[1][1]
-                self.players[1].snakes[1].current_y_head = self.players[1].snakes[1].snake[0][1]
-                self.players[1].snakes[1].direction = 'LEFT'
-                self.players[1].snakes[1].grow_snake = True
-                k = self.key_presses
-                self.key_presses = 0
+                    snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
+                                  self.players[active_player].snakes[self.active_snake].snake[i][1] - 3])
+                if not self.check_split_collision(snake):
+                    snake.clear()
+                    for i in range(5):
+                        snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
+                                      self.players[active_player].snakes[self.active_snake].snake[i][1] + 3])
+                    if not self.check_split_collision(snake):
+                        return
+            elif self.players[active_player].snakes[self.active_snake].direction == 'UP' or \
+                    self.players[active_player].snakes[self.active_snake].direction == 'DOWN':
                 for i in range(5):
-                    self.move_snake(active_player, 1)
-                self.key_presses = k
-        if active_player == 2:
-            if len(self.players[active_player].snakes) < 2:
+                    snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0] - 3,
+                                  self.players[active_player].snakes[self.active_snake].snake[i][1]])
+                if not self.check_split_collision(snake):
+                    snake.clear()
+                    for i in range(5):
+                        snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0] + 3,
+                                      self.players[active_player].snakes[self.active_snake].snake[i][1]])
+                    if not self.check_split_collision(snake):
+                        return
+            new_snake.snake = snake
+            new_snake.direction = self.players[active_player].snakes[self.active_snake].direction
 
-                self.players[2].snakes.append(Snake())
+            new_snake.current_x_head = new_snake.snake[0][0]
+            new_snake.current_y_head = new_snake.snake[0][1]
 
-                self.players[2].snakes[1].snake = [[0, 5], [0, 10], [0, 17], [0, 40]]
-                self.players[2].snakes[1].current_x_head = self.players[2].snakes[1].snake[1][1]
-                self.players[2].snakes[1].current_y_head = self.players[2].snakes[1].snake[0][1]
-                self.players[2].snakes[1].direction = 'DOWN'
-                self.players[2].snakes[1].grow_snake = True
-                k = self.key_presses
-                self.key_presses = 0
-                for i in range(5):
-                    self.move_snake(active_player, 1)
-                self.key_presses = k
-        if active_player == 3:
-            if len(self.players[active_player].snakes) < 2:
-
-                self.players[3].snakes.append(Snake())
-
-                self.players[3].snakes[1].snake = [[0, 35], [0, 50], [0, 17], [0, 40]]
-                self.players[3].snakes[1].current_x_head = self.players[3].snakes[1].snake[1][1]
-                self.players[3].snakes[1].current_y_head = self.players[3].snakes[1].snake[0][1]
-                self.players[3].snakes[1].direction = 'UP'
-
-                self.players[3].snakes[1].grow_snake = True
-                k = self.key_presses
-                self.key_presses = 0
-                for i in range(5):
-                    self.move_snake(active_player, 1)
-                self.key_presses = k
+            self.players[active_player].snakes.append(new_snake)
 
     def move_snake(self, ap: int, i: int):
 
-        if self.key_presses <= len(self.players[self.active_player].snakes[self.active_snake].snake):
+        if self.players[ap].snakes[i].steps_moved < \
+                len(self.players[ap].snakes[i].snake):
             if self.players[ap].snakes[i].direction == 'LEFT':
 
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
                     self.players[ap].snakes[i].current_x_head - 1, \
                     self.players[ap].snakes[i].current_y_head
                 self.flag = False
-                self.moves = self.moves - 1
+                self.players[ap].snakes[i].steps_moved += 1
                 if self.players[ap].snakes[i].current_x_head < 0:
                     self.players[ap].snakes[i].current_x_head = Board.WIDTHINBLOCKS - 1
             if self.players[ap].snakes[i].direction == 'RIGHT':
@@ -380,6 +333,7 @@ class Board(QFrame):
                 self.flag = False
                 if self.players[ap].snakes[i].current_x_head == Board.WIDTHINBLOCKS:
                     self.players[ap].snakes[i].current_x_head = 0
+                self.players[ap].snakes[i].steps_moved += 1
 
             if self.players[ap].snakes[i].direction == 'DOWN':
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
@@ -388,6 +342,8 @@ class Board(QFrame):
                 self.flag = False
                 if self.players[ap].snakes[i].current_y_head == Board.HEIGHTINBLOCKS:
                     self.players[ap].snakes[i].current_y_head = 0
+                self.players[ap].snakes[i].steps_moved += 1
+
             if self.players[ap].snakes[i].direction == 'UP':
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
                     self.players[ap].snakes[i].current_x_head, \
@@ -395,6 +351,7 @@ class Board(QFrame):
                 self.flag = False
                 if self.players[ap].snakes[i].current_y_head < 0:
                     self.players[ap].snakes[i].current_y_head = Board.HEIGHTINBLOCKS
+                self.players[ap].snakes[i].steps_moved += 1
 
             head = [self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head]
             self.players[ap].snakes[i].snake.insert(0, head)
@@ -404,23 +361,26 @@ class Board(QFrame):
             else:
                 self.players[ap].snakes[i].grow_snake = False
 
+            self.check_collisions()
+
     def is_suicide(self):
 
         for j in range(2, len(self.players[self.active_player].snakes[self.active_snake].snake)):
             if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
                     self.players[self.active_player].snakes[self.active_snake].snake[j]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                if len(self.players[self.active_player].snakes) > 1 and self.players[self.active_player].is_dead \
-                        == False:
-                    self.change_active_snake()
-
-                else:
+                self.check_if_alive()
+                if self.players[self.active_player].is_dead:
+                    self.interrupt_skip = True
                     self.change_active_player()
+                else:
+                    self.change_active_snake()
+                time.sleep(1)
+
                 break
         self.update()
 
     def snake_collision(self):
-
         for i in range(len(self.players)):
             for j in range(len(self.players[i].snakes)):
                 if self.players[i].snakes[j].is_dead:
@@ -431,20 +391,46 @@ class Board(QFrame):
                         if i == self.active_player:
                             continue
                         self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                        if len(self.players[self.active_player].snakes) > 1 and self.players[self.active_player].is_dead \
-                                == False:
+                        self.check_if_alive()
+                        if not self.players[self.active_player].is_dead:
                             self.change_active_snake()
                         else:
+                            self.interrupt_skip = True
                             self.change_active_player()
+                        time.sleep(1)
+
                         self.update()
+
+    def check_split_collision(self, snake) -> bool:
+        can_split = True
+        x_left = 1
+        x_right = 58
+        y_bottom = 38
+        y_top = 1
+        for x in range(len(self.players)):
+            for j in range(len(self.players[x].snakes)):
+                for q in range(len(self.players[x].snakes[j].snake)):
+                    for t in range(5):
+                        if snake[t] == self.players[x].snakes[j].snake[q]:
+                            can_split = False
+        for i in range(2, 38):
+            for x in range(5):
+                if snake[x] == [x_left, i] \
+                        or snake[x] == [x_right, i]:
+                    can_split = False
+        for j in range(2, 58):
+            for x in range(5):
+                if snake[x] == [j, y_bottom] \
+                        or snake[x] == [j, y_top]:
+                    can_split = False
+        if not can_split:
+            self.msg2statusbar.emit('Splitting is currently impossible')
+
+        return can_split
 
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
-            self.is_suicide()
-            self.is_food_collision()
-            self.wall_collision()
-            self.snake_collision()
-            self.check_if_alive()
+
             if self.flag:
                 self.move_snake(self.active_player, self.active_snake)
             self.update()
@@ -456,7 +442,6 @@ class Board(QFrame):
                     if pos == self.players[i].snakes[x].snake[0]:
                         self.food.pos.remove(pos)
                         self.food.drop_food()
-                        self.players[i].snakes[x].grow_snake = True
 
     def deus_ex_machine_bonus(self):
         self.bonus_timer.cancel()
@@ -570,30 +555,43 @@ class Board(QFrame):
             if self.players[self.active_player].snakes[self.active_snake].snake[0] == [x_left, i] \
                     or self.players[self.active_player].snakes[self.active_snake].snake[0] == [x_right, i]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                if len(self.players[self.active_player].snakes) > 1 and self.players[
-                    self.active_player].is_dead == False:
-                    self.change_active_snake()
-                else:
+                self.check_if_alive()
+                if self.players[self.active_player].is_dead:
+                    self.interrupt_skip = True
                     self.change_active_player()
+                else:
+                    self.change_active_snake()
+                time.sleep(1)
                 self.update()
 
         for j in range(2, 58):
             if self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_bottom] \
                     or self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_top]:
                 self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                if len(self.players[self.active_player].snakes) > 1 and self.players[
-                    self.active_player].is_dead == False:
-                    self.change_active_snake()
-                else:
-
+                self.check_if_alive()
+                if self.players[self.active_player].is_dead:
+                    self.interrupt_skip = True
                     self.change_active_player()
-
+                else:
+                    self.change_active_snake()
+                time.sleep(1)
                 self.update()
 
     def change_active_player(self):
-        self.flag = False
-        self.key_presses = 0
+        if self.interrupt_skip:
+            self.t.cancel()
+            if self.game_speed == 1:
+                self.cntdwn = 15
+            elif self.game_speed == 2:
+                self.cntdwn = 12
+            elif self.game_speed == 3:
+                self.cntdwn = 10
+            self.t.start()
+            self.interrupt_skip = False
 
+        self.flag = False
+        for i in self.players[self.active_player].snakes:
+            i.steps_moved = 0
         if self.active_player < len(self.players) - 1:
             i = self.active_player + 1
         else:
@@ -613,15 +611,11 @@ class Board(QFrame):
                     i = 0
                 else:
                     i += 1
-
                 continue
 
         self.setStyleSheet(
             'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
             ') 0 0 0 0 stretch center')
-
-    def check_winner(self):
-        pass
 
     def check_if_alive(self):
         for i in range(len(self.players)):
@@ -640,5 +634,23 @@ class Board(QFrame):
             elif self.game_speed == 3:
                 self.cntdwn = 10
         self.cntdwn -= 1
+
         self.msg2statusbar.emit(self.players[self.active_player].name + '\'s turn. ' + str(self.cntdwn + 1)
-                                + ' seconds left')
+                                + ' seconds left.' + ' Snake ' + str(self.active_snake + 1) + ' active')
+
+    def check_number_of_alive_snakes(self):
+        i = 0
+        for x in self.players[self.active_player].snakes:
+            if not x.is_dead:
+                i += 1
+        if i < 2:
+            self.players[self.active_player].can_split = True
+        else:
+            self.players[self.active_player].can_split = False
+
+    def check_collisions(self):
+        self.is_suicide()
+        self.is_food_collision()
+        self.wall_collision()
+        self.snake_collision()
+        self.update()
