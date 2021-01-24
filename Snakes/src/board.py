@@ -185,10 +185,10 @@ class Board(QFrame):
                            boardtop + pos[1] * self.square_height(), 'apple.png')
         for pos in self.bonus.pos:
             self.draw_bonus_or_malus(painter, rect.left() + pos[0] * self.square_width(),
-                                     boardtop + pos[1] * self.square_height(), 'apple.png')
+                                     boardtop + pos[1] * self.square_height(), 'bonus.png')
         for pos in self.malus.pos:
             self.draw_bonus_or_malus(painter, rect.left() + pos[0] * self.square_width(),
-                                     boardtop + pos[1] * self.square_height(), 'apple.png')
+                                     boardtop + pos[1] * self.square_height(), 'malus.png')
         for pos in self.players[self.active_player].snakes[self.active_snake].snake:
             self.draw_glow(painter, rect.left() + pos[0] * self.square_width(),
                            boardtop + pos[1] * self.square_height(), 'glow.png')
@@ -203,7 +203,7 @@ class Board(QFrame):
 
         image = QImage(load_res(file))
 
-        painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
+        painter.drawImage(QRect(x + 1, x + 1, self.square_width() + 10, self.square_height() + 10), image)
 
     def draw_head(self, painter, x, y, file):
         image = QImage(load_res(file))
