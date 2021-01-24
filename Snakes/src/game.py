@@ -8,14 +8,15 @@ from helpers import load_res
 
 
 class SnakeGame(QMainWindow):
-    def __init__(self, usernames_list: list, speed: int, multiple: bool):
+    def __init__(self, usernames_list: list, speed: int, multiple: bool, food: int):
         super(SnakeGame, self).__init__()
 
         self.usernames = usernames_list
         self.game_speed = speed
         self.multiple_snakes = multiple
+        self.food_count = food
 
-        self.game_board = Board(self, self.usernames, self.game_speed, self.multiple_snakes)
+        self.game_board = Board(self, self.usernames, self.game_speed, self.multiple_snakes, self.food_count)
         self.statusbar = self.statusBar()
         self.game_board.msg2statusbar[str].connect(self.statusbar.showMessage)
 

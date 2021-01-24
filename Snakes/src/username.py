@@ -3,7 +3,7 @@ import game
 
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon, QImage, QPalette, QBrush, QFont
-from PyQt5.QtWidgets import QWidget, QMessageBox, QLabel, QDesktopWidget, QLineEdit, QPushButton, QCheckBox
+from PyQt5.QtWidgets import QWidget, QMessageBox, QLabel, QDesktopWidget, QLineEdit, QPushButton, QCheckBox, QSlider
 
 from helpers import load_res
 
@@ -14,6 +14,7 @@ class Username2Window(QWidget):
         super(Username2Window, self).__init__()
         self.usernames = []
         self.game_speed = speed
+        self.num_of_food = 2
         self.multiple_snakes = True
         self.game_window = None
 
@@ -72,6 +73,33 @@ class Username2Window(QWidget):
         self.cb.toggle()
         self.cb.stateChanged.connect(self.change_checkbox)
 
+        self.slider = QSlider(Qt.Horizontal, self)
+        self.slider.setMinimumSize(300, 40)
+        self.slider.setFocusPolicy(Qt.NoFocus)
+        self.slider.setRange(2, 20)
+        self.slider.setSingleStep(1)
+        self.slider.move(150, 530)
+        self.slider.valueChanged[int].connect(self.changeValue)
+
+        self.apple_box = QLineEdit(self, )
+        font_edit = self.apple_box.font()
+        font_edit.setPointSize(14)
+        font_edit.setFamily(font)
+        self.apple_box.setFont(font_edit)
+        self.apple_box.setReadOnly(True)
+        self.apple_box.setText("2")
+        self.apple_box.setFixedSize(70, 60)
+        self.apple_box.move(470, 520)
+
+        self.apple_label = QLabel(self, )
+        font_edit = self.apple_label.font()
+        font_edit.setPointSize(15)
+        font_edit.setFamily(font)
+        self.apple_label.setFont(font_edit)
+        self.apple_label.setText("Food Count")
+        self.apple_label.setFixedSize(150, 60)
+        self.apple_label.move(550, 520)
+
         self.start_button = QPushButton(self)
         self.start_button.setText("Start")
         self.start_button.setFont(QFont(font))
@@ -83,6 +111,12 @@ class Username2Window(QWidget):
         self.start_button.move(150, 600)
 
         self.setPalette(palette)
+
+    def changeValue(self, value):
+        self.num_of_food = value
+        if self.num_of_food < 2:
+            self.num_of_food = 2
+        self.apple_box.setText(str(self.num_of_food))
 
     def change_checkbox(self, state):
         if state == Qt.Checked:
@@ -104,7 +138,7 @@ class Username2Window(QWidget):
 
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
 
-            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes)
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes, self.num_of_food)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -116,6 +150,7 @@ class Username3Window(QWidget):
         super(Username3Window, self).__init__()
         self.game_window = None
         self.usernames = []
+        self.num_of_food = 2
         self.multiple_snakes = True
         self.game_speed = speed
 
@@ -190,6 +225,33 @@ class Username3Window(QWidget):
         self.cb.toggle()
         self.cb.stateChanged.connect(self.change_checkbox)
 
+        self.slider = QSlider(Qt.Horizontal, self)
+        self.slider.setMinimumSize(300, 40)
+        self.slider.setFocusPolicy(Qt.NoFocus)
+        self.slider.setRange(2, 20)
+        self.slider.setSingleStep(1)
+        self.slider.move(150, 530)
+        self.slider.valueChanged[int].connect(self.changeValue)
+
+        self.apple_box = QLineEdit(self, )
+        font_edit = self.apple_box.font()
+        font_edit.setPointSize(14)
+        font_edit.setFamily(font)
+        self.apple_box.setFont(font_edit)
+        self.apple_box.setReadOnly(True)
+        self.apple_box.setText("2")
+        self.apple_box.setFixedSize(70, 60)
+        self.apple_box.move(470, 520)
+
+        self.apple_label = QLabel(self, )
+        font_edit = self.apple_label.font()
+        font_edit.setPointSize(15)
+        font_edit.setFamily(font)
+        self.apple_label.setFont(font_edit)
+        self.apple_label.setText("Food Count")
+        self.apple_label.setFixedSize(150, 60)
+        self.apple_label.move(550, 520)
+
         self.start_button = QPushButton(self)
         self.start_button.setText("Start")
         self.start_button.setFont(QFont(font))
@@ -201,6 +263,12 @@ class Username3Window(QWidget):
         self.start_button.move(150, 600)
 
         self.setPalette(palette)
+
+    def changeValue(self, value):
+        self.num_of_food = value
+        if self.num_of_food < 2:
+            self.num_of_food = 2
+        self.apple_box.setText(str(self.num_of_food))
 
     def change_checkbox(self, state):
         if state == Qt.Checked:
@@ -222,7 +290,7 @@ class Username3Window(QWidget):
             self.usernames.append(self.usernameEdit2.text())
             self.usernames.append(self.usernameEdit3.text())
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes)
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes, self.num_of_food)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)
@@ -234,6 +302,7 @@ class Username4Window(QWidget):
         super(Username4Window, self).__init__()
         self.game_window = None
         self.game_speed = speed
+        self.num_of_food = 2
         self.multiple_snakes = True
         self.usernames = []
 
@@ -324,6 +393,33 @@ class Username4Window(QWidget):
         self.cb.toggle()
         self.cb.stateChanged.connect(self.change_checkbox)
 
+        self.slider = QSlider(Qt.Horizontal, self)
+        self.slider.setMinimumSize(300, 40)
+        self.slider.setFocusPolicy(Qt.NoFocus)
+        self.slider.setRange(2, 20)
+        self.slider.setSingleStep(1)
+        self.slider.move(150, 530)
+        self.slider.valueChanged[int].connect(self.changeValue)
+
+        self.apple_box = QLineEdit(self, )
+        font_edit = self.apple_box.font()
+        font_edit.setPointSize(14)
+        font_edit.setFamily(font)
+        self.apple_box.setFont(font_edit)
+        self.apple_box.setReadOnly(True)
+        self.apple_box.setText("2")
+        self.apple_box.setFixedSize(70, 60)
+        self.apple_box.move(470, 520)
+
+        self.apple_label = QLabel(self, )
+        font_edit = self.apple_label.font()
+        font_edit.setPointSize(15)
+        font_edit.setFamily(font)
+        self.apple_label.setFont(font_edit)
+        self.apple_label.setText("Food Count")
+        self.apple_label.setFixedSize(150, 60)
+        self.apple_label.move(550, 520)
+
         self.start_button = QPushButton(self)
         self.start_button.setText("Start")
         self.start_button.setFont(QFont(font))
@@ -335,6 +431,12 @@ class Username4Window(QWidget):
         self.start_button.move(150, 600)
 
         self.setPalette(palette)
+
+    def changeValue(self, value):
+        self.num_of_food = value
+        if self.num_of_food < 2:
+            self.num_of_food = 2
+        self.apple_box.setText(str(self.num_of_food))
 
     def change_checkbox(self, state):
         if state == Qt.Checked:
@@ -359,7 +461,7 @@ class Username4Window(QWidget):
             self.usernames.append(self.usernameEdit4.text())
             # winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC) hocu da kad se klikne START da se cuje taj zvuk zmije jednom
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
-            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes)
+            self.game_window = game.SnakeGame(self.usernames, self.game_speed, self.multiple_snakes, self.num_of_food)
             self.game_window.show()
         else:
             QMessageBox.warning(self, 'Warning', "Validation fault. Username required.", QMessageBox.Ok)

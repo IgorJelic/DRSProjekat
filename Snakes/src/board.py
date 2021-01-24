@@ -17,12 +17,13 @@ class Board(QFrame):
     WIDTHINBLOCKS = 60
     HEIGHTINBLOCKS = 40
 
-    def __init__(self, parent, usernames: list, speed: int, multiple: bool):
+    def __init__(self, parent, usernames: list, speed: int, multiple: bool, food: int):
         super(Board, self).__init__(parent)
         self.timer = QBasicTimer()
         self.usernames = usernames
         self.game_speed = speed
         self.num_of_players = len(usernames)
+        self.food_count = food
         self.combined_length = 0
         self.tab_mode = multiple
         self.alive = self.num_of_players
@@ -112,15 +113,18 @@ class Board(QFrame):
 
         self.food = Food()
 
-        if self.num_of_players == 2:
-            for i in range(12):
-                self.food.drop_food()
-        elif self.num_of_players == 3:
-            for i in range(10):
-                self.food.drop_food()
-        elif self.num_of_players == 4:
-            for i in range(8):
-                self.food.drop_food()
+        for i in range(self.food_count):
+            self.food.drop_food()
+
+        # if self.num_of_players == 2:
+        #     for i in range(12):
+        #         self.food.drop_food()
+        # elif self.num_of_players == 3:
+        #     for i in range(10):
+        #         self.food.drop_food()
+        # elif self.num_of_players == 4:
+        #     for i in range(8):
+        #         self.food.drop_food()
 
         self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
