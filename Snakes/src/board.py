@@ -203,7 +203,7 @@ class Board(QFrame):
 
         image = QImage(load_res(file))
 
-        painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
+        painter.drawImage(QRect(x + 1, y + 1, 100, 100), image)
 
     def draw_head(self, painter, x, y, file):
         image = QImage(load_res(file))
