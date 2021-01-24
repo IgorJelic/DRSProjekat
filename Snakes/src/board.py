@@ -203,7 +203,7 @@ class Board(QFrame):
 
         image = QImage(load_res(file))
 
-        painter.drawImage(QRect(x + 1, x + 1, self.square_width() + 10, self.square_height() + 10), image)
+        painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
 
     def draw_head(self, painter, x, y, file):
         image = QImage(load_res(file))
@@ -442,6 +442,7 @@ class Board(QFrame):
                     if pos == self.players[i].snakes[x].snake[0]:
                         self.food.pos.remove(pos)
                         self.food.drop_food()
+                        self.players[self.active_player].snakes[self.active_snake].grow_snake = True
 
     def deus_ex_machine_bonus(self):
         self.bonus_timer.cancel()
