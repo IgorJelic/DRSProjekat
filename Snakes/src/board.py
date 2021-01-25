@@ -264,16 +264,21 @@ class Board(QFrame):
 
     def change_active_snake(self):
         self.flag = False
-        if self.active_snake == 0:
-            if self.players[self.active_player].snakes[1].is_dead:
-                pass
-            else:
-                self.active_snake = 1
+        if self.active_snake < len(self.players[self.active_player].snakes) - 1:
+            i = self.active_snake + 1
         else:
-            if self.players[self.active_player].snakes[0].is_dead:
-                pass
+            i = 0
+        while i < len(self.players[self.active_player].snakes):
+            if not self.players[self.active_player].snakes[i].is_dead:
+                self.active_snake = i
+                break
             else:
-                self.active_snake = 0
+                if i + 1 == len(self.players[self.active_player].snakes):
+                    i = 0
+                else:
+                    i += 1
+
+                continue
 
     def split_snake(self, active_player: int):
         self.check_number_of_alive_snakes()
@@ -447,7 +452,7 @@ class Board(QFrame):
     def deus_ex_machine_bonus(self):
         self.bonus_timer.cancel()
         self.bonus.drop_bonus()
-        time.sleep(2)
+        time.sleep(10)
         for pos in self.bonus.pos:
             for i in range(len(self.players)):
                 for x in range(len(self.players[i].snakes)):
@@ -498,52 +503,52 @@ class Board(QFrame):
     def deus_ex_machine_malus(self):
         self.malus_timer.cancel()
         self.malus.drop_malus()
-        time.sleep(2)
+        time.sleep(10)
         for pos in self.malus.pos:
             for i in range(len(self.players)):
                 for x in range(len(self.players[i].snakes)):
                     if pos == self.players[i].snakes[x].snake[0]:
                         self.players[i].snakes[x].snake.pop()
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] + 1), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] - 1), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 1)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 1)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] + 2), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] - 2), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 2)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 2)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] + 3), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] - 3), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 3)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 3)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] + 4), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] - 4), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 4)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 4)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] + 5), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [(pos[0] - 5), pos[1]]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 5)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
                     elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 5)]:
-                        self.players[i].snakes[x].snake.pop()
+                        self.players[i].snakes[x].grow_snake = True
             self.malus.pos.remove(pos)
 
     def wall_collision(self):
