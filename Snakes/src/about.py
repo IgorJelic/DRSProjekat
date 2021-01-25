@@ -20,13 +20,18 @@ class AboutWindow(QWidget):
         self.label = QLabel(
             "<br> How to play: <br><br>• Two to four players plan a snake movement strategy. Each player has one or "
             "more snakes <br> with which they can execute the strategy. <br><br> • The player's goal is to capture "
-            "rival snakes. <br><br> • A snake dies if it hits its head against a wall or the body of another snake. "
+            "rival snakes. <br><br> • Every player has 15 seconds to finish a move. <br><br>"
+            "• A snake dies if it hits its head against a wall or the body of another snake. "
             "<br><br> • A snake has the length and number of steps per stroke that it can extend by gathering food. "
-            "<br><br> • Food moves in a straight line from 1 to 3 steps per move. <br><br>Good luck "
-            ":)<br><br><br><br><br><br><br><br>")
+            "<br><br> • Players can choose the extent to which the food will appear, which further affects the difficulty of the game."
+            "<br><br> • Food moves in a straight line from 1 to 3 steps per move."
+            "<br><br>• From time to time an unexpected force appears."
+            "<br> The player has two seconds to approach the force or escape from it (the force acts on an area of 5 squares in all directions)."
+            "<br> If a player joins a positive force - he will be rewarded, or damaged if he does not manage to escape from the negative force."
+            "<br><br>Good luck! :) <br><br><br><br><br><br><br><br><br><br>")
 
         font = self.label.font()
-        font.setPointSize(13)
+        font.setPointSize(11)
         font.setFamily('Spongeboy Me Bob')
 
         image = QImage(load_res('wp2409705.jpg'))
