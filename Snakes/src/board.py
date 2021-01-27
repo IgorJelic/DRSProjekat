@@ -27,6 +27,7 @@ class Board(QFrame):
         self.combined_length = 0
         self.tab_mode = multiple
         self.alive = self.num_of_players
+        self.dead_players = 0
         self.players = []
         self.interrupt_skip = False
         for k in range(len(self.usernames)):
@@ -512,6 +513,21 @@ class Board(QFrame):
             else:
                 self.players[i].is_dead = True
 
+    def check_winner(self):
+        for i in range(len(self.players)):
+            if self.players[i].is_dead:
+                self.dead_players += 1
+
+        if self.dead_players == len(self.players) - 1:
+            self.setStyleSheet(
+                'border-image: url(' + load_style_res(str(self.active_player + 1) + 'won' + '.png') +
+                ') 0 0 0 0 stretch center')
+            self.timer.stop()
+            self.r.cancel()
+
+        else:
+            self.dead_players = 0
+
     def countdown(self):
         if self.cntdwn == 0:
             if self.game_speed == 1:
@@ -541,3 +557,4 @@ class Board(QFrame):
         self.wall_collision()
         self.snake_collision()
         self.update()
+        self.check_winner()
