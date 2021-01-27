@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QC
 import about
 from button import Button
 from helpers import load_res
-from username import UsernameWindow
+from username import Username2Window, Username3Window, Username4Window
 
 
 class SplashScreen(QMainWindow):
@@ -19,7 +19,7 @@ class SplashScreen(QMainWindow):
         self.combo_speeds = QComboBox()
         self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
-        self.username_window = None
+
         font_db = QFontDatabase()
 
         font_db.addApplicationFont(load_res('Spongeboy Me Bob.ttf'))
@@ -104,8 +104,20 @@ class SplashScreen(QMainWindow):
 
         num_of_players = self.get_players()
         game_speed = self.get_speed()
-        self.username_window = UsernameWindow(num_of_players, game_speed)
-        self.username_window.show()
+
+        if num_of_players == 2:
+            self.username_window = Username2Window(game_speed)
+            self.username_window.show()
+        elif num_of_players == 3:
+            self.username_window = Username3Window(game_speed)
+            self.username_window.show()
+        elif num_of_players == 4:
+            self.username_window = Username4Window(game_speed)
+            self.username_window.show()
+
+        # self.game_window = game.SnakeGame()
+        # self.game_window.show()
+        # self.game_window.game_board.start()
 
     def about_info(self):
         self.about_window.show()
