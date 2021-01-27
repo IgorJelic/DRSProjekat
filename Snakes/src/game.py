@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QMessageBox
 
 from board import Board
 from helpers import load_res
@@ -29,6 +29,18 @@ class SnakeGame(QMainWindow):
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
         self.game_board.start()
 
+    def closeEvent(self, event):
+
+        reply = QMessageBox.question(self, 'Really?',
+                                     "Are you sure to quit?", QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+            self.game_board.t.cancel()
+            self.game_board.r.cancel()
+        else:
+            event.ignore()
 
 def main():
     app = QApplication([])

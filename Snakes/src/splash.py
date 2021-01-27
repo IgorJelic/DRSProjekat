@@ -115,10 +115,6 @@ class SplashScreen(QMainWindow):
             self.username_window = Username4Window(game_speed)
             self.username_window.show()
 
-        # self.game_window = game.SnakeGame()
-        # self.game_window.show()
-        # self.game_window.game_board.start()
-
     def about_info(self):
         self.about_window.show()
 
