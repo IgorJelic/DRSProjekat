@@ -350,6 +350,7 @@ class Board(QFrame):
 
             self.check_collisions()
 
+
     def is_suicide(self):
 
         for j in range(2, len(self.players[self.active_player].snakes[self.active_snake].snake)):

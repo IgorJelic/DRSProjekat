@@ -93,6 +93,7 @@ class SplashScreen(QMainWindow):
         self.show()
         winsound.PlaySound(load_res('rattlesnake.wav'), winsound.SND_ASYNC)
 
+
     def get_players(self):
         cmb_text = str(self.combo_players.currentText())
         final = re.sub('\D', '', cmb_text)
