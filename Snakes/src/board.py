@@ -186,7 +186,7 @@ class Board(QFrame):
 
         image = QImage(load_res(file))
 
-        painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 10, self.square_height() + 10), image)
+        painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 5, self.square_height() + 10), image)
 
     def draw_head(self, painter, x, y, file):
         image = QImage(load_res(file))
@@ -279,18 +279,19 @@ class Board(QFrame):
                     for i in range(5):
                         snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
                                       self.players[active_player].snakes[self.active_snake].snake[i][1] + 3])
+
                     if not self.check_split_collision(snake):
                         return
             elif self.players[active_player].snakes[self.active_snake].direction == 'UP' or \
                     self.players[active_player].snakes[self.active_snake].direction == 'DOWN':
-                for i in range(5):
-                    snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0] - 3,
-                                  self.players[active_player].snakes[self.active_snake].snake[i][1]])
+                for x in range(5):
+                    snake.append([self.players[active_player].snakes[self.active_snake].snake[x][0] - 3,
+                                  self.players[active_player].snakes[self.active_snake].snake[x][1]])
                 if not self.check_split_collision(snake):
                     snake.clear()
-                    for i in range(5):
-                        snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0] + 3,
-                                      self.players[active_player].snakes[self.active_snake].snake[i][1]])
+                    for x in range(5):
+                        snake.append([self.players[active_player].snakes[self.active_snake].snake[x][0] + 3,
+                                      self.players[active_player].snakes[self.active_snake].snake[x][1]])
                     if not self.check_split_collision(snake):
                         return
             new_snake.snake = snake
@@ -303,8 +304,7 @@ class Board(QFrame):
 
     def move_snake(self, ap: int, i: int):
 
-        if self.players[ap].snakes[i].steps_moved < \
-                len(self.players[ap].snakes[i].snake):
+        if self.players[ap].snakes[i].steps_moved < len(self.players[ap].snakes[i].snake):
             if self.players[ap].snakes[i].direction == 'LEFT':
 
                 self.players[ap].snakes[i].current_x_head, self.players[ap].snakes[i].current_y_head = \
@@ -394,23 +394,25 @@ class Board(QFrame):
         x_left = 1
         x_right = 58
         y_bottom = 38
-        y_top = 1
+        y_top = 2
         for x in range(len(self.players)):
             for j in range(len(self.players[x].snakes)):
                 for q in range(len(self.players[x].snakes[j].snake)):
                     for t in range(5):
                         if snake[t] == self.players[x].snakes[j].snake[q]:
                             can_split = False
-        for i in range(2, 38):
+        for i in range(0, 40):
             for x in range(5):
-                if snake[x] == [x_left, i] \
-                        or snake[x] == [x_right, i]:
-                    can_split = False
-        for j in range(2, 58):
+                for j in range(5):
+                    if snake[x] == [x_left - j, i] \
+                            or snake[x] == [x_right + j, i]:
+                        can_split = False
+        for j in range(0, 60):
             for x in range(5):
-                if snake[x] == [j, y_bottom] \
-                        or snake[x] == [j, y_top]:
-                    can_split = False
+                for j in range(5):
+                    if snake[x] == [j, y_bottom + j] \
+                            or snake[x] == [j, y_top - j]:
+                        can_split = False
         if not can_split:
             self.msg2statusbar.emit('Splitting is currently impossible')
 

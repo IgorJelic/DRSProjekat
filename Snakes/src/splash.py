@@ -6,6 +6,7 @@ from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget, QMessageBox)
 
 import about
+import game2
 from button import Button
 from helpers import load_res
 from username import Username2Window, Username3Window, Username4Window
@@ -16,6 +17,7 @@ class SplashScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.game_window = None
+        self.classic = None
         self.combo_speeds = QComboBox()
         self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
@@ -33,7 +35,7 @@ class SplashScreen(QMainWindow):
         font_cbs.setPointSize(20)
         font_cbs.setFamily('Spongeboy Me Bob')
         self.combo_speeds.setFont(font_cbs)
-        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ']
+        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ', ' Classic game ']
         self.combo_players = QComboBox(self)
         self.combo_players.addItems(combo_players_list)
         self.combo_players.setFixedSize(210, 70)
@@ -95,7 +97,10 @@ class SplashScreen(QMainWindow):
 
     def get_players(self):
         cmb_text = str(self.combo_players.currentText())
-        final = re.sub('\D', '', cmb_text)
+        if cmb_text == ' Classic game ':
+            final = '1'
+        else:
+            final = re.sub('\D', '', cmb_text)
         print(final)
         return int(final)
 
@@ -104,6 +109,11 @@ class SplashScreen(QMainWindow):
 
         num_of_players = self.get_players()
         game_speed = self.get_speed()
+        if num_of_players == 1:
+            self.classic = game2.SnakeGame()
+            self.classic.show()
+            self.classic.sboard.start(self.get_speed())
+            winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
 
         if num_of_players == 2:
             self.username_window = Username2Window(game_speed)
