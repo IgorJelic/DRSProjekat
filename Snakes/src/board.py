@@ -117,16 +117,6 @@ class Board(QFrame):
         for i in range(self.food_count):
             self.food.drop_food()
 
-        # if self.num_of_players == 2:
-        #     for i in range(12):
-        #         self.food.drop_food()
-        # elif self.num_of_players == 3:
-        #     for i in range(10):
-        #         self.food.drop_food()
-        # elif self.num_of_players == 4:
-        #     for i in range(8):
-        #         self.food.drop_food()
-
         self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
 
@@ -409,9 +399,9 @@ class Board(QFrame):
                         can_split = False
         for j in range(0, 60):
             for x in range(5):
-                for j in range(5):
-                    if snake[x] == [j, y_bottom + j] \
-                            or snake[x] == [j, y_top - j]:
+                for k in range(5):
+                    if snake[x] == [j, y_bottom + k] \
+                            or snake[x] == [j, y_top - k]:
                         can_split = False
         if not can_split:
             self.msg2statusbar.emit('Splitting is currently impossible')

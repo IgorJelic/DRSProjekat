@@ -35,10 +35,10 @@ class SplashScreen(QMainWindow):
         font_cbs.setPointSize(20)
         font_cbs.setFamily('Spongeboy Me Bob')
         self.combo_speeds.setFont(font_cbs)
-        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ', ' Classic game ']
+        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ', ' Classic snake ']
         self.combo_players = QComboBox(self)
         self.combo_players.addItems(combo_players_list)
-        self.combo_players.setFixedSize(210, 70)
+        self.combo_players.setFixedSize(250, 70)
         font_cb = self.combo_players.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
@@ -97,7 +97,7 @@ class SplashScreen(QMainWindow):
 
     def get_players(self):
         cmb_text = str(self.combo_players.currentText())
-        if cmb_text == ' Classic game ':
+        if cmb_text == ' Classic snake ':
             final = '1'
         else:
             final = re.sub('\D', '', cmb_text)
