@@ -329,7 +329,7 @@ class Board(QFrame):
         self.bonus_timer.cancel()
         self.drop_bonus()
         consumed = False
-        time.sleep(10)
+        time.sleep(2)
         for pos in self.bonus.pos:
             for i in range(len(self.players)):
                 for x in range(len(self.players[i].snakes)):
@@ -428,7 +428,7 @@ class Board(QFrame):
     def deus_ex_machine_malus(self):
         self.malus_timer.cancel()
         self.drop_malus()
-        time.sleep(10)
+        time.sleep(2)
         for pos in self.malus.pos:
             for i in range(len(self.players)):
                 for x in range(len(self.players[i].snakes)):
