@@ -6,8 +6,8 @@ from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget, QMessageBox)
 
 import about
-from button import Button
-from helpers import load_res
+import game
+from helpers import load_res, init_button
 from username import Username2Window, Username3Window, Username4Window
 
 
@@ -16,6 +16,7 @@ class SplashScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.game_window = None
+        self.classic = None
         self.combo_speeds = QComboBox()
         self.about_window = about.AboutWindow()
         self.central_widget = QWidget()
@@ -33,10 +34,10 @@ class SplashScreen(QMainWindow):
         font_cbs.setPointSize(20)
         font_cbs.setFamily('Spongeboy Me Bob')
         self.combo_speeds.setFont(font_cbs)
-        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ']
+        combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ', ' Classic snake ']
         self.combo_players = QComboBox(self)
         self.combo_players.addItems(combo_players_list)
-        self.combo_players.setFixedSize(210, 70)
+        self.combo_players.setFixedSize(250, 70)
         font_cb = self.combo_players.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')
@@ -51,18 +52,18 @@ class SplashScreen(QMainWindow):
 
         font = QFont("Spongeboy Me Bob")
 
-        btn_start = Button.init_ui('Start')
+        btn_start = init_button('Start')
         btn_start.setFont(font)
         btn_start.clicked.connect(self.on_btn_start_pressed)
         btn_start.setStyleSheet("color: orange; font-size:40px; background-color: transparent")
 
-        btn_close = Button.init_ui('Exit')
+        btn_close = init_button('Exit')
         btn_close.setFont(font)
 
         btn_close.clicked.connect(QApplication.instance().quit)
         btn_close.setStyleSheet("color: red; font-size:40px; background-color: transparent")
 
-        btn_about = Button.init_ui('About')
+        btn_about = init_button('About')
 
         btn_about.clicked.connect(self.about_info)
         btn_about.setFont(font)
@@ -96,7 +97,10 @@ class SplashScreen(QMainWindow):
 
     def get_players(self):
         cmb_text = str(self.combo_players.currentText())
-        final = re.sub('\D', '', cmb_text)
+        if cmb_text == ' Classic snake ':
+            final = '1'
+        else:
+            final = re.sub('\D', '', cmb_text)
         print(final)
         return int(final)
 
@@ -105,6 +109,11 @@ class SplashScreen(QMainWindow):
 
         num_of_players = self.get_players()
         game_speed = self.get_speed()
+        if num_of_players == 1:
+            self.classic = game.ClassicSnake()
+            self.classic.show()
+            self.classic.sboard.start(self.get_speed())
+            winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
 
         if num_of_players == 2:
             self.username_window = Username2Window(game_speed)
@@ -115,10 +124,6 @@ class SplashScreen(QMainWindow):
         elif num_of_players == 4:
             self.username_window = Username4Window(game_speed)
             self.username_window.show()
-
-        # self.game_window = game.SnakeGame()
-        # self.game_window.show()
-        # self.game_window.game_board.start()
 
     def about_info(self):
         self.about_window.show()

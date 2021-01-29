@@ -1,11 +1,11 @@
 import sys
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QMessageBox
 
 from board import Board
 from helpers import load_res
-
+import classic_snake
 
 class SnakeGame(QMainWindow):
     def __init__(self, usernames_list: list, speed: int, multiple: bool, food: int):
@@ -28,6 +28,37 @@ class SnakeGame(QMainWindow):
         size = self.geometry()
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
         self.game_board.start()
+
+    def closeEvent(self, event):
+
+        reply = QMessageBox.question(self, 'Really?',
+                                     "Are you sure to quit?", QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+            self.game_board.t.cancel()
+            self.game_board.r.cancel()
+            self.game_board.bonus_timer.cancel()
+            self.game_board.malus_timer.cancel()
+        else:
+            event.ignore()
+
+
+class ClassicSnake(QMainWindow):
+    def __init__(self):
+        super(ClassicSnake, self).__init__()
+        self.sboard = classic_snake.Board(self)
+        self.statusbar = self.statusBar()
+        self.sboard.msg2statusbar[str].connect(self.statusbar.showMessage)
+
+        self.setCentralWidget(self.sboard)
+        self.setWindowTitle('Snakes')
+        self.setWindowIcon(QIcon(load_res('icon.png')))
+        self.resize(1280, 720)
+        screen = QDesktopWidget().screenGeometry()
+        size = self.geometry()
+        self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
 
 
 def main():
