@@ -534,7 +534,7 @@ class Board(QFrame):
 
         x = random.randint(rand_s.snake[0][0] + 1, rand_s.snake[0][0] + 5)
         y = random.randint(rand_s.snake[0][1] + 1, rand_s.snake[0][1] + 5)
-        if [x, y] == rand_s.snake[0]:
+        if [x, y] == rand_s.snake[0] or x > 58 or x < 2 or y > 38 or y < 2:
             self.drop_bonus()
         else:
             self.bonus.pos.append([x, y])
@@ -547,8 +547,8 @@ class Board(QFrame):
         x = random.randint(rand_s.snake[0][0] + 1, rand_s.snake[0][0] + 5)
         y = random.randint(rand_s.snake[0][1] + 1, rand_s.snake[0][1] + 5)
 
-        if [x, y] == rand_s.snake[0]:
-            self.drop_bonus()
+        if [x, y] == rand_s.snake[0] or x > 58 or x < 2 or y > 38 or y < 2:
+            self.drop_malus()
         else:
             self.malus.pos.append([x, y])
             self.update()
