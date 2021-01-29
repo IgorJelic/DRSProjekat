@@ -1,5 +1,9 @@
 import time
 
+from Snakes.src import snake
+# from snake import change_active_snake
+from player import change_active_player
+
 
 def is_suicide(self):
     for j in range(2, len(self.players[self.active_player].snakes[self.active_snake].snake)):
@@ -9,9 +13,9 @@ def is_suicide(self):
             self.check_if_alive()
             if self.players[self.active_player].is_dead:
                 self.interrupt_skip = True
-                self.change_active_player()
+                change_active_player(self)
             else:
-                self.change_active_snake()
+                snake.change_active_snake(self)
             time.sleep(1)
 
             break
@@ -30,10 +34,10 @@ def snake_collision(self):
                     self.players[self.active_player].snakes[self.active_snake].is_dead = True
                     self.check_if_alive()
                     if not self.players[self.active_player].is_dead:
-                        self.change_active_snake()
+                        snake.change_active_snake(self)
                     else:
                         self.interrupt_skip = True
-                        self.change_active_player()
+                        change_active_player(self)
                     time.sleep(1)
 
 
@@ -80,9 +84,9 @@ def wall_collision(self):
             self.check_if_alive()
             if self.players[self.active_player].is_dead:
                 self.interrupt_skip = True
-                self.change_active_player()
+                change_active_player(self)
             else:
-                self.change_active_snake()
+                snake.change_active_snake(self)
             time.sleep(1)
     for j in range(2, 58):
         if self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_bottom] \
@@ -91,9 +95,9 @@ def wall_collision(self):
             self.check_if_alive()
             if self.players[self.active_player].is_dead:
                 self.interrupt_skip = True
-                self.change_active_player()
+                change_active_player(self)
             else:
-                self.change_active_snake()
+                snake.change_active_snake(self)
             time.sleep(1)
 
 
