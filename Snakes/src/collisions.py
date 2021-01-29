@@ -1,6 +1,6 @@
 import time
 
-from Snakes.src import snake
+import snake
 # from snake import change_active_snake
 from player import change_active_player
 

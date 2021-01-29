@@ -1,4 +1,4 @@
-from Snakes.src.helpers import load_style_res
+from helpers import load_style_res
 
 
 class Player(object):

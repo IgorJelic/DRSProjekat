@@ -1,5 +1,5 @@
 import collisions
-from Snakes.src.player import check_number_of_live_snakes
+from player import check_number_of_live_snakes
 
 
 class Snake(object):
