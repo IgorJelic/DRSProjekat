@@ -16,8 +16,6 @@ def is_suicide(self):
                 change_active_player(self)
             else:
                 snake.change_active_snake(self)
-            time.sleep(1)
-
             break
 
 
@@ -38,7 +36,6 @@ def snake_collision(self):
                     else:
                         self.interrupt_skip = True
                         change_active_player(self)
-                    time.sleep(1)
 
 
 def check_split_collision(self, snake) -> bool:
@@ -87,7 +84,7 @@ def wall_collision(self):
                 change_active_player(self)
             else:
                 snake.change_active_snake(self)
-            time.sleep(1)
+
     for j in range(2, 58):
         if self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_bottom] \
                 or self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_top]:
@@ -98,7 +95,6 @@ def wall_collision(self):
                 change_active_player(self)
             else:
                 snake.change_active_snake(self)
-            time.sleep(1)
 
 
 def is_food_collision(self):

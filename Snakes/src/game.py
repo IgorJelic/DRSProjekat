@@ -41,6 +41,7 @@ class SnakeGame(QMainWindow):
             self.game_board.r.cancel()
             self.game_board.bonus_timer.cancel()
             self.game_board.malus_timer.cancel()
+            self.game_board.th.join()
         else:
             event.ignore()
 
