@@ -9,6 +9,7 @@ class Player(object):
         self.is_dead = False
         self.can_split = True
 
+
 def change_active_player(self):
     if self.interrupt_skip:
         self.t.cancel()
