@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QFrame
 from food import Food
 from helpers import load_style_res, load_res
 from player import Player
-from ppt_timer import PerpetualTimer
+from helpers import PerpetualTimer
 from snake import Snake
 
 

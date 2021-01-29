@@ -6,9 +6,8 @@ from PyQt5.QtGui import QFontDatabase, QFont, QImage, QPalette, QBrush, QIcon
 from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QGridLayout, QComboBox, QDesktopWidget, QMessageBox)
 
 import about
-import game2
-from button import Button
-from helpers import load_res
+import game
+from helpers import load_res, init_button
 from username import Username2Window, Username3Window, Username4Window
 
 
@@ -53,18 +52,18 @@ class SplashScreen(QMainWindow):
 
         font = QFont("Spongeboy Me Bob")
 
-        btn_start = Button.init_ui('Start')
+        btn_start = init_button('Start')
         btn_start.setFont(font)
         btn_start.clicked.connect(self.on_btn_start_pressed)
         btn_start.setStyleSheet("color: orange; font-size:40px; background-color: transparent")
 
-        btn_close = Button.init_ui('Exit')
+        btn_close = init_button('Exit')
         btn_close.setFont(font)
 
         btn_close.clicked.connect(QApplication.instance().quit)
         btn_close.setStyleSheet("color: red; font-size:40px; background-color: transparent")
 
-        btn_about = Button.init_ui('About')
+        btn_about = init_button('About')
 
         btn_about.clicked.connect(self.about_info)
         btn_about.setFont(font)
@@ -110,7 +109,7 @@ class SplashScreen(QMainWindow):
         num_of_players = self.get_players()
         game_speed = self.get_speed()
         if num_of_players == 1:
-            self.classic = game2.SnakeGame()
+            self.classic = game.ClassicSnake()
             self.classic.show()
             self.classic.sboard.start(self.get_speed())
             winsound.PlaySound(load_res('kaerMorhen.wav'), winsound.SND_ASYNC + winsound.SND_LOOP)
