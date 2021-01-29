@@ -1,14 +1,18 @@
+import random
 import time
 
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
 from PyQt5.QtWidgets import QFrame
 
+from collisions import is_suicide, snake_collision, wall_collision, is_food_collision
 from food import Food
+from bonus import Bonus
+from malus import Malus
 from helpers import load_style_res, load_res
-from player import Player
-from ppt_timer import PerpetualTimer
-from snake import Snake
+from player import Player, change_active_player
+from helpers import PerpetualTimer
+from snake import Snake, change_active_snake, split_snake
 
 
 class Board(QFrame):
@@ -26,7 +30,6 @@ class Board(QFrame):
         self.food_count = food
         self.combined_length = 0
         self.tab_mode = multiple
-        self.alive = self.num_of_players
         self.dead_players = 0
         self.players = []
         self.interrupt_skip = False
@@ -43,26 +46,35 @@ class Board(QFrame):
         self.key_presses = 0
         self.flag = False
         self.t = None
-        self.cntdwn = 0
+
+        self.pos_x = None
+        self.pos_y = None
+
+        self.bonus_timer = PerpetualTimer(random.randint(5, 20), self.deus_ex_machine_bonus)
+        self.malus_timer = PerpetualTimer(random.randint(5, 20), self.deus_ex_machine_malus)
+
         if self.game_speed == 1:
 
-            self.t = PerpetualTimer(15.05, self.change_active_player)
+            self.t = PerpetualTimer(15.05, change_active_player, self)
 
         elif self.game_speed == 2:
 
-            self.t = PerpetualTimer(12.05, self.change_active_player)
+            self.t = PerpetualTimer(12.05, change_active_player, self)
 
         elif self.game_speed == 3:
 
-            self.t = PerpetualTimer(10.05, self.change_active_player)
+            self.t = PerpetualTimer(10.05, change_active_player, self)
 
         else:
 
-            self.t = PerpetualTimer(15, self.change_active_player)
+            self.t = PerpetualTimer(15, change_active_player, self)
 
         self.r = PerpetualTimer(0.995, self.countdown)
         self.r.start()
         self.t.start()
+        self.cntdwn = 0
+        self.bonus_timer.start()
+        self.malus_timer.start()
 
         if self.num_of_players == 2:
             self.players[0].snakes[0].snake = [[14, 35], [13, 35], [12, 35], [11, 35], [10, 35]]
@@ -113,29 +125,17 @@ class Board(QFrame):
             self.players[3].snakes[0].direction = 'UP'
 
         self.food = Food()
+        self.bonus = Bonus()
+        self.malus = Malus()
 
         for i in range(self.food_count):
             self.food.drop_food()
 
-        # if self.num_of_players == 2:
-        #     for i in range(12):
-        #         self.food.drop_food()
-        # elif self.num_of_players == 3:
-        #     for i in range(10):
-        #         self.food.drop_food()
-        # elif self.num_of_players == 4:
-        #     for i in range(8):
-        #         self.food.drop_food()
-
         self.countdown()
         self.setFocusPolicy(Qt.StrongFocus)
 
-        if self.num_of_players == 2:
-            self.setStyleSheet('border-image: url(' + load_style_res('grass2ps.png') + ') 0 0 0 0 stretch center')
-        elif self.num_of_players == 3:
-            self.setStyleSheet('border-image: url(' + load_style_res('grass3ps.png') + ') 0 0 0 0 stretch center')
-        elif self.num_of_players == 4:
-            self.setStyleSheet('border-image: url(' + load_style_res('grass4ps.png') + ') 0 0 0 0 stretch center')
+        self.setStyleSheet('border-image: url(' +
+                           load_style_res('grass' + str(self.num_of_players) + 'ps.png') + ') 0 0 0 0 stretch center')
 
     def square_width(self):
         return self.contentsRect().width() / Board.WIDTHINBLOCKS
@@ -178,6 +178,12 @@ class Board(QFrame):
         for pos in self.food.pos:
             self.draw_food(painter, rect.left() + pos[0] * self.square_width(),
                            boardtop + pos[1] * self.square_height(), 'apple.png')
+        for pos in self.bonus.pos:
+            self.draw_bonus_or_malus(painter, rect.left() + pos[0] * self.square_width(),
+                                     boardtop + pos[1] * self.square_height(), 'bonus.png')
+        for pos in self.malus.pos:
+            self.draw_bonus_or_malus(painter, rect.left() + pos[0] * self.square_width(),
+                                     boardtop + pos[1] * self.square_height(), 'malus.png')
         for pos in self.players[self.active_player].snakes[self.active_snake].snake:
             self.draw_glow(painter, rect.left() + pos[0] * self.square_width(),
                            boardtop + pos[1] * self.square_height(), 'glow.png')
@@ -187,6 +193,12 @@ class Board(QFrame):
         image = QImage(load_res(file))
 
         painter.drawImage(QRect(x + 1, y + 1, self.square_width() + 5, self.square_height() + 10), image)
+
+    def draw_bonus_or_malus(self, painter, x, y, file):
+
+        image = QImage(load_res(file))
+
+        painter.drawImage(QRect(x + 1, y + 1, 30, 30), image)
 
     def draw_head(self, painter, x, y, file):
         image = QImage(load_res(file))
@@ -235,72 +247,15 @@ class Board(QFrame):
         elif key == Qt.Key_S:
             if self.tab_mode:
                 if len(self.players[self.active_player].snakes[self.active_snake].snake) >= 5:
-                    self.split_snake(self.active_player)
+                    split_snake(self, self.active_player)
 
         elif key == Qt.Key_N:
             self.interrupt_skip = True
-            self.change_active_player()
+            change_active_player(self)
 
         elif key == Qt.Key_Tab:
             if len(self.players[self.active_player].snakes) > 1:
-                self.change_active_snake()
-
-    def change_active_snake(self):
-        self.flag = False
-        if self.active_snake < len(self.players[self.active_player].snakes) - 1:
-            i = self.active_snake + 1
-        else:
-            i = 0
-        while i < len(self.players[self.active_player].snakes):
-            if not self.players[self.active_player].snakes[i].is_dead:
-                self.active_snake = i
-                break
-            else:
-                if i + 1 == len(self.players[self.active_player].snakes):
-                    i = 0
-                else:
-                    i += 1
-
-                continue
-
-    def split_snake(self, active_player: int):
-        self.check_number_of_alive_snakes()
-        new_snake = Snake()
-        snake = []
-        if self.players[active_player].can_split:
-
-            if self.players[active_player].snakes[self.active_snake].direction == 'RIGHT' or \
-                    self.players[active_player].snakes[self.active_snake].direction == 'LEFT':
-                for i in range(5):
-                    snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
-                                  self.players[active_player].snakes[self.active_snake].snake[i][1] - 3])
-                if not self.check_split_collision(snake):
-                    snake.clear()
-                    for i in range(5):
-                        snake.append([self.players[active_player].snakes[self.active_snake].snake[i][0],
-                                      self.players[active_player].snakes[self.active_snake].snake[i][1] + 3])
-
-                    if not self.check_split_collision(snake):
-                        return
-            elif self.players[active_player].snakes[self.active_snake].direction == 'UP' or \
-                    self.players[active_player].snakes[self.active_snake].direction == 'DOWN':
-                for x in range(5):
-                    snake.append([self.players[active_player].snakes[self.active_snake].snake[x][0] - 3,
-                                  self.players[active_player].snakes[self.active_snake].snake[x][1]])
-                if not self.check_split_collision(snake):
-                    snake.clear()
-                    for x in range(5):
-                        snake.append([self.players[active_player].snakes[self.active_snake].snake[x][0] + 3,
-                                      self.players[active_player].snakes[self.active_snake].snake[x][1]])
-                    if not self.check_split_collision(snake):
-                        return
-            new_snake.snake = snake
-            new_snake.direction = self.players[active_player].snakes[self.active_snake].direction
-
-            new_snake.current_x_head = new_snake.snake[0][0]
-            new_snake.current_y_head = new_snake.snake[0][1]
-
-            self.players[active_player].snakes.append(new_snake)
+                change_active_snake(self)
 
     def move_snake(self):
 
@@ -357,73 +312,6 @@ class Board(QFrame):
 
             self.check_collisions()
 
-    def is_suicide(self):
-
-        for j in range(2, len(self.players[self.active_player].snakes[self.active_snake].snake)):
-            if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
-                    self.players[self.active_player].snakes[self.active_snake].snake[j]:
-                self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                self.check_if_alive()
-                if self.players[self.active_player].is_dead:
-                    self.interrupt_skip = True
-                    self.change_active_player()
-                else:
-                    self.change_active_snake()
-                time.sleep(1)
-
-                break
-        self.update()
-
-    def snake_collision(self):
-        for i in range(len(self.players)):
-            for j in range(len(self.players[i].snakes)):
-                if self.players[i].snakes[j].is_dead:
-                    continue
-                for x in range(len(self.players[i].snakes[j].snake)):
-                    if self.players[self.active_player].snakes[self.active_snake].snake[0] == \
-                            self.players[i].snakes[j].snake[x]:
-                        if i == self.active_player:
-                            continue
-                        self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                        self.check_if_alive()
-                        if not self.players[self.active_player].is_dead:
-                            self.change_active_snake()
-                        else:
-                            self.interrupt_skip = True
-                            self.change_active_player()
-                        time.sleep(1)
-
-                        self.update()
-
-    def check_split_collision(self, snake) -> bool:
-        can_split = True
-        x_left = 1
-        x_right = 58
-        y_bottom = 38
-        y_top = 2
-        for x in range(len(self.players)):
-            for j in range(len(self.players[x].snakes)):
-                for q in range(len(self.players[x].snakes[j].snake)):
-                    for t in range(5):
-                        if snake[t] == self.players[x].snakes[j].snake[q]:
-                            can_split = False
-        for i in range(0, 40):
-            for x in range(5):
-                for j in range(5):
-                    if snake[x] == [x_left - j, i] \
-                            or snake[x] == [x_right + j, i]:
-                        can_split = False
-        for j in range(0, 60):
-            for x in range(5):
-                for j in range(5):
-                    if snake[x] == [j, y_bottom + j] \
-                            or snake[x] == [j, y_top - j]:
-                        can_split = False
-        if not can_split:
-            self.msg2statusbar.emit('Splitting is currently impossible')
-
-        return can_split
-
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
 
@@ -431,87 +319,108 @@ class Board(QFrame):
                 self.move_snake()
             self.update()
 
-    def is_food_collision(self):
-        for pos in self.food.pos:
+    def deus_ex_machine_bonus(self):
+        self.bonus_timer.cancel()
+        self.bonus.drop_bonus()
+        time.sleep(2)
+        for pos in self.bonus.pos:
             for i in range(len(self.players)):
                 for x in range(len(self.players[i].snakes)):
                     if pos == self.players[i].snakes[x].snake[0]:
-                        self.food.pos.remove(pos)
-                        self.food.drop_food()
-
                         self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 1), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 1), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 1)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 1)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 2), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 2), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 2)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 2)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 3), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 3), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 3)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 3)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 4), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 4), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 4)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 4)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 5), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 5), pos[1]]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 5)]:
+                        self.players[i].snakes[x].grow_snake = True
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 5)]:
+                        self.players[i].snakes[x].grow_snake = True
+            self.bonus.pos.remove(pos)
 
-    def wall_collision(self):
-        x_left = 1
-        x_right = 58
-        y_bottom = 38
-        y_top = 1
-
-        for i in range(2, 38):
-            if self.players[self.active_player].snakes[self.active_snake].snake[0] == [x_left, i] \
-                    or self.players[self.active_player].snakes[self.active_snake].snake[0] == [x_right, i]:
-                self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                self.check_if_alive()
-                if self.players[self.active_player].is_dead:
-                    self.interrupt_skip = True
-                    self.change_active_player()
-                else:
-                    self.change_active_snake()
-                time.sleep(1)
-                self.update()
-
-        for j in range(2, 58):
-            if self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_bottom] \
-                    or self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_top]:
-                self.players[self.active_player].snakes[self.active_snake].is_dead = True
-                self.check_if_alive()
-                if self.players[self.active_player].is_dead:
-                    self.interrupt_skip = True
-                    self.change_active_player()
-                else:
-                    self.change_active_snake()
-                time.sleep(1)
-                self.update()
-
-    def change_active_player(self):
-        if self.interrupt_skip:
-            self.t.cancel()
-            if self.game_speed == 1:
-                self.cntdwn = 15
-            elif self.game_speed == 2:
-                self.cntdwn = 12
-            elif self.game_speed == 3:
-                self.cntdwn = 10
-            self.t.start()
-            self.interrupt_skip = False
-
-        self.flag = False
-        for i in self.players[self.active_player].snakes:
-            i.steps_moved = 0
-        if self.active_player < len(self.players) - 1:
-            i = self.active_player + 1
-        else:
-            i = 0
-
-        while i < len(self.players):
-            if not self.players[i].is_dead:
+    def deus_ex_machine_malus(self):
+        self.malus_timer.cancel()
+        self.malus.drop_malus()
+        time.sleep(2)
+        for pos in self.malus.pos:
+            for i in range(len(self.players)):
                 for x in range(len(self.players[i].snakes)):
-                    if not self.players[i].snakes[x].is_dead:
-                        self.active_snake = x
-                        break
-                self.active_player = i
-                break
-            else:
+                    if pos == self.players[i].snakes[x].snake[0]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 1), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 1), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 1)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 1)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 2), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 2), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 2)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 2)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 3), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 3), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 3)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 3)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 4), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 4), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 4)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 4)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] + 5), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [(pos[0] - 5), pos[1]]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] + 5)]:
+                        self.players[i].snakes[x].snake.pop()
+                    elif self.players[i].snakes[x].snake[0] == [pos[0], (pos[1] - 5)]:
+                        self.players[i].snakes[x].snake.pop()
 
-                if i + 1 == len(self.players):
-                    i = 0
-                else:
-                    i += 1
-                continue
-
-        self.setStyleSheet(
-            'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
-            ') 0 0 0 0 stretch center')
+            self.malus.pos.remove(pos)
 
     def check_if_alive(self):
         for i in range(len(self.players)):
@@ -532,6 +441,10 @@ class Board(QFrame):
                 ') 0 0 0 0 stretch center')
             self.timer.stop()
             self.r.cancel()
+            self.t.cancel()
+            self.bonus_timer.cancel()
+            self.malus_timer.cancel()
+            self.msg2statusbar.emit('Game over!')
 
         else:
             self.dead_players = 0
@@ -549,20 +462,10 @@ class Board(QFrame):
         self.msg2statusbar.emit(self.players[self.active_player].name + '\'s turn. ' + str(self.cntdwn + 1)
                                 + ' seconds left.' + ' Snake ' + str(self.active_snake + 1) + ' active')
 
-    def check_number_of_alive_snakes(self):
-        i = 0
-        for x in self.players[self.active_player].snakes:
-            if not x.is_dead:
-                i += 1
-        if i < 2:
-            self.players[self.active_player].can_split = True
-        else:
-            self.players[self.active_player].can_split = False
-
     def check_collisions(self):
-        self.is_suicide()
-        self.is_food_collision()
-        self.wall_collision()
-        self.snake_collision()
+        is_suicide(self)
+        is_food_collision(self)
+        wall_collision(self)
+        snake_collision(self)
         self.update()
         self.check_winner()
