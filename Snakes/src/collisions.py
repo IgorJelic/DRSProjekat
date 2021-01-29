@@ -104,5 +104,5 @@ def is_food_collision(self):
                 if pos == self.players[i].snakes[x].snake[0]:
                     self.food.pos.remove(pos)
                     self.food.drop_food()
-
+                    self.players[i].food_eaten += 1
                     self.players[i].snakes[x].grow_snake = True

@@ -249,7 +249,7 @@ class Board(QFrame):
 
             elif key == Qt.Key_S:
                 if self.tab_mode:
-                    if len(self.players[self.active_player].snakes[self.active_snake].snake) >= 5:
+                    if self.players[self.active_player].food_eaten >= 5:
                         split_snake(self, self.active_player)
 
             elif key == Qt.Key_N:
@@ -420,6 +420,7 @@ class Board(QFrame):
                         head = [self.players[i].snakes[x].current_x_head,
                                 self.players[i].snakes[x].current_y_head]
                         self.players[i].snakes[x].snake.insert(0, head)
+                        self.players[i].food_eaten += 2
 
             self.bonus.pos.remove(pos)
             self.update()
@@ -477,6 +478,7 @@ class Board(QFrame):
 
             self.malus.pos.remove(pos)
             self.update()
+
     def check_if_alive(self):
         for i in range(len(self.players)):
             for j in range(len(self.players[i].snakes)):

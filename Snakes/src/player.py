@@ -8,7 +8,7 @@ class Player(object):
         self.score = 0
         self.is_dead = False
         self.can_split = True
-
+        self.food_eaten = 0
 
 def change_active_player(self):
     if self.interrupt_skip:

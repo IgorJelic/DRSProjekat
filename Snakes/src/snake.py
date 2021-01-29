@@ -68,5 +68,8 @@ def split_snake(self, active_player: int):
 
         new_snake.current_x_head = new_snake.snake[0][0]
         new_snake.current_y_head = new_snake.snake[0][1]
-
+        for k in range(5):
+            self.players[active_player].snakes[self.active_snake].snake.pop()
         self.players[active_player].snakes.append(new_snake)
+        self.players[self.active_player].food_eaten = 0
+        self.update()
