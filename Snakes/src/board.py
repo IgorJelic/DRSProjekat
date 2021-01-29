@@ -435,6 +435,10 @@ class Board(QFrame):
                 ') 0 0 0 0 stretch center')
             self.timer.stop()
             self.r.cancel()
+            self.t.cancel()
+            self.bonus_timer.cancel()
+            self.malus_timer.cancel()
+            self.msg2statusbar.emit('Game over!')
 
         else:
             self.dead_players = 0
