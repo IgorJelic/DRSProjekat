@@ -37,7 +37,7 @@ class SplashScreen(QMainWindow):
         combo_players_list = [' 2 players ', ' 3 players ', ' 4 players ', ' Classic snake ']
         self.combo_players = QComboBox(self)
         self.combo_players.addItems(combo_players_list)
-        self.combo_players.setFixedSize(250, 70)
+        self.combo_players.setFixedSize(270, 70)
         font_cb = self.combo_players.font()
         font_cb.setPointSize(20)
         font_cb.setFamily('Spongeboy Me Bob')

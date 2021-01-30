@@ -71,7 +71,6 @@ class Board(QFrame):
             Board.SPEED = 0.1
         Board.START_SPEED = Board.SPEED
 
-
     def paintEvent(self, event):
         painter = QPainter(self)
         rect = self.contentsRect()
@@ -178,20 +177,11 @@ class Board(QFrame):
                 self.update()
             time.sleep(Board.SPEED)
 
-    # def timerEvent(self, event):
-    #     if event.timerId() == self.timer.timerId():
-    #         self.move_snake()
-    #         self.wall_collision()
-    #         self.is_food_collision()
-    #         self.is_suicide()
-    #         self.update()
-
     def is_suicide(self):  # If snake collides with itself, game is over
         for i in range(1, len(self.snake)):
             if self.snake[0] == self.snake[i]:
                 self.msg2statusbar.emit('Game over suicide! Your final score was: ' + str(len(self.snake) - 2))
 
-                winsound.PlaySound(load_res('death.wav'), winsound.SND_ASYNC)
                 self.setStyleSheet('border-image: url(' + load_style_res('you_died.png') + ') 0 0 0 0 stretch stretch')
                 self.remove_food()
 
@@ -248,7 +238,7 @@ class Board(QFrame):
 
         for i in range(0, 40):
             if self.snake[0] == [x_left, i] or self.snake[0] == [x_right, i]:
-                winsound.PlaySound(load_res('death.wav'), winsound.SND_ASYNC)
+
                 self.setStyleSheet(
                     'border-image: url(' + load_style_res('you_died.png') + ') 0 0 0 0 stretch stretch')
                 self.msg2statusbar.emit('Game over! Your final score was: ' + str(len(self.snake) - 2))
@@ -258,13 +248,11 @@ class Board(QFrame):
 
         for j in range(2, 57):
             if self.snake[0] == [j, y_bottom] or self.snake[0] == [j, y_top]:
-                winsound.PlaySound(load_res('death.wav'), winsound.SND_ASYNC)
                 self.setStyleSheet('border-image: url(' + load_style_res('you_died.png') + ') 0 0 0 0 stretch stretch')
                 self.msg2statusbar.emit('Game over! Your final score was: ' + str(len(self.snake) - 2))
 
                 self.remove_food()
                 self.is_dead = True
-
 
     def drop_food(self):
 
@@ -281,5 +269,4 @@ class Board(QFrame):
             self.wall_collision()
             self.is_food_collision()
             self.is_suicide()
-            time.sleep(Board.SPEED)
-
+            time.sleep(0.01)
