@@ -2,7 +2,7 @@ import random
 import time
 from threading import Thread
 
-from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
+from PyQt5.QtCore import pyqtSignal, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
 from PyQt5.QtWidgets import QFrame
 
@@ -18,7 +18,6 @@ from snake import Snake, change_active_snake, split_snake
 
 class Board(QFrame):
     msg2statusbar = pyqtSignal(str)
-    SPEED = 150
     WIDTHINBLOCKS = 60
     HEIGHTINBLOCKS = 40
 
@@ -494,7 +493,7 @@ class Board(QFrame):
             self.setStyleSheet(
                 'border-image: url(' + load_style_res(str(self.active_player + 1) + 'won' + '.png') +
                 ') 0 0 0 0 stretch center')
-            self.timer.stop()
+
             self.r.cancel()
             self.t.cancel()
             self.bonus_timer.cancel()
