@@ -1,6 +1,8 @@
 import random
 import sys
+import time
 import winsound
+from threading import Thread
 
 from PyQt5.QtCore import pyqtSignal, QBasicTimer, Qt, QRect
 from PyQt5.QtGui import QPainter, QImage
@@ -11,14 +13,13 @@ from helpers import load_style_res, load_res
 
 class Board(QFrame):
     msg2statusbar = pyqtSignal(str)
-    SPEED = 150
+    SPEED = 0.15
     WIDTHINBLOCKS = 60
     HEIGHTINBLOCKS = 40
     START_SPEED = SPEED
 
     def __init__(self, parent):
         super(Board, self).__init__(parent)
-        self.timer = QBasicTimer()
 
         self.food_eaten = 0
         self.snake = [[46, 5], [47, 5], [48, 5], [49, 5], [50, 5]]
@@ -28,10 +29,15 @@ class Board(QFrame):
 
         self.food = []
         self.grow_snake = False
-
+        self.is_dead = False
         self.board = []
         self.direction = 'LEFT'
-
+        self.th = Thread(target=self.move_snake, args=())
+        self.th.daemon = True
+        self.th.start()
+        self.cc = Thread(target=self.check_collisions, args=())
+        self.cc.daemon = True
+        self.cc.start()
         self.drop_food()
 
         self.setFocusPolicy(Qt.StrongFocus)
@@ -58,14 +64,13 @@ class Board(QFrame):
         )
 
         if speed == 1:
-            Board.SPEED = 150
+            Board.SPEED = 0.15
         elif speed == 2:
-            Board.SPEED = 125
+            Board.SPEED = 0.125
         elif speed == 3:
-            Board.SPEED = 100
+            Board.SPEED = 0.1
         Board.START_SPEED = Board.SPEED
 
-        self.timer.start(Board.SPEED, self)
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -128,50 +133,58 @@ class Board(QFrame):
                 self.direction = 'UP'
 
     def move_snake(self):
-        if self.direction == 'LEFT':
-            self.current_x_head, self.current_y_head = self.current_x_head - 1, self.current_y_head
-            if self.current_x_head < 0:
-                self.current_x_head = Board.WIDTHINBLOCKS - 1
-        if self.direction == 'RIGHT':
-            self.current_x_head, self.current_y_head = self.current_x_head + 1, self.current_y_head
-            if self.current_x_head == Board.WIDTHINBLOCKS:
-                self.current_x_head = 0
-        if self.direction == 'DOWN':
-            self.current_x_head, self.current_y_head = self.current_x_head, self.current_y_head + 1
-            if self.current_y_head == Board.HEIGHTINBLOCKS:
-                self.current_y_head = 0
-        if self.direction == 'UP':
-            self.current_x_head, self.current_y_head = self.current_x_head, self.current_y_head - 1
-            if self.current_y_head < 0:
-                self.current_y_head = Board.HEIGHTINBLOCKS
+        while True:
+            if self.is_dead:
+                break
+            else:
 
-        head = [self.current_x_head, self.current_y_head]
-        self.snake.insert(0, head)
-        if not self.grow_snake:
-            self.snake.pop()
-        else:
+                if self.direction == 'LEFT':
+                    self.current_x_head, self.current_y_head = self.current_x_head - 1, self.current_y_head
+                    if self.current_x_head < 0:
+                        self.current_x_head = Board.WIDTHINBLOCKS - 1
+                if self.direction == 'RIGHT':
+                    self.current_x_head, self.current_y_head = self.current_x_head + 1, self.current_y_head
+                    if self.current_x_head == Board.WIDTHINBLOCKS:
+                        self.current_x_head = 0
+                if self.direction == 'DOWN':
+                    self.current_x_head, self.current_y_head = self.current_x_head, self.current_y_head + 1
+                    if self.current_y_head == Board.HEIGHTINBLOCKS:
+                        self.current_y_head = 0
+                if self.direction == 'UP':
+                    self.current_x_head, self.current_y_head = self.current_x_head, self.current_y_head - 1
+                    if self.current_y_head < 0:
+                        self.current_y_head = Board.HEIGHTINBLOCKS
 
-            self.msg2statusbar.emit(
-                'Score: ' + str(len(self.snake) - 5) + '                        '
+                head = [self.current_x_head, self.current_y_head]
+                self.snake.insert(0, head)
+                if not self.grow_snake:
+                    self.snake.pop()
+                else:
 
-                                                       '                                  '
-                                                       '                                      '
-                                                       '        '
-                                                       '                            '
-                                                       '                        '
-                                                       ' '
-                                                       '            '
-            )
+                    self.msg2statusbar.emit(
+                        'Score: ' + str(len(self.snake) - 5) + '                        '
+            
+                                                               '                                  '
+                                                               '                                      '
+                                                               '        '
+                                                               '                            '
+                                                               '                        '
+                                                               ' '
+                                                               '            '
+                    )
 
-            self.grow_snake = False
+                    self.grow_snake = False
 
-    def timerEvent(self, event):
-        if event.timerId() == self.timer.timerId():
-            self.move_snake()
-            self.wall_collision()
-            self.is_food_collision()
-            self.is_suicide()
-            self.update()
+                self.update()
+            time.sleep(Board.SPEED)
+
+    # def timerEvent(self, event):
+    #     if event.timerId() == self.timer.timerId():
+    #         self.move_snake()
+    #         self.wall_collision()
+    #         self.is_food_collision()
+    #         self.is_suicide()
+    #         self.update()
 
     def is_suicide(self):  # If snake collides with itself, game is over
         for i in range(1, len(self.snake)):
@@ -181,8 +194,8 @@ class Board(QFrame):
                 winsound.PlaySound(load_res('death.wav'), winsound.SND_ASYNC)
                 self.setStyleSheet('border-image: url(' + load_style_res('you_died.png') + ') 0 0 0 0 stretch stretch')
                 self.remove_food()
-                self.timer.stop()
-                self.update()
+
+                self.is_dead = True
 
     def is_food_collision(self):
         for pos in self.food:
@@ -200,44 +213,28 @@ class Board(QFrame):
                         self.drop_food()
                 elif 25 <= self.food_eaten < 60:
                     if len(self.food) > 6:
-                        Board.SPEED = Board.SPEED - 1
-                        self.timer.stop()
-                        self.timer.start(Board.SPEED, self)
+                        self.drop_food()
 
                     else:
                         self.drop_food()
                         self.drop_food()
                 elif 60 <= self.food_eaten < 100:
                     if len(self.food) > 8:
-                        if Board.SPEED > Board.START_SPEED - 25:
-                            Board.SPEED = Board.SPEED - 1
-
-                        self.timer.stop()
-                        self.timer.start(Board.SPEED, self)
-                        print('current' + str(Board.SPEED))
+                        self.drop_food()
 
                     else:
                         self.drop_food()
                         self.drop_food()
                 elif 100 <= self.food_eaten < 175:
                     if len(self.food) > 9:
-                        if Board.SPEED > Board.START_SPEED - 40:
-                            Board.SPEED = Board.SPEED - 1
+                        self.drop_food()
 
-                            self.timer.stop()
-                            self.timer.start(Board.SPEED, self)
-                            print(Board.SPEED)
                     else:
                         self.drop_food()
                         self.drop_food()
                 elif self.food_eaten >= 200:
                     if len(self.food) > 10:
-                        if Board.SPEED > Board.START_SPEED - 60:
-                            Board.SPEED = Board.SPEED - 1
-
-                            self.timer.stop()
-                            self.timer.start(Board.SPEED, self)
-                            print(Board.SPEED)
+                        self.drop_food()
                     else:
                         self.drop_food()
                         self.drop_food()
@@ -255,18 +252,19 @@ class Board(QFrame):
                 self.setStyleSheet(
                     'border-image: url(' + load_style_res('you_died.png') + ') 0 0 0 0 stretch stretch')
                 self.msg2statusbar.emit('Game over! Your final score was: ' + str(len(self.snake) - 2))
-                self.timer.stop()
+
                 self.remove_food()
-                self.update()
+                self.is_dead = True
 
         for j in range(2, 57):
             if self.snake[0] == [j, y_bottom] or self.snake[0] == [j, y_top]:
                 winsound.PlaySound(load_res('death.wav'), winsound.SND_ASYNC)
                 self.setStyleSheet('border-image: url(' + load_style_res('you_died.png') + ') 0 0 0 0 stretch stretch')
                 self.msg2statusbar.emit('Game over! Your final score was: ' + str(len(self.snake) - 2))
-                self.timer.stop()
+
                 self.remove_food()
-                self.update()
+                self.is_dead = True
+
 
     def drop_food(self):
 
@@ -278,12 +276,10 @@ class Board(QFrame):
     def remove_food(self):
         self.food.clear()
 
+    def check_collisions(self):
+        while True:
+            self.wall_collision()
+            self.is_food_collision()
+            self.is_suicide()
+            time.sleep(Board.SPEED)
 
-def main():
-    app = QApplication([])
-
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()

@@ -24,7 +24,7 @@ class Board(QFrame):
 
     def __init__(self, parent, usernames: list, speed: int, multiple: bool, food: int):
         super(Board, self).__init__(parent)
-        self.timer = QBasicTimer()
+
         self.usernames = usernames
         self.game_speed = speed
         self.num_of_players = len(usernames)
@@ -40,7 +40,7 @@ class Board(QFrame):
 
         self.board = []
         self.steps = 1
-        self.passed = False
+
         self.moves = 1
         self.active_snake = 0
         self.active_player = 0
@@ -150,8 +150,6 @@ class Board(QFrame):
 
         self.msg2statusbar.emit('Welcome! ' + self.usernames[0] + '\'s turn. You\'ve got ' + str(self.cntdwn + 1) +
                                 ' seconds ')
-
-        self.timer.start(Board.SPEED, self)
 
     def paintEvent(self, event):
         painter = QPainter(self)

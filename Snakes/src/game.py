@@ -60,7 +60,16 @@ class ClassicSnake(QMainWindow):
         size = self.geometry()
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
 
+    def closeEvent(self, event):
 
+        reply = QMessageBox.question(self, 'Really?',
+                                     "Are you sure to quit?", QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 def main():
     app = QApplication([])
 
