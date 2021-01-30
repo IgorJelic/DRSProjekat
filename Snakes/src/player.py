@@ -1,14 +1,19 @@
 from helpers import load_style_res
 
+from food import Food
+
 
 class Player(object):
     def __init__(self, name):
         self.name = name
         self.snakes = []
         self.score = 0
+        self.split = False
         self.is_dead = False
         self.can_split = True
         self.food_eaten = 0
+        self.turn = 0
+
 
 def change_active_player(self):
     if self.interrupt_skip:
@@ -45,6 +50,16 @@ def change_active_player(self):
             else:
                 i += 1
             continue
+
+    for k in range(len(self.players)):
+        for j in range(len(self.players[k].snakes)):
+            if self.players[k].snakes[j].grow_snake:
+                break
+            else:
+                self.players[k].turn += 1
+                if self.players[k].turn == len(self.players):
+                    self.food.move_food()
+                    self.players[k].turn = 0
 
     self.setStyleSheet(
         'border-image: url(' + load_style_res('grassp' + str(self.active_player + 1) + '.png') +
