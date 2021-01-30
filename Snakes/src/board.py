@@ -248,6 +248,8 @@ class Board(QFrame):
                 if self.tab_mode:
                     if self.players[self.active_player].food_eaten >= 5:
                         split_snake(self, self.active_player)
+                    else:
+                        self.msg2statusbar.emit('Splitting is currently impossible')
 
             elif key == Qt.Key_N:
                 self.interrupt_skip = True
