@@ -37,10 +37,13 @@ class SnakeGame(QMainWindow):
 
         if reply == QMessageBox.Yes:
             event.accept()
+            if self.game_board.bonus_timer.is_alive:
+                self.game_board.bonus_timer.cancel()
+            if self.game_board.malus_timer.is_alive:
+                self.game_board.malus_timer.cancel()
             self.game_board.t.cancel()
             self.game_board.r.cancel()
-            self.game_board.bonus_timer.cancel()
-            self.game_board.malus_timer.cancel()
+
         else:
             event.ignore()
 

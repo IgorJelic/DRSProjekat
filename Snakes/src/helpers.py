@@ -11,7 +11,7 @@ class PerpetualTimer:
         self.f = f
         self.args = args
         self.kwargs = kwargs
-
+        self.is_alive = False
         self.timer = None
 
     def callback(self):
@@ -20,10 +20,11 @@ class PerpetualTimer:
 
     def cancel(self):
         self.timer.cancel()
-
+        self.is_alive = False
     def start(self):
         self.timer = Timer(self.interval, self.callback)
         self.timer.start()
+        self.is_alive = True
 
 
 def load_res(name: str) -> str:
