@@ -422,7 +422,7 @@ class Board(QFrame):
                         self.players[i].food_eaten += 2
 
             self.bonus.pos.remove(pos)
-        self.update()
+            self.update()
 
     def deus_ex_machine_malus(self):
         self.malus_timer.cancel()
@@ -476,7 +476,7 @@ class Board(QFrame):
                         self.players[i].snakes[x].snake.pop()
 
             self.malus.pos.remove(pos)
-        self.update()
+            self.update()
 
     def check_if_alive(self):
         for i in range(len(self.players)):
@@ -531,8 +531,8 @@ class Board(QFrame):
 
         rand_s = random.choice(rand_p.snakes)
 
-        x = random.randint(rand_s.snake[0][0] + 5, rand_s.snake[0][0] + 10)
-        y = random.randint(rand_s.snake[0][1] + 5, rand_s.snake[0][1] + 10)
+        x = random.randint(rand_s.snake[0][0] + 1, rand_s.snake[0][0] + 5)
+        y = random.randint(rand_s.snake[0][1] + 1, rand_s.snake[0][1] + 5)
         if [x, y] == rand_s.snake[0] or x > 58 or x < 2 or y > 38 or y < 2:
             self.drop_bonus()
         else:
