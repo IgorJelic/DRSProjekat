@@ -36,6 +36,7 @@ def snake_collision(self):
                     else:
                         self.interrupt_skip = True
                         change_active_player(self)
+                    break
 
 
 def check_split_collision(self, snake) -> bool:
@@ -84,6 +85,7 @@ def wall_collision(self):
                 change_active_player(self)
             else:
                 snake.change_active_snake(self)
+            break
 
     for j in range(2, 58):
         if self.players[self.active_player].snakes[self.active_snake].snake[0] == [j, y_bottom] \
@@ -95,6 +97,7 @@ def wall_collision(self):
                 change_active_player(self)
             else:
                 snake.change_active_snake(self)
+            break
 
 
 def is_food_collision(self):
